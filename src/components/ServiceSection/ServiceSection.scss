@@ -1,0 +1,31 @@
+@import "./../../sass/mixins.scss";
+@import "./../../sass/variables.scss";
+
+.service-section {
+  padding-top: 6rem;
+  margin-bottom: 6rem;
+  &__header-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-transform: capitalize;
+    .header-section-title {
+      @include header-section-text-mixin;
+      span {
+        color: $secondary-color;
+      }
+    }
+    .normal-text {
+      @include normal-text-mixin;
+    }
+  }
+
+  &__services-list {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-top: 6rem;
+  }
+}

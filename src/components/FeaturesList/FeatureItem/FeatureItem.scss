@@ -1,0 +1,71 @@
+@import "./../../../sass/mixins.scss";
+@import "./../../../sass/variables.scss";
+
+.icon {
+  cursor: pointer;
+}
+.feature-item {
+  border-radius: 1.5rem;
+  overflow: hidden;
+  max-width: 100%;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  &:hover &__image {
+    overflow: hidden;
+    img {
+      transform: scale(1.2);
+      transition: transform 1s;
+    }
+  }
+  &__image {
+    position: relative;
+    img {
+      width: 100%;
+      object-fit: contain;
+    }
+    .price-per-month {
+      position: absolute;
+      background-color: $background-white;
+      padding: 1rem 2rem;
+      font-size: $normal-font-size;
+      bottom: 1.5rem;
+      left: 1.5rem;
+      border-radius: 1rem;
+    }
+  }
+  .name,
+  .location,
+  .interior {
+    padding: 0 0 0.8rem 0;
+  }
+  &__info {
+    padding: 1rem 2.5rem;
+    font-size: $item-name-font-size;
+    font-weight: 300;
+    .name {
+      font-weight: 600;
+      line-height: 2rem;
+    }
+    .interior {
+      display: flex;
+      gap: 1.4rem;
+      justify-content: flex-start;
+      &__bed,
+      &__bath,
+      &__square-metre {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+    }
+
+    .actions {
+      padding: 2rem 0 1rem 0;
+      border-top: 1px solid #717171;
+      display: flex;
+      justify-content: space-between;
+      &__watch-later .icon {
+        font-size: 3rem;
+      }
+    }
+  }
+}

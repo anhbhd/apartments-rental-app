@@ -1,0 +1,78 @@
+@import "../../sass/variables.scss";
+@import "../../sass/mixins.scss";
+
+a {
+  display: block;
+}
+.footer {
+  background-color: $footer-background-color;
+  padding: 8rem 15rem;
+  color: $background-white;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-areas: "left left right right right";
+
+  &__leftside {
+    grid-area: left;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+
+    .support-box {
+      font-size: $normal-font-size;
+      &__phone {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 2rem;
+        & > span:last-child {
+          font-size: 1.8rem;
+          font-weight: 600;
+        }
+      }
+      &__email {
+        display: flex;
+        flex-direction: column;
+        & > span:last-child {
+          font-size: 1.8rem;
+          font-weight: 600;
+        }
+      }
+    }
+
+    .social-box {
+      font-size: $normal-font-size;
+      & > p:last-child {
+        margin-top: 2rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+      }
+    }
+  }
+  &__rightside {
+    grid-area: right;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    font-size: $normal-font-size;
+    ul {
+      list-style-type: none;
+      & > li {
+        margin-bottom: 1rem;
+        a {
+          text-decoration: none;
+          color: darken($color: $text-footer-white, $amount: 20%);
+          &:hover {
+            color: lighten($color: $text-footer-white, $amount: 20%);
+            text-decoration: underline;
+          }
+        }
+      }
+      & > li:first-child {
+        font-size: 1.8rem;
+        margin-bottom: 4rem;
+        font-weight: 600;
+      }
+    }
+  }
+}

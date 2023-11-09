@@ -1,0 +1,47 @@
+@import "./../../sass/variables.scss";
+
+.navbar {
+  display: flex;
+  justify-content: center;
+  padding-top: 1rem;
+  gap: 5rem;
+  background-color: $background-white;
+  position: fixed;
+  width: 100%;
+  padding: 1.5rem 0;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  z-index: 1000;
+  ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    gap: 2rem;
+    li {
+      border-radius: 1rem;
+      overflow: hidden;
+      position: relative;
+      a {
+        text-decoration: none;
+        padding: 1.4rem 2rem;
+        color: $main-text-color;
+        font-size: 1.6rem;
+        font-weight: 600;
+        display: block;
+      }
+      &::after {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        content: "";
+        width: 0;
+        background-color: $secondary-color;
+        height: 0.2rem;
+        transition: width 0.5s;
+      }
+      &:hover::after {
+        width: 100%;
+      }
+    }
+  }
+}

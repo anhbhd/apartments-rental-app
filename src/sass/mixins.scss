@@ -1,0 +1,23 @@
+@import "./../sass/variables.scss";
+
+@mixin normal-text-mixin {
+  font-size: $normal-font-size;
+  color: $main-text-color;
+  line-height: 1.8rem;
+}
+
+@mixin header-section-text-mixin {
+  font-size: $header-section-font-size;
+  color: $main-text-color;
+  font-weight: 700;
+  letter-spacing: 0.1rem;
+  line-height: 4rem;
+}
+
+@mixin title-section-mixin {
+  @include header-section-text-mixin;
+  margin-bottom: 1rem;
+  span {
+    color: $secondary-color;
+  }
+}
