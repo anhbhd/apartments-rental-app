@@ -2,7 +2,7 @@ import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import FeatureItem from "./FeatureItem/FeatureItem";
-import imgItem from "./../../assets/FeatureSection/feature-item1.jpg";
+import imgItem from "./../../assets/FeatureSection/feature-item-image.jpg";
 import "./FeaturesList.scss";
 
 const FeaturesList = () => {
@@ -32,8 +32,6 @@ const FeaturesList = () => {
             spaceBetween: 50,
           },
         }}
-        onSlideChange={() => console.log("slide change")}
-        onSwiper={(swiper: any) => console.log(swiper)}
       >
         <SwiperSlide>
           <FeatureItem imgItem={imgItem} />

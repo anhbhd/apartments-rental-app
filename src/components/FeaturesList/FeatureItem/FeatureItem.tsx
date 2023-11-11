@@ -1,16 +1,16 @@
 import React from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
 
 import { BiBed, BiBath, BiHomeAlt } from "react-icons/bi";
-import { AiOutlineHeart } from "react-icons/ai";
+import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import "./FeatureItem.scss";
 interface IFeatureProps {
   imgItem: string;
+  className?: string;
 }
 
-const FeatureItem = ({ imgItem }: IFeatureProps) => {
+const FeatureItem = ({ imgItem, className }: IFeatureProps) => {
   return (
-    <div className="feature-item">
+    <div className={`feature-item ${className}`}>
       <div className="feature-item__image">
         <img src={imgItem} alt="item" />
         <span className="price-per-month">
@@ -34,9 +34,10 @@ const FeatureItem = ({ imgItem }: IFeatureProps) => {
           </span>
         </div>
         <div className="actions">
-          <span className="actions__quantity-available">2 available</span>
+          <span className="actions__quantity-available">Apartment</span>
           <span className="actions__watch-later">
             <AiOutlineHeart className="icon " />
+            {/* <AiFillHeart className="icon " style={{ color: "#eb6753" }} /> */}
           </span>
         </div>
       </div>

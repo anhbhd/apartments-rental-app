@@ -1,5 +1,6 @@
 import React from "react";
 import "./HeroSection.scss";
+import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   return (
@@ -10,8 +11,13 @@ const HeroSection = () => {
         <p>We’ve more than 745,000 apartments, place & plot.</p>
       </div>
       <div className="hero-section__call-to-actions">
-        <button className="button">Our available Apartments</button>
-        <button className="button">Create an Account</button>
+        <button className="button">
+          <Link to="search">Our available Apartments</Link>
+        </button>
+
+        <button className="button">
+          <Link to="sign_up">Create an Account</Link>
+        </button>
       </div>
     </section>
   );

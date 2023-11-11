@@ -1,0 +1,150 @@
+@import "./../../../sass/variables.scss";
+@import "./../../../sass/mixins.scss";
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+.filterbar {
+  background-color: $background-white;
+  border-radius: 1.5rem;
+  font-size: $normal-font-size;
+  &__section {
+    margin-bottom: 3rem;
+
+    .field-label {
+      font-size: 1.6rem;
+      font-weight: 600;
+      margin-bottom: 2.5rem;
+    }
+
+    .search-field {
+      position: relative;
+      input {
+        @include input-fillter-space-mixin;
+        padding-left: 5rem;
+        width: 100%;
+      }
+      .search-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
+
+    .checkboxes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+
+      .checkbox-label-container {
+        display: grid;
+        grid-template-columns: auto 1fr;
+
+        label {
+          display: inline-block;
+          cursor: pointer;
+          padding-left: 1rem;
+          text-transform: capitalize;
+          width: fit-content;
+        }
+      }
+    }
+    .price-range-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      input {
+        @include input-fillter-space-mixin;
+        margin-bottom: 1rem;
+      }
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        margin: 0;
+      }
+      .price-range-item {
+        p {
+          margin-bottom: 1rem;
+        }
+      }
+    }
+
+    .selected-stars,
+    .selected-city {
+      @include input-fillter-space-mixin;
+      cursor: pointer;
+    }
+    .selectbox-container {
+      position: relative;
+      cursor: pointer;
+      display: block;
+      .selectbox-ul {
+        position: absolute;
+        width: 100%;
+        list-style-type: none;
+        padding: 0 0.1rem;
+        z-index: 500;
+        overflow-y: scroll;
+        height: 20rem;
+        background-color: $background-white;
+        margin-top: 0.1rem;
+        box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+          rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+
+        li {
+          @include li-option-fillter-space-mixin;
+        }
+      }
+    }
+  }
+  &__search-btn {
+    width: 100%;
+    padding: 2rem;
+    font-size: 1.6rem;
+    font-weight: 600;
+    border-radius: 1rem;
+    cursor: pointer;
+    background-color: $secondary-color;
+    border: none;
+    outline: none;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+      rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    transition: 0.5s;
+    &:active,
+    &:hover {
+      background-color: rgba($color: #eb6753, $alpha: 0.9);
+    }
+    &:hover {
+      transform: translateY(-0.3rem);
+    }
+    &:active {
+      transform: translateY(0.5rem);
+    }
+  }
+  .clear-all-filter {
+    display: inline-block;
+    margin-top: 2rem;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}

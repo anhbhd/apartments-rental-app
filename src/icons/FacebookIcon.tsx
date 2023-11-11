@@ -1,11 +1,11 @@
 import React from "react";
-import FooterIcon from "../Type/FooterIcon";
+import FooterIcon from "../type/FooterIcon";
 
 const FacebookIcon: React.FC<FooterIcon> = ({ width, height }) => {
   return (
     <svg
       id="Capa_1"
-      enable-background="new 0 0 512 512"
+      enableBackground="new 0 0 512 512"
       height={width}
       width={height}
       viewBox="0 0 512 512"

@@ -4,11 +4,25 @@ import "./TestimonialItem.scss";
 import testimonialAva from "./../../../assets/TestimonialAvatars/testimonial-avatar.jpg";
 import QuotationMark from "../../../icons/QuotationMark";
 
-const TestimonialItem = () => {
+interface ITestimonialItemProps {
+  compliment: string;
+  detail: string;
+  customerName: string;
+  career: string;
+  className?: string;
+  style?: {};
+}
+
+const TestimonialItem = ({
+  compliment,
+  detail,
+  customerName,
+  career,
+}: ITestimonialItemProps) => {
   return (
     <div className="testimonial-item">
       <div className="testimonial-item__review">
-        <div className="compliment">Great Work</div>
+        <div className="compliment">{compliment}</div>
         <span className="quotation-marks">
           <QuotationMark
             className="mark"
@@ -17,20 +31,16 @@ const TestimonialItem = () => {
             fill="#fef7f6"
           />
         </span>
-        <p className="detail">
-          Amazing design, easy to customize and a design quality superlative
-          account on its cloud platform for the optimized performance. And we
-          didn’t on our original designs.
-        </p>
+        <p className="detail">{detail}</p>
       </div>
       <div className="testimonial-item__reviewer-box">
         <span className="avatar">
           <img src={testimonialAva} alt="ava" />
         </span>
         <div className="reviewer-info">
-          <p className="name">Floyd Miles</p>
+          <p className="name">{customerName}</p>
           <p className="career">
-            <em>Bank of America</em>
+            <em>{career}</em>
           </p>
         </div>
       </div>

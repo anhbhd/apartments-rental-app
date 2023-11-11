@@ -8,12 +8,12 @@ import Testimonial from "../../components/Testimonial/Testimonial";
 
 const Home = () => {
   return (
-    <div className="home">
+    <main className="home">
       <HeroSection />
       <ServiceSection />
       <FeaturesList />
       <Testimonial />
-    </div>
+    </main>
   );
 };
 

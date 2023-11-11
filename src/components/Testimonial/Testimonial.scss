@@ -2,7 +2,7 @@
 @import "./../../sass/mixins.scss";
 .testimonial {
   background-color: #fef7f6;
-  padding: 8rem 15rem;
+  @include padding-section-mixin-desktop;
   &__title-section {
     @include title-section-mixin;
   }

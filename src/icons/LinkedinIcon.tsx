@@ -1,5 +1,5 @@
 import React from "react";
-import FooterIcon from "../Type/FooterIcon";
+import FooterIcon from "../type/FooterIcon";
 
 const LinkedinIcon: React.FC<FooterIcon> = ({ width, height }) => {
   return (

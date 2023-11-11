@@ -1,0 +1,18 @@
+@import "./../../../sass/variables.scss";
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  list-style: none;
+  margin-top: 5rem;
+  li {
+    cursor: pointer;
+    padding: 1.5rem 2rem;
+    border-radius: 5rem;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+      rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    font-size: $normal-font-size;
+  }
+}

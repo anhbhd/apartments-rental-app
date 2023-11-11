@@ -1,0 +1,40 @@
+@import "./../../sass/variables.scss";
+@import "./../../sass/mixins.scss";
+
+.aparments-list {
+  min-height: 100vh;
+  background-color: $secondary-background-color;
+  @include padding-section-mixin-desktop;
+  padding-top: 15rem;
+
+  &__textheader {
+    margin-bottom: 6rem;
+    .header--bigtext {
+      @include title-section-mixin;
+    }
+    .header--smalltext {
+      @include normal-text-mixin;
+    }
+  }
+
+  &__main-content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-areas: "filterbar results results";
+    gap: 4rem;
+    .filterbar {
+      grid-area: filterbar;
+      padding: 4rem;
+      box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    }
+    .apartments-result {
+      grid-area: results;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-auto-rows: max-content;
+
+      column-gap: 2rem;
+      row-gap: 4rem;
+    }
+  }
+}

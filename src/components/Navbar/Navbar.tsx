@@ -2,26 +2,29 @@ import React from "react";
 import HeaderLogo from "../HeaderLogo/HeaderLogo";
 
 import "./Navbar.scss";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
     <nav className="navbar">
-      <HeaderLogo className="navbar__logo" />
+      <Link to="/">
+        <HeaderLogo className="navbar__logo" />
+      </Link>
       <ul>
         <li>
-          <a href="">Home</a>
+          <Link to="/">Home</Link>
         </li>
         <li>
-          <a href="">Listings</a>
+          <Link to="search">Listings</Link>
         </li>
         <li>
-          <a href="">Watchlist</a>
+          <Link to="wishlist">Wishlist</Link>
         </li>
         <li>
-          <a href="">Login</a>
+          <Link to="">Login</Link>
         </li>
         <li>
-          <a href="">Sign Up</a>
+          <Link to="">Sign Up</Link>
         </li>
       </ul>
     </nav>

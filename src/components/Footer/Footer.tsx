@@ -5,12 +5,15 @@ import FacebookIcon from "../../icons/FacebookIcon";
 import InstagramIcon from "../../icons/InstagramIcon";
 import TweeterIcon from "../../icons/TweeterIcon";
 import LinkedinIcon from "../../icons/LinkedinIcon";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
     <footer className="footer">
       <div className="footer__leftside">
-        <FooterLogo />
+        <Link to="/">
+          <FooterLogo />
+        </Link>
         <div className="support-box">
           <div className="support-box__phone">
             <span>Total Free Customer Care</span>
