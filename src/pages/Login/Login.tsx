@@ -22,15 +22,15 @@ const Login = () => {
             <label>Password</label>
             <input type="password" placeholder="Enter Password" />
           </div>
+
+          <button className="login__signin-button">Sign in</button>
+          <p className="login__text-or">OR</p>
+
+          <button className="login__google-button">
+            <GoogleIcon className="google-icon" height="20" width="20" />
+            Continue with Google
+          </button>
         </form>
-
-        <button className="login__signin-button">Sign in</button>
-        <span className="login__text-or">OR</span>
-
-        <button className="login__google-button">
-          <GoogleIcon className="google-icon" height="20" width="20" />
-          Continue with Google
-        </button>
       </div>
     </div>
   );

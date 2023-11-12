@@ -1,25 +1,25 @@
 @import "./../../sass/variables.scss";
 @import "./../../sass/mixins.scss";
 
-.loginpage {
+.registerpage {
   padding: 3rem;
-  padding-top: 15rem;
+  padding-top: 12rem;
   min-height: 100vh;
 }
-.login,
-.login__field {
+.register,
+.register__field {
   display: flex;
   flex-direction: column;
 }
 
-.login__field label {
+.register__field label {
   @include normal-text-mixin;
   margin-bottom: 1rem;
   margin-top: 3rem;
   font-weight: 600;
 }
 
-.login {
+.register {
   box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
     rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
   gap: 2rem;
@@ -48,8 +48,9 @@
     margin-top: 2rem;
   }
 
-  &__signin-button,
+  &__register-button,
   &__google-button {
+    width: 100%;
     padding: 1.5rem 3rem;
     text-align: center;
     cursor: pointer;
@@ -57,15 +58,14 @@
     @include normal-text-mixin;
     border-radius: 1rem;
     font-weight: 600;
-    width: 100%;
     margin-top: 2rem;
   }
-  &__signin-button {
+  &__register-button {
     background-color: $secondary-color;
   }
   &__google-button {
     background-color: $background-white;
-    width: 100%;
+
     position: relative;
     box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
       rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
