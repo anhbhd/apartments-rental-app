@@ -1,5 +1,5 @@
 body {
-  font-family: "Inter", sans-serif;
+  font-family: "Inter", "system-ui", "Avenir", "Helvetica", "Arial", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -9,6 +9,27 @@ body {
   padding: 0;
   box-sizing: border-box;
 }
-:root {
+html {
   font-size: 62.5%;
+}
+
+::-webkit-scrollbar {
+  width: 0.8rem;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }

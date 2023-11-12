@@ -1,7 +1,7 @@
 import React from "react";
-import FooterIcon from "../type/FooterIcon";
+import Icon from "../type/Icon";
 
-const FacebookIcon: React.FC<FooterIcon> = ({ width, height }) => {
+const FacebookIcon: React.FC<Icon> = ({ width, height }) => {
   return (
     <svg
       id="Capa_1"

@@ -35,7 +35,7 @@
   border-radius: 1.2rem;
   &:active,
   &:focus {
-    outline: 1px solid black;
+    outline: 2px solid black;
   }
 }
 
@@ -46,5 +46,18 @@
 
   &:hover {
     background-color: rgba($color: $secondary-color, $alpha: 0.5);
+  }
+}
+
+@mixin button-animation-onclick-mixin {
+  transition: all 0.5s;
+  border: none;
+  outline: none;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  &:hover {
+    transform: translateY(-2px);
+  }
+  &:active {
+    transform: translateY(3px);
   }
 }

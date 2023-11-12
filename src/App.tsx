@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import ApartmentsList from "./pages/ApartmentsList/ApartmentsList";
 import { Navigate, Route, Routes } from "react-router-dom";
+import Login from "./pages/Login/Login";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="home" element={<Navigate to="/" />} />
         <Route path="search" element={<ApartmentsList />} />
         <Route path="wishlist" element={<ApartmentsList />} />
+        <Route path="login" element={<Login />} />
         <Route path="checkout/:apartmentId" />
       </Routes>
 

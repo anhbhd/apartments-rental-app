@@ -1,9 +1,10 @@
 import React from "react";
-import FooterIcon from "../type/FooterIcon";
+import Icon from "../type/Icon";
 
-const LinkedinIcon: React.FC<FooterIcon> = ({ width, height }) => {
+const LinkedinIcon: React.FC<Icon> = ({ width, height, style }) => {
   return (
     <svg
+      style={style}
       height={height}
       viewBox="0 0 176 176"
       width={width}

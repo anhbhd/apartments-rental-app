@@ -27,8 +27,12 @@ const Footer = () => {
         <div className="social-box">
           <p>Follow us on social media</p>
           <p>
-            <FacebookIcon width="40" height="40" />
-            <InstagramIcon width="40" height="40" />
+            <Link to="https://www.facebook.com/ducanh.buihoang/">
+              <FacebookIcon width="40" height="40" />
+            </Link>
+            <Link to="https://www.instagram.com/ko_phai_duc_anh/">
+              <InstagramIcon width="40" height="40" />
+            </Link>
             <TweeterIcon width="40" height="40" />
             <LinkedinIcon width="40" height="40" />
           </p>

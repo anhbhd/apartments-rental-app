@@ -1,7 +1,7 @@
 import React from "react";
-import FooterIcon from "../type/FooterIcon";
+import Icon from "../type/Icon";
 
-const FullStar: React.FC<FooterIcon> = ({ width, height, className }) => {
+const FullStar: React.FC<Icon> = ({ width, height, className }) => {
   return (
     <svg
       className={className}

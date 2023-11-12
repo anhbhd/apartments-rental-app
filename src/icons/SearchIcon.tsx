@@ -1,9 +1,10 @@
 import React from "react";
-import FooterIcon from "../type/FooterIcon";
+import Icon from "../type/Icon";
 
-const SearchIcon: React.FC<FooterIcon> = ({ width, height, className }) => {
+const SearchIcon: React.FC<Icon> = ({ width, height, className, style }) => {
   return (
     <svg
+      style={style}
       className={className}
       enableBackground="new 0 0 48 48"
       height={height}
