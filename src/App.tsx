@@ -6,6 +6,7 @@ import ApartmentsList from "./pages/ApartmentsList/ApartmentsList";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
+import Wishlist from "./pages/Wishlist/Wishlist";
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Navigate to="/" />} />
         <Route path="/search" element={<ApartmentsList />} />
-        <Route path="/wishlist" element={<ApartmentsList />} />
+        <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Register />} />
         <Route path="/checkout/:apartmentId" />

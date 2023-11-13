@@ -61,3 +61,23 @@
     transform: translateY(3px);
   }
 }
+
+@mixin css-space-for-all-page-desktop-mixin {
+  padding: 15rem;
+  padding-top: 12rem;
+  min-height: 100vh;
+  background-color: $secondary-background-color;
+}
+
+@mixin css-form-base-for-register-login-mixin {
+  box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
+    rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+  gap: 2rem;
+  border-radius: 1rem;
+  padding: 3rem;
+  width: 50rem;
+  max-width: 100%;
+  margin-left: 50%;
+  transform: translateX(-50%);
+  background-color: $background-white;
+}

@@ -1,0 +1,25 @@
+@import "./../../sass/variables.scss";
+@import "./../../sass/mixins.scss";
+
+.wishlist-page {
+  @include css-space-for-all-page-desktop-mixin;
+  &__header-text {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+    span {
+      color: $secondary-color;
+    }
+  }
+  &__clear-button {
+    font-size: $normal-font-size;
+    cursor: pointer;
+    text-decoration: underline;
+    margin-bottom: 3rem;
+  }
+
+  &__wishlist-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+}

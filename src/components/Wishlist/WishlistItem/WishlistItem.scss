@@ -1,0 +1,47 @@
+@import "./../../../sass/variables.scss";
+@import "./../../../sass/mixins.scss";
+
+.wishlist-item {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border-radius: 1rem;
+  overflow: hidden;
+  max-width: 100%;
+  grid-template-rows: max-content;
+  position: relative;
+  &__img-container {
+    img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+  }
+  &__info {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 2rem;
+    justify-content: space-between;
+    font-size: $normal-font-size;
+    .name {
+      font-weight: 600;
+    }
+    .amenities {
+      display: flex;
+      justify-content: flex-start;
+      gap: 2rem;
+    }
+    .type {
+      text-decoration: underline;
+    }
+  }
+  &__actions {
+    position: absolute;
+    right: 2rem;
+    bottom: 2rem;
+
+    .icon {
+      font-size: 2rem;
+    }
+  }
+}

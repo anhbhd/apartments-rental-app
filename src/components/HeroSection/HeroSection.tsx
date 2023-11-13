@@ -12,11 +12,11 @@ const HeroSection = () => {
       </div>
       <div className="hero-section__call-to-actions">
         <button className="button">
-          <Link to="search">Our available Apartments</Link>
+          <Link to="/search">Our available Apartments</Link>
         </button>
 
         <button className="button">
-          <Link to="sign_up">Create an Account</Link>
+          <Link to="/signup">Create an Account</Link>
         </button>
       </div>
     </section>
