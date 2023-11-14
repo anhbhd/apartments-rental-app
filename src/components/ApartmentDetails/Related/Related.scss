@@ -1,0 +1,13 @@
+@import "./../index.scss";
+.related {
+  margin-top: 3rem;
+  @include apartment-detail-base-style-section-mixin;
+  &__text-lg {
+    @include title-section-mixin;
+    margin-bottom: 1rem;
+  }
+  &__text-sm {
+    font-size: $normal-font-size;
+    margin-bottom: 3rem;
+  }
+}

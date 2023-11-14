@@ -7,6 +7,8 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import Wishlist from "./pages/Wishlist/Wishlist";
+import ApartmentDetails from "./pages/ApartmentDetails/ApartmentDetails";
+import PersonalInfo from "./pages/PersonalInfo/PersonalInfo";
 
 function App() {
   return (
@@ -20,7 +22,8 @@ function App() {
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Register />} />
-        <Route path="/checkout/:apartmentId" />
+        <Route path="/personal_info" element={<PersonalInfo />} />
+        <Route path="/checkout/:apartmentId" element={<ApartmentDetails />} />
       </Routes>
 
       <Footer />

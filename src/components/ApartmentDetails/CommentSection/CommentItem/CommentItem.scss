@@ -1,0 +1,44 @@
+@import "./../../index.scss";
+
+.comment-item {
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px;
+
+  margin-bottom: 2rem;
+  &__info-rating {
+    display: flex;
+    flex-wrap: wrap;
+    font-size: $normal-font-size;
+    gap: 3rem;
+    margin-bottom: 3rem;
+    .ava-container {
+      width: 6rem;
+      border-radius: 5rem;
+      overflow: hidden;
+      img {
+        width: 100%;
+        object-fit: contain;
+      }
+    }
+    .text-container {
+      flex-direction: column;
+      .username {
+        font-weight: 600;
+      }
+    }
+    .text-container,
+    .stars-rating {
+      display: flex;
+      justify-content: space-between;
+    }
+    .stars-rating {
+      color: $secondary-color;
+      font-size: 1.8rem;
+    }
+  }
+
+  &__text-comment {
+    font-size: $normal-font-size;
+  }
+}

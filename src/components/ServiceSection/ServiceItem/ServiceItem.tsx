@@ -1,5 +1,6 @@
 import React from "react";
 import "./ServiceItem.scss";
+import { Link } from "react-router-dom";
 
 interface IServiceItemProps {
   img: any;
@@ -19,7 +20,9 @@ const ServiceItem = ({
       </div>
       <p className="service-item__name">{serviceName}</p>
       <p className="service-item__short-description">{shortDescription}</p>
-      <button className="service-item__action">Discovery now</button>
+      <Link to="/search">
+        <button className="service-item__action">Discovery now</button>
+      </Link>
     </div>
   );
 };

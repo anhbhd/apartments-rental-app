@@ -1,0 +1,41 @@
+@import "./../../sass/variables.scss";
+@import "./../../sass/mixins.scss";
+
+.apartment-details-page {
+  @include css-space-for-all-page-desktop-mixin;
+  .apartment-details {
+    .apartment-details__info {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-auto-rows: max-content;
+      border-radius: 1.5rem;
+      box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+      padding: 3rem;
+      .text-info {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        font-size: $normal-font-size;
+        .name {
+          @include title-section-mixin;
+        }
+        .amenities {
+          display: flex;
+          gap: 1rem;
+        }
+      }
+
+      .action-and-price {
+        text-align: right;
+        .price {
+          @include title-section-mixin;
+          font-size: 2rem;
+          font-weight: 650;
+        }
+        .action {
+          font-size: 3rem;
+        }
+      }
+    }
+  }
+}
