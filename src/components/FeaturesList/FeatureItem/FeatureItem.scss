@@ -70,6 +70,13 @@
       justify-content: space-between;
       &__watch-later .icon {
         font-size: 3rem;
+        transition: all 0.5s;
+        &:hover {
+          transform: translateY(-1px);
+        }
+        &:active {
+          transform: translateY(1px);
+        }
       }
     }
   }

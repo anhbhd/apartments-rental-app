@@ -34,6 +34,15 @@
         }
         .action {
           font-size: 3rem;
+          .icon {
+            transition: all 0.5s;
+            &:hover {
+              transform: translateY(-1px);
+            }
+            &:active {
+              transform: translateY(1px);
+            }
+          }
         }
       }
     }

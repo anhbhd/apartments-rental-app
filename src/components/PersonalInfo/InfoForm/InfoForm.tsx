@@ -12,7 +12,6 @@ interface IFormState {
   phoneNumber: string;
   gender: string;
   hometown: string;
-  password: string;
 }
 
 const InfoForm: React.FC<IInfoFormProps> = ({ className = "", style }) => {
@@ -23,7 +22,6 @@ const InfoForm: React.FC<IInfoFormProps> = ({ className = "", style }) => {
     phoneNumber: "",
     gender: "",
     hometown: "",
-    password: "",
   });
 
   const onSubmitHandler = (e: React.FormEvent) => {
@@ -98,18 +96,7 @@ const InfoForm: React.FC<IInfoFormProps> = ({ className = "", style }) => {
           disabled={!isEditing}
         />
       </div>
-      <div className="info-form__input-field">
-        <label>Password</label>
-        <input
-          type="password"
-          name="password"
-          value={formState.password}
-          onChange={(e) =>
-            setFormState({ ...formState, password: e.target.value })
-          }
-          disabled={!isEditing}
-        />
-      </div>
+
       <div className="info-form__button-container">
         {isEditing && <button type="submit">Save</button>}
       </div>

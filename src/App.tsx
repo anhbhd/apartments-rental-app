@@ -1,32 +1,34 @@
 import Home from "./pages/Home/Home";
 import "./App.scss";
-import Navbar from "./components/Navbar/Navbar";
-import Footer from "./components/Footer/Footer";
+
 import ApartmentsList from "./pages/ApartmentsList/ApartmentsList";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import Wishlist from "./pages/Wishlist/Wishlist";
 import ApartmentDetails from "./pages/ApartmentDetails/ApartmentDetails";
 import PersonalInfo from "./pages/PersonalInfo/PersonalInfo";
+import MyRentalApplications from "./pages/MyRentalApplications/MyRentalApplications";
+import ScrollToTop from "./utils/ScrollToTop";
+import MainLayout from "./layouts/MainLayout/MainLayout";
 
 function App() {
   return (
     <div className="App">
-      <Navbar />
+      <ScrollToTop />
 
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/home" element={<Navigate to="/" />} />
-        <Route path="/search" element={<ApartmentsList />} />
-        <Route path="/wishlist" element={<Wishlist />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Register />} />
-        <Route path="/personal_info" element={<PersonalInfo />} />
-        <Route path="/checkout/:apartmentId" element={<ApartmentDetails />} />
+        <Route path="/" element={<MainLayout />}>
+          <Route index={true} element={<Home />} />
+          <Route path="search" element={<ApartmentsList />} />
+          <Route path="wishlist" element={<Wishlist />} />
+          <Route path="login" element={<Login />} />
+          <Route path="signup" element={<Register />} />
+          <Route path="personal_info" element={<PersonalInfo />} />
+          <Route path="my_rental_apps" element={<MyRentalApplications />} />
+          <Route path="/checkout/:apartmentId" element={<ApartmentDetails />} />
+        </Route>
       </Routes>
-
-      <Footer />
     </div>
   );
 }

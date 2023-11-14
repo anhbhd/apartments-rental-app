@@ -1,5 +1,3 @@
-import React from "react";
-
 import HeroSection from "../../components/HeroSection/HeroSection";
 import "./Home.scss";
 import ServiceSection from "../../components/ServiceSection/ServiceSection";

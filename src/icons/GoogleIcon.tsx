@@ -6,7 +6,7 @@ const GoogleIcon: React.FC<Icon> = ({ width, height, className }) => {
     <svg
       className={className}
       id="Capa_1"
-      enable-background="new 0 0 512 512"
+      enableBackground="new 0 0 512 512"
       height={height}
       width={width}
       viewBox="0 0 512 512"

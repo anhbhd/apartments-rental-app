@@ -1,0 +1,13 @@
+@import "./../../index.scss";
+
+.app-item {
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+    rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  padding: 1.6rem 2rem;
+  display: grid;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  margin-top: 1rem;
+  grid-template-columns: 20rem 1fr 10rem auto;
+  font-size: $normal-font-size;
+}

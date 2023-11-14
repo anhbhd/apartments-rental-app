@@ -1,0 +1,73 @@
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+.custom-select {
+  position: relative;
+  display: inline-block;
+  font-size: 1.8rem;
+  min-width: 20rem;
+  border-radius: 1rem;
+}
+
+.select-header {
+  padding: 1rem;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  border-radius: 1rem;
+  font-weight: 500;
+  position: relative;
+  .icon-down {
+    position: absolute;
+    right: 2rem;
+    font-size: 2rem;
+    transform: translateY(-50%);
+    top: 45%;
+  }
+}
+
+.options-list {
+  list-style: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 15rem;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  background-color: white;
+}
+
+.options-list li {
+  padding: 1rem;
+  cursor: pointer;
+}
+
+.options-list li:hover {
+  background-color: #f0f0f0;
+}
+
+.custom-select.open .select-header {
+  border-bottom: 1px solid transparent;
+  border-radius: 5px 5px 0 0;
+}
+
+.custom-select.open .options-list {
+  display: block;
+}

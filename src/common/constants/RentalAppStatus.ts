@@ -1,0 +1,7 @@
+export enum RentAppStatus {
+  PENDING = "PENDING",
+  PROCESSING = "PROCESSING",
+  RENTING = "RENTING",
+  EXPIRED = "EXPIRED",
+  CANCELED = "CANCELED",
+}

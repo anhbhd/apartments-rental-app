@@ -1,0 +1,5 @@
+@import "./../../sass/variables.scss";
+@import "./../../sass/mixins.scss";
+.my-rental-app {
+  @include css-space-for-all-page-desktop-mixin;
+}
