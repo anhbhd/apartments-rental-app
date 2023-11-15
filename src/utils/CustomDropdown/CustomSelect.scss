@@ -1,38 +1,40 @@
-::-webkit-scrollbar {
-  width: 4px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 5px grey;
-  border-radius: 10px;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 10px;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
 .custom-select {
   position: relative;
   display: inline-block;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   min-width: 20rem;
   border-radius: 1rem;
+  background-color: white;
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
 }
 
 .select-header {
-  padding: 1rem;
+  padding: 1.5rem;
   border: 1px solid #ccc;
   cursor: pointer;
   border-radius: 1rem;
   font-weight: 500;
   position: relative;
+
   .icon-down {
     position: absolute;
     right: 2rem;
@@ -70,4 +72,5 @@
 
 .custom-select.open .options-list {
   display: block;
+  z-index: 10;
 }

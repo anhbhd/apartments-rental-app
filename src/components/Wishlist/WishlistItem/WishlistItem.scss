@@ -22,6 +22,7 @@
     display: flex;
     flex-direction: column;
     padding: 1rem 2rem;
+    gap: 0.5rem;
     justify-content: space-between;
     font-size: $normal-font-size;
     .name {

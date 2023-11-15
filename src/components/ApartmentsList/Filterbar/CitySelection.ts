@@ -1,27 +1,27 @@
-import { Selection } from "../../../type/Selection";
-export const citiesSelections: Selection[] = [
+import { Option } from "../../../type/Option";
+export const citiesSelections: Option[] = [
   {
-    text: "All",
+    label: "All",
     value: 0,
   },
   {
-    text: "Hà nội",
+    label: "Hà nội",
     value: 1,
   },
   {
-    text: "Hải phòng",
+    label: "Hải phòng",
     value: 2,
   },
   {
-    text: "Thái nguyên",
+    label: "Thái nguyên",
     value: 3,
   },
   {
-    text: "Hà nam",
+    label: "Hà nam",
     value: 4,
   },
   {
-    text: "Hà giang",
+    label: "Hà giang",
     value: 4,
   },
 ];

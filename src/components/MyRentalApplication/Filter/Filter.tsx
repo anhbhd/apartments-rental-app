@@ -1,11 +1,7 @@
 import React from "react";
 import "./Filter.scss";
 import CustomSelect from "../../../utils/CustomDropdown/CustomSelect";
-
-interface Option {
-  value: string;
-  label: string;
-}
+import { Option } from "../../../type/Option";
 
 const options: Option[] = [
   { value: "PENDING", label: "Pending" },

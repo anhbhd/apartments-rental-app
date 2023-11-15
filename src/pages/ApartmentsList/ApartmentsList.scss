@@ -3,7 +3,6 @@
 
 .aparments-list {
   min-height: 100vh;
-  background-color: $secondary-background-color;
   @include padding-section-mixin-desktop;
   padding-top: 15rem;
 
@@ -25,7 +24,6 @@
     .filterbar {
       grid-area: filterbar;
       padding: 4rem;
-      box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     }
     .apartments-result {
       grid-area: results;

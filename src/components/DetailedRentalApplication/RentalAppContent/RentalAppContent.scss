@@ -1,0 +1,61 @@
+.rental-app-content {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px,
+    rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+  border-radius: 0.8rem;
+  padding: 3rem;
+  margin-top: 3rem;
+  font-size: 1.5rem;
+
+  &__info .line,
+  &__tenant-info .line {
+    display: grid;
+    grid-template-columns: 15rem 1fr;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+    label {
+      font-weight: 600;
+    }
+  }
+
+  &__info {
+    label {
+      font-weight: 600;
+    }
+    .note {
+      margin-bottom: 5rem;
+      label {
+        display: inline-block;
+        margin-bottom: 1rem;
+      }
+    }
+  }
+  &__apartment-info {
+    p {
+      margin-bottom: 1.5rem;
+    }
+    a {
+      display: inline-block;
+    }
+  }
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    button {
+      padding: 1rem 2.5rem;
+      font-size: 1.4rem;
+      cursor: pointer;
+      border-radius: 1rem;
+      border: none;
+      outline: none;
+      transition: all 0.3s;
+      box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+        rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+      color: white;
+      background-color: rgba($color: #d75642, $alpha: 0.8);
+      &:active,
+      &:focus {
+        box-shadow: rgba(3, 102, 214, 0.3) 0px 0px 0px 3px;
+      }
+    }
+  }
+}

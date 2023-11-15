@@ -7,6 +7,9 @@ import Pagination from "../../components/ApartmentsList/Pagination/Pagination";
 const MyRentalApplications = () => {
   return (
     <main className="my-rental-app">
+      <h3 className="my-rental-app__title">
+        My <span>rental applications</span>
+      </h3>
       <Filter />
       <ApplicationsList />
       <Pagination />

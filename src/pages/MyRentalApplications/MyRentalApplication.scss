@@ -2,4 +2,8 @@
 @import "./../../sass/mixins.scss";
 .my-rental-app {
   @include css-space-for-all-page-desktop-mixin;
+  &__title {
+    @include title-section-mixin;
+    margin-bottom: 2rem;
+  }
 }

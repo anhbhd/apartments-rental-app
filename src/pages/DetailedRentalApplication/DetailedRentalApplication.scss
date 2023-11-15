@@ -1,0 +1,11 @@
+@import "../../sass/variables.scss";
+@import "../../sass/mixins.scss";
+
+.detailed-rental-app {
+  @include css-space-for-all-page-desktop-mixin;
+
+  &__title {
+    @include title-section-mixin;
+    font-size: 2.4rem;
+  }
+}

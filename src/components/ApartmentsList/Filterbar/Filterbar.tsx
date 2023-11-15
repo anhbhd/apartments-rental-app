@@ -1,29 +1,28 @@
 import { useState } from "react";
-import { Selection } from "../../../type/Selection";
+import { Option } from "../../../type/Option";
 
 import SearchIcon from "../../../icons/SearchIcon";
 import { starsSelections } from "./StarSelections";
 
 import { citiesSelections } from "./CitySelection";
 import "./Filterbar.scss";
+import CustomSelect from "../../../utils/CustomDropdown/CustomSelect";
 const Filterbar = () => {
-  const [selectedStars, setSelectedStars] = useState<Selection>(
+  const [selectedStars, setSelectedStars] = useState<Option>(
     starsSelections[0]
   );
-  const [selectedCity, setSelectedCity] = useState<Selection>(
-    starsSelections[0]
-  );
+  const [selectedCity, setSelectedCity] = useState<Option>(starsSelections[0]);
   const [starsSeletectBoxIsOpen, setStarsSeletecBoxtIsOpen] =
     useState<boolean>(false);
 
   const [citiesSeletectBoxIsOpen, setCitiesSeletecBoxtIsOpen] =
     useState<boolean>(false);
 
-  const handleStarSelection = (option: Selection) => {
+  const handleStarSelection = (option: Option) => {
     setSelectedStars(option);
     setStarsSeletecBoxtIsOpen(!starsSeletectBoxIsOpen);
   };
-  const handleCitySelection = (option: Selection) => {
+  const handleCitySelection = (option: Option) => {
     setSelectedCity(option);
     setCitiesSeletecBoxtIsOpen(!citiesSeletectBoxIsOpen);
   };
@@ -98,70 +97,35 @@ const Filterbar = () => {
       {/* custom select box for stars selection */}
       <div className="filterbar__section">
         <p className="field-label">Fill by Stars</p>
-        <div
-          className="selected-stars"
-          onClick={() => setStarsSeletecBoxtIsOpen(!starsSeletectBoxIsOpen)}
-        >
-          {selectedStars.text}
-        </div>
-
-        <span className="selectbox-container selectbox-stars-container">
-          {starsSeletectBoxIsOpen && (
-            <ul className="selectbox-ul selectbox-stars">
-              {starsSelections.map((item) => (
-                <li key={item.value} onClick={() => handleStarSelection(item)}>
-                  {item.text}
-                </li>
-              ))}
-            </ul>
-          )}
-        </span>
+        <CustomSelect
+          className="select-box"
+          onSelect={handleStarSelection}
+          options={starsSelections}
+          selected={starsSelections[0]}
+        />
       </div>
 
       {/* custom select box for city selection */}
       <div className="filterbar__section">
         <p className="field-label">Fill by City</p>
-        <div
-          className="selected-city"
-          onClick={() => setCitiesSeletecBoxtIsOpen(!citiesSeletectBoxIsOpen)}
-        >
-          {selectedCity.text}
-        </div>
-
-        <span className="selectbox-container ">
-          {citiesSeletectBoxIsOpen && (
-            <ul className="selectbox-ul selectbox-cities">
-              {citiesSelections.map((item) => (
-                <li key={item.value} onClick={() => handleCitySelection(item)}>
-                  {item.text}
-                </li>
-              ))}
-            </ul>
-          )}
-        </span>
+        <CustomSelect
+          className="select-box"
+          onSelect={handleCitySelection}
+          options={citiesSelections}
+          selected={citiesSelections[0]}
+        />
       </div>
 
       {/* custom select box for District selection */}
       <div className="filterbar__section">
         <p className="field-label">Fill by District</p>
-        <div
-          className="selected-city"
-          onClick={() => setCitiesSeletecBoxtIsOpen(!citiesSeletectBoxIsOpen)}
-        >
-          {selectedCity.text}
-        </div>
 
-        <span className="selectbox-container ">
-          {citiesSeletectBoxIsOpen && (
-            <ul className="selectbox-ul selectbox-cities">
-              {citiesSelections.map((item) => (
-                <li key={item.value} onClick={() => handleCitySelection(item)}>
-                  {item.text}
-                </li>
-              ))}
-            </ul>
-          )}
-        </span>
+        <CustomSelect
+          className="select-box"
+          onSelect={handleCitySelection}
+          options={citiesSelections}
+          selected={citiesSelections[0]}
+        />
       </div>
 
       <button className="filterbar__search-btn">Search</button>
