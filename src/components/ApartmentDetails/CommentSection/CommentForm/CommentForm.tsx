@@ -7,7 +7,7 @@ const CommentForm = () => {
       <h3 className="comment-form__title">Write your comment</h3>
       <form className="comment-form__form">
         <p className="stars-rating">
-          <p>Give us a rating</p>
+          <span>Give us a rating</span>
           <StarsRating />
         </p>
 

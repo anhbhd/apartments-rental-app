@@ -6,19 +6,30 @@ import ApartmentsListResult from "../../components/ApartmentsList/ApartmentsList
 import Pagination from "../../components/ApartmentsList/Pagination/Pagination";
 import { db } from "../../config/firebase_config";
 import { collection, getDocs } from "@firebase/firestore";
+import { Apartment } from "../../type/Apartment";
 
 const ApartmentsList: React.FC = () => {
-  // const [users, setUsers] = useState<any[]>([]);
-  // const usersCollectionRef = collection(db, "users");
-  // useEffect(() => {
-  //   const getApartments = async () => {
-  //     const data = await getDocs(usersCollectionRef);
-  //     console.log(data);
-  //     setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-  //     console.log(users);
-  //   };
-  //   getApartments();
-  // }, []);
+  const [apartments, setApartments] = useState<Apartment[]>([]);
+
+  // const [isLoading, setIsLoading] = useState(true);
+  // const [error, setError] = useState("");
+  useEffect(() => {
+    const apartmentsCollectionRef = collection(db, "apartments");
+    const getAllApartments = async () => {
+      const apartmentsSnapshot = await getDocs(apartmentsCollectionRef);
+      let apartmentsData: Apartment[] = [];
+      if (apartmentsSnapshot) {
+        apartmentsSnapshot.docs.forEach((doc: any) => {
+          apartmentsData.push({
+            ...doc.data(),
+            id: doc.id,
+          });
+        });
+      }
+      setApartments(apartmentsData);
+    };
+    getAllApartments();
+  }, []);
 
   return (
     <main className="aparments-list">
@@ -30,7 +41,7 @@ const ApartmentsList: React.FC = () => {
       </div>
       <div className="aparments-list__main-content">
         <Filterbar />
-        <ApartmentsListResult />
+        <ApartmentsListResult apartmentsList={apartments} />
       </div>
 
       <nav className="aparments-list__pagination">

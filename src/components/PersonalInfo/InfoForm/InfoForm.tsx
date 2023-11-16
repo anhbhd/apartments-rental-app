@@ -11,7 +11,6 @@ interface IFormState {
   fullName: string;
   phoneNumber: string;
   gender: string;
-  hometown: string;
 }
 
 const InfoForm: React.FC<IInfoFormProps> = ({ className = "", style }) => {
@@ -21,7 +20,6 @@ const InfoForm: React.FC<IInfoFormProps> = ({ className = "", style }) => {
     fullName: "",
     phoneNumber: "",
     gender: "",
-    hometown: "",
   });
 
   const onSubmitHandler = (e: React.FormEvent) => {
@@ -80,18 +78,6 @@ const InfoForm: React.FC<IInfoFormProps> = ({ className = "", style }) => {
           value={formState.gender}
           onChange={(e) =>
             setFormState({ ...formState, gender: e.target.value })
-          }
-          disabled={!isEditing}
-        />
-      </div>
-      <div className="info-form__input-field">
-        <label>Hometown</label>
-        <input
-          type="text"
-          name="hometown"
-          value={formState.hometown}
-          onChange={(e) =>
-            setFormState({ ...formState, hometown: e.target.value })
           }
           disabled={!isEditing}
         />

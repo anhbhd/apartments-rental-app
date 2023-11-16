@@ -12,10 +12,12 @@
   grid-template-rows: max-content;
   position: relative;
   &__img-container {
+    padding: 1rem;
     img {
       height: 100%;
       width: 100%;
       object-fit: cover;
+      border-radius: 1rem;
     }
   }
   &__info {

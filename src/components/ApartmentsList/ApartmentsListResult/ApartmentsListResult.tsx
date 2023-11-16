@@ -1,12 +1,22 @@
 import React from "react";
-import FeatureItem from "../../../components/FeaturesList/FeatureItem/FeatureItem";
-import imgItem from "./../../../assets/FeatureSection/feature-item-image.jpg";
+import ApartmentItem from "../../FeaturesList/ApartmentItem/ApartmentItem";
 
-const ApartmentsListResult = () => {
+import { Apartment } from "../../../type/Apartment";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../../../config/firebase_config";
+
+interface IApartmentsListResultProps {
+  className?: string;
+  apartmentsList: Apartment[];
+}
+const ApartmentsListResult = ({
+  className,
+  apartmentsList,
+}: IApartmentsListResultProps) => {
   return (
-    <div className="apartments-result">
-      {Array.from({ length: 6 }, (_, index) => (
-        <FeatureItem key={index} className="" imgItem={imgItem} />
+    <div className={`apartments-result ${className || ""}`}>
+      {apartmentsList.map((apartment) => (
+        <ApartmentItem apartment={apartment} key={apartment.id} />
       ))}
     </div>
   );

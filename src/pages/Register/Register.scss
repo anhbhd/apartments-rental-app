@@ -14,13 +14,13 @@
 .register__field label {
   @include normal-text-mixin;
   margin-bottom: 1rem;
-  margin-top: 3rem;
   font-weight: 600;
 }
 
 .register {
   @include css-form-base-for-register-login-mixin;
   &__text-header {
+    margin-bottom: 2rem;
     &--text-lg {
       @include header-section-text-mixin;
     }
@@ -30,8 +30,21 @@
   }
 
   &__field {
+    position: relative;
+    margin-bottom: 3rem;
     input {
       @include input-fillter-space-mixin;
+      &.invalid {
+        outline: 2px solid red;
+        background-color: rgba(255, 99, 71, 0.2);
+      }
+    }
+    .error-msg-form {
+      position: absolute;
+      bottom: -2rem;
+      font-size: 1.2rem;
+      left: 0;
+      color: red;
     }
   }
   &__text-or {
@@ -49,12 +62,12 @@
     @include normal-text-mixin;
     border-radius: 1rem;
     font-weight: 600;
-    margin-top: 2rem;
   }
   &__register-button {
     background-color: $secondary-color;
   }
   &__google-button {
+    margin-top: 2rem;
     background-color: $background-white;
     position: relative;
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,

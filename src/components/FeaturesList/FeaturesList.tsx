@@ -1,7 +1,7 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import FeatureItem from "./FeatureItem/FeatureItem";
+import FeatureItem from "./ApartmentItem/ApartmentItem";
 import imgItem from "./../../assets/FeatureSection/feature-item-image.jpg";
 import "./FeaturesList.scss";
 
@@ -33,7 +33,7 @@ const FeaturesList = () => {
           },
         }}
       >
-        <SwiperSlide>
+        {/* <SwiperSlide>
           <FeatureItem imgItem={imgItem} />
         </SwiperSlide>
         <SwiperSlide>
@@ -47,7 +47,7 @@ const FeaturesList = () => {
         </SwiperSlide>
         <SwiperSlide>
           <FeatureItem imgItem={imgItem} />
-        </SwiperSlide>
+        </SwiperSlide> */}
       </Swiper>
     </div>
   );

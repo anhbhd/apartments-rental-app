@@ -31,7 +31,10 @@ function App() {
             path="my_rental_apps/:rentalAppId"
             element={<DetailedRentalApplication />}
           />
-          <Route path="/checkout/:apartmentId" element={<ApartmentDetails />} />
+          <Route
+            path="/apartments/:apartmentId"
+            element={<ApartmentDetails />}
+          />
         </Route>
       </Routes>
     </div>

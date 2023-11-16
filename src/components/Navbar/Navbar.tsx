@@ -21,6 +21,12 @@ const Navbar = () => {
           <Link to="/wishlist">Wishlist</Link>
         </li>
         <li>
+          <Link to="/my_rental_apps">Rental applications</Link>
+        </li>
+        <li>
+          <Link to="/personal_info">Personal Info</Link>
+        </li>
+        <li>
           <Link to="/login">Login</Link>
         </li>
         <li>

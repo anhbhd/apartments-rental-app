@@ -13,13 +13,14 @@
 .login__field label {
   @include normal-text-mixin;
   margin-bottom: 1rem;
-  margin-top: 3rem;
+  margin-top: 1rem;
   font-weight: 600;
 }
 
 .login {
   @include css-form-base-for-register-login-mixin;
   &__text-header {
+    margin-bottom: 2rem;
     &--text-lg {
       @include header-section-text-mixin;
     }
@@ -29,8 +30,21 @@
   }
 
   &__field {
+    position: relative;
+    margin-bottom: 3rem;
     input {
       @include input-fillter-space-mixin;
+      &.invalid {
+        outline: 2px solid red;
+        background-color: rgba(255, 99, 71, 0.2);
+      }
+    }
+    .error-msg-form {
+      position: absolute;
+      bottom: -2rem;
+      font-size: 1.2rem;
+      left: 0;
+      color: red;
     }
   }
   &__text-or {
@@ -48,12 +62,12 @@
     border-radius: 1rem;
     font-weight: 600;
     width: 100%;
-    margin-top: 2rem;
   }
   &__signin-button {
     background-color: $secondary-color;
   }
   &__google-button {
+    margin-top: 2rem;
     background-color: $background-white;
     width: 100%;
     position: relative;

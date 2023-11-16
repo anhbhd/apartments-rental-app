@@ -2,7 +2,7 @@ import React from "react";
 
 import "./Related.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
-import FeatureItem from "../../FeaturesList/FeatureItem/FeatureItem";
+import FeatureItem from "../../FeaturesList/ApartmentItem/ApartmentItem";
 
 import imgItem from "./../../../assets/FeatureSection/feature-item-image.jpg";
 
@@ -11,7 +11,7 @@ const Related = () => {
     <section className="related">
       <h3 className="related__text-lg">You might be interested</h3>
       <p className="related__text-sm">Find out some more our features</p>
-      <Swiper
+      {/* <Swiper
         className="features-list__feature-item-container"
         spaceBetween={50}
         slidesPerView={3}
@@ -31,21 +31,21 @@ const Related = () => {
         }}
       >
         <SwiperSlide>
-          <FeatureItem imgItem={imgItem} />
+          <FeatureItem  />
         </SwiperSlide>
         <SwiperSlide>
-          <FeatureItem imgItem={imgItem} />
+          <FeatureItem  />
         </SwiperSlide>
         <SwiperSlide>
-          <FeatureItem imgItem={imgItem} />
+          <FeatureItem  />
         </SwiperSlide>
         <SwiperSlide>
-          <FeatureItem imgItem={imgItem} />
+          <FeatureItem  />
         </SwiperSlide>
         <SwiperSlide>
-          <FeatureItem imgItem={imgItem} />
+          <FeatureItem  />
         </SwiperSlide>
-      </Swiper>
+      </Swiper> */}
     </section>
   );
 };

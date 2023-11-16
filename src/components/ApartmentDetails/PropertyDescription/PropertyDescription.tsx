@@ -1,19 +1,23 @@
 import React from "react";
 
 import "./PropertyDescription.scss";
-const PropertyDescription = () => {
+import { Apartment } from "../../../type/Apartment";
+
+interface IPropertyDescriptionProps {
+  apartment: Apartment;
+  className?: string;
+}
+
+const PropertyDescription = ({
+  apartment,
+  className,
+}: IPropertyDescriptionProps) => {
   return (
-    <section className="property-description">
+    <section className={`property-description ${className || ""}`}>
       <div className="property-description-container">
         <h3 className="property-description__title">Property Description</h3>
         <p className="property-description__des-text">
-          This 3-bed with a loft, 2-bath home in the gated community of The
-          Hideout has it all. From the open floor plan to the abundance of light
-          from the windows, this home is perfect for entertaining. The living
-          room and dining room have vaulted ceilings and a beautiful fireplace.
-          You will love spending time on the deck taking in the beautiful views.
-          In the kitchen, you'll find stainless steel appliances and a tile
-          backsplash, as well as a breakfast bar.
+          {apartment?.detailedDescription}
         </p>
       </div>
 
