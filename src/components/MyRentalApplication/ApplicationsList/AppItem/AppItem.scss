@@ -11,4 +11,7 @@
   grid-template-columns: 20rem 1fr 10rem auto;
   font-size: $normal-font-size;
   background-color: $background-white;
+  a {
+    color: $main-text-color;
+  }
 }

@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import "./InfoForm.scss";
+import { User } from "../../../type/User";
 
 interface IInfoFormProps {
   className?: string;
   style?: React.CSSProperties;
+  userData: User;
 }
 
 interface IFormState {
@@ -13,7 +15,11 @@ interface IFormState {
   gender: string;
 }
 
-const InfoForm: React.FC<IInfoFormProps> = ({ className = "", style }) => {
+const InfoForm: React.FC<IInfoFormProps> = ({
+  className = "",
+  style,
+  userData,
+}) => {
   const [isEditing, setIsEditting] = useState(false);
   const [formState, setFormState] = useState<IFormState>({
     email: "",

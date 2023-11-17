@@ -1,17 +1,19 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth, db, signInWithGoogle } from "./../../config/firebase_config";
+import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { auth, db, provider } from "./../../config/firebase_config";
 import "./Register.scss";
 import GoogleIcon from "../../icons/GoogleIcon";
-import { doc, setDoc, Timestamp } from "firebase/firestore";
+import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { emailRegex } from "../../utils/regex";
+
 interface FormInputs {
   email: string;
   password: string;
   confirmPassword: string;
 }
-
-const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
 
 const Register: React.FC = () => {
   const [formInputs, setFormInputs] = useState<FormInputs>({
@@ -23,6 +25,10 @@ const Register: React.FC = () => {
   const [emailError, setEmailError] = useState<string>("");
   const [passwordError, setPasswordError] = useState<string>("");
   const [confirmPasswordError, setConfirmPasswordError] = useState<string>("");
+  const [promisedError, setPromisedError] = useState<string>();
+  const navigate = useNavigate();
+
+  const { setCredentialUserForApp } = useAuth();
 
   const validateEmail = () => {
     setEmailError(
@@ -49,6 +55,7 @@ const Register: React.FC = () => {
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormInputs({ ...formInputs, [name]: value });
+    setPromisedError("");
   };
 
   const handleRegisterFormSubmit = async (e: FormEvent) => {
@@ -65,23 +72,53 @@ const Register: React.FC = () => {
           formInputs.email,
           formInputs.password
         );
-        const usersDocRef = doc(db, `users/${response.user.uid}`);
+        const userDocRef = doc(db, `users/${response.user.uid}`);
         try {
-          await setDoc(usersDocRef, {
+          await setDoc(userDocRef, {
             email: response.user.email,
+            isAdmin: false,
             createdDate: Timestamp.now(),
           });
+          navigate("/login");
         } catch (err: any) {
-          console.log(err.message);
+          setPromisedError(err.code);
         }
       } catch (err: any) {
-        console.log(err.message);
+        setPromisedError(err.code);
       }
     }
   };
 
-  const handleSignInWithGoogle = () => {
-    signInWithGoogle();
+  const handleSignInWithGoogle = async () => {
+    try {
+      const response = await signInWithPopup(auth, provider);
+
+      const userDocRef = doc(db, `users/${response.user.uid}`);
+
+      setCredentialUserForApp({
+        uid: response.user.uid,
+        email: response.user.email,
+        displayName: response.user.displayName,
+        photoURL: response.user.photoURL,
+      });
+
+      try {
+        const userDocSnap = await getDoc(userDocRef);
+        if (!userDocSnap.exists()) {
+          await setDoc(userDocRef, {
+            email: response.user.email,
+            isAdmin: false,
+            createdDate: Timestamp.now(),
+          });
+        }
+      } catch (err: any) {
+        setPromisedError(err.code);
+      }
+
+      navigate("/");
+    } catch (err: any) {
+      setPromisedError(err.code);
+    }
   };
 
   return (
@@ -145,6 +182,7 @@ const Register: React.FC = () => {
           <GoogleIcon className="google-icon" height="20" width="20" />
           Continue with Google
         </button>
+        {promisedError && <p className="error-server">{promisedError}</p>}
       </div>
     </div>
   );

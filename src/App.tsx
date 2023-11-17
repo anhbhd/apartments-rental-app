@@ -27,6 +27,7 @@ function App() {
           <Route path="signup" element={<Register />} />
           <Route path="personal_info" element={<PersonalInfo />} />
           <Route path="my_rental_apps" element={<MyRentalApplications />} />
+          <Route path="my_rental_apps" element={<MyRentalApplications />} />
           <Route
             path="my_rental_apps/:rentalAppId"
             element={<DetailedRentalApplication />}

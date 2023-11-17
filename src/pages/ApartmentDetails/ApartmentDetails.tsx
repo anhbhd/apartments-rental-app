@@ -12,6 +12,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../config/firebase_config";
 import { Apartment } from "../../type/Apartment";
 import { formatter } from "./../../utils/FormatMoney";
+import { secondsToDateTime } from "../../utils/SecondToDate";
 
 const ApartmentDetails = () => {
   const { pathname } = useLocation();
@@ -43,9 +44,15 @@ const ApartmentDetails = () => {
             <p className="address">{apartment?.detailedAddress}</p>
             <p className="created-date">Created date: 26/1/2023</p>
             <p className="amenities">
-              <span>1 bed</span>
-              <span>1 bath</span>
-              <span>1200 sqm</span>
+              <span>
+                {apartment?.beds}{" "}
+                {(apartment?.beds as number) > 1 ? "beds" : "bed"}
+              </span>
+              <span>
+                {apartment?.baths}{" "}
+                {(apartment?.baths as number) > 1 ? "baths" : "bath"}
+              </span>
+              <span>{apartment?.area} sqm</span>
             </p>
           </div>
           <div className="action-and-price">
@@ -57,6 +64,7 @@ const ApartmentDetails = () => {
               {apartment && formatter.format(apartment.pricePerMonth)}/
               <em>month</em>
             </h3>
+            <button className="rent-btn">Rent</button>
           </div>
         </div>
 

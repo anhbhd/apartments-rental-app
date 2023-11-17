@@ -2,6 +2,7 @@ import React from "react";
 
 import "./PropertyDescription.scss";
 import { Apartment } from "../../../type/Apartment";
+import { formatter } from "../../../utils/FormatMoney";
 
 interface IPropertyDescriptionProps {
   apartment: Apartment;
@@ -26,23 +27,23 @@ const PropertyDescription = ({
         <div className="property-details">
           <div className="property-details__item">
             <label>Price</label>
-            <span>$252,000/month</span>
+            <span>{formatter.format(apartment?.pricePerMonth)}/month</span>
           </div>
           <div className="property-details__item">
             <label>Property Size</label>
-            <span>1500 sqm</span>
+            <span>{apartment?.area} sqm</span>
           </div>
           <div className="property-details__item">
             <label>Bathrooms</label>
-            <span>3</span>
+            <span>{apartment?.baths}</span>
           </div>
           <div className="property-details__item">
             <label>Bedrooms</label>
-            <span>4</span>
+            <span>{apartment?.beds}</span>
           </div>
           <div className="property-details__item">
             <label>Year Built</label>
-            <span>2018</span>
+            <span>{apartment?.yearBuild}</span>
           </div>
           <div className="property-details__item">
             <label>Property Type</label>
@@ -50,7 +51,7 @@ const PropertyDescription = ({
           </div>
           <div className="property-details__item">
             <label>Property Status</label>
-            <span>Available</span>
+            <span>{apartment?.rented ? "Rented" : "Available"}</span>
           </div>
         </div>
       </div>
@@ -61,15 +62,15 @@ const PropertyDescription = ({
           <div className="address-section__text-details">
             <p className="item">
               <label>Address</label>
-              <span>$252,000/month</span>
+              <span>{apartment?.detailedAddress}</span>
             </p>
             <p className="item">
               <label>City</label>
-              <span>1500 sqm</span>
+              <span>{apartment?.city}</span>
             </p>
             <p className="item">
               <label>District</label>
-              <span>3</span>
+              <span>{apartment?.district}</span>
             </p>
           </div>
         </div>

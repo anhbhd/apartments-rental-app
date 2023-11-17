@@ -32,6 +32,16 @@
           font-size: 2rem;
           font-weight: 650;
         }
+        .rent-btn {
+          cursor: pointer;
+          border-radius: 0.5rem;
+          padding: 1rem 3rem;
+          color: white;
+          font-size: 1.6rem;
+          background-color: $secondary-color;
+          @include button-animation-onclick-mixin;
+          margin-top: 1rem;
+        }
         .action {
           font-size: 3rem;
           .icon {

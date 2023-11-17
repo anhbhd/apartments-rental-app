@@ -21,8 +21,8 @@
     }
     .post-btn {
       @include button-animation-onclick-mixin;
-      font-size: 1.8rem;
-      padding: 1.2rem 3rem;
+      font-size: 1.6rem;
+      padding: 1.2rem 2.5rem;
       background-color: rgb(65, 63, 63);
       color: white;
       font-weight: 550;

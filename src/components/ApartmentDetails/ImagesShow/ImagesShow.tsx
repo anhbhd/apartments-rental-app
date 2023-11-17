@@ -15,7 +15,10 @@ const ImagesShow = ({ className, style, images }: IImagesShowProps) => {
         {images && <img src={images[0]} alt={images[0]} />}
       </div>
       <div className="images-show__group2">
-        {images && images.slice(1).map((img) => <img src={img} alt={img} />)}
+        {images &&
+          images
+            .slice(1)
+            .map((img, index) => <img key={index} src={img} alt={img} />)}
       </div>
     </section>
   );

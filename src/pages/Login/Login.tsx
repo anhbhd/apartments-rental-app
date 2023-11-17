@@ -3,16 +3,19 @@ import React, { ChangeEvent, FormEvent, useState } from "react";
 import "./Login.scss";
 import GoogleIcon from "../../icons/GoogleIcon";
 import { useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth, signInWithGoogle } from "../../config/firebase_config";
-
-const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { auth, db, provider } from "../../config/firebase_config";
+import { useAuth } from "../../context/AuthContext";
+import { emailRegex } from "../../utils/regex";
+import { Timestamp, doc, getDoc, setDoc } from "firebase/firestore";
 
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isValidEmail, setIsValidEmail] = useState(true);
+  const [promisedError, setPromisedError] = useState<string>();
+  const { setCredentialUserForApp } = useAuth();
 
   const validateEmail = (email: string): boolean => {
     return emailRegex.test(email);
@@ -30,10 +33,8 @@ const Login = () => {
           console.log("login successfully");
           console.log(user);
         })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.log(errorCode, errorMessage);
+        .catch((error: any) => {
+          setPromisedError(error.code);
         });
     } else {
       setIsValidEmail(false);
@@ -41,8 +42,36 @@ const Login = () => {
     }
   };
 
-  const handleSignInWithGoogle = (): void => {
-    signInWithGoogle();
+  const handleSignInWithGoogle = async () => {
+    try {
+      const response = await signInWithPopup(auth, provider);
+
+      const userDocRef = doc(db, `users/${response.user.uid}`);
+
+      setCredentialUserForApp({
+        uid: response.user.uid,
+        email: response.user.email,
+        displayName: response.user.displayName,
+        photoURL: response.user.photoURL,
+      });
+
+      try {
+        const userDocSnap = await getDoc(userDocRef);
+        if (!userDocSnap.exists()) {
+          await setDoc(userDocRef, {
+            email: response.user.email,
+            isAdmin: false,
+            createdDate: Timestamp.now(),
+          });
+        }
+      } catch (err: any) {
+        setPromisedError(err.code);
+      }
+
+      navigate("/");
+    } catch (err: any) {
+      setPromisedError(err.code);
+    }
   };
 
   const handleChangeField = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -57,9 +86,8 @@ const Login = () => {
       case "password":
         setPassword(event.target.value);
         break;
-      default:
-        return;
     }
+    setPromisedError("");
   };
 
   return (
@@ -108,6 +136,7 @@ const Login = () => {
           <GoogleIcon className="google-icon" height="20" width="20" />
           Continue with Google
         </button>
+        {promisedError && <p className="error-server">{promisedError}</p>}
       </div>
     </div>
   );
