@@ -1,7 +1,7 @@
 @import "../../sass/variables.scss";
 @import "../../sass/mixins.scss";
 @mixin apartment-detail-base-style-section-mixin {
-  border-radius: 1.5rem;
+  border-radius: 0.5rem;
   background-color: $background-white;
   padding: 3rem;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;

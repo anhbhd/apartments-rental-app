@@ -79,7 +79,7 @@ const Register: React.FC = () => {
             isAdmin: false,
             createdDate: Timestamp.now(),
           });
-          navigate("/login");
+          navigate("/");
         } catch (err: any) {
           setPromisedError(err.code);
         }

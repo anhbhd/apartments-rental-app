@@ -3,7 +3,7 @@
 
 .service-section {
   padding-top: 6rem;
-  margin-bottom: 6rem;
+  padding-bottom: 4rem;
   &__header-box {
     display: flex;
     flex-direction: column;
@@ -15,6 +15,7 @@
       span {
         color: $secondary-color;
       }
+      margin-bottom: 1.5rem;
     }
     .normal-text {
       @include normal-text-mixin;
@@ -27,5 +28,19 @@
     gap: 2rem;
     flex-wrap: wrap;
     margin-top: 6rem;
+  }
+}
+
+@media screen and (max-width: $mobile-width) {
+  .service-section {
+    padding: $padding-size-x-axis-section-page-for-mobile;
+    &__header-box {
+      .header-section-title {
+        @include header-section-text-mobile-mixin;
+      }
+      .normal-text {
+        @include normal-text-mobile-mixin;
+      }
+    }
   }
 }

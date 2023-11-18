@@ -1,11 +1,72 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import FeatureItem from "./ApartmentItem/ApartmentItem";
-import imgItem from "./../../assets/FeatureSection/feature-item-image.jpg";
+
 import "./FeaturesList.scss";
+import { Apartment } from "../../type/Apartment";
+import {
+  collection,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
+import { db } from "../../config/firebase_config";
+import { useAuth } from "../../context/AuthContext";
 
 const FeaturesList = () => {
+  const [featuresList, setFeatureList] = useState<Apartment[]>([]);
+
+  const { currentUser } = useAuth();
+
+  useEffect(() => {
+    const fetchFeaturesList = async () => {
+      const data: Apartment[] = [];
+      try {
+        const apartmentCollectionRef = collection(db, "apartments");
+
+        const q = query(
+          apartmentCollectionRef,
+          limit(7),
+          orderBy("createdDate")
+        );
+
+        const apartmentCollectionSnapshot = await getDocs(q);
+
+        apartmentCollectionSnapshot.docs.forEach((doc) => {
+          data.push({
+            ...(doc.data() as Apartment),
+            id: doc.id as string,
+          });
+        });
+
+        setFeatureList(data);
+      } catch (err: any) {
+        console.error(err);
+      }
+    };
+    fetchFeaturesList();
+  }, []);
+
+  // useEffect(() => {
+  //   const fetchWishlist = async () => {
+  //     const wishlistRef = collection(db, "wishlist");
+  //     const q = query(wishlistRef, where("userId", "==", currentUser.uid));
+  //     const userWishlistSnapshot = await getDocs(q);
+
+  //     const items = userWishlistSnapshot.docs.map((doc) => ({
+  //       id: doc.id,
+  //       ...doc.data(),
+  //     }));
+
+  //     setWishlistItems(items);
+  //   };
+
+  //   fetchWishlist();
+  // }, [currentUser.uid]);
+
   return (
     <div className="features-list">
       <h3 className="features-list__title-section">
@@ -23,7 +84,7 @@ const FeaturesList = () => {
             slidesPerView: 1,
             spaceBetween: 20,
           },
-          900: {
+          680: {
             slidesPerView: 2,
             spaceBetween: 20,
           },
@@ -33,21 +94,11 @@ const FeaturesList = () => {
           },
         }}
       >
-        {/* <SwiperSlide>
-          <FeatureItem imgItem={imgItem} />
-        </SwiperSlide>
-        <SwiperSlide>
-          <FeatureItem imgItem={imgItem} />
-        </SwiperSlide>
-        <SwiperSlide>
-          <FeatureItem imgItem={imgItem} />
-        </SwiperSlide>
-        <SwiperSlide>
-          <FeatureItem imgItem={imgItem} />
-        </SwiperSlide>
-        <SwiperSlide>
-          <FeatureItem imgItem={imgItem} />
-        </SwiperSlide> */}
+        {featuresList.map((apartment) => (
+          <SwiperSlide key={apartment.id}>
+            <FeatureItem apartment={apartment} />
+          </SwiperSlide>
+        ))}
       </Swiper>
     </div>
   );

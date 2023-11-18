@@ -16,3 +16,23 @@
     padding: 1rem 0;
   }
 }
+
+@media screen and (max-width: $desktop-width) {
+  .testimonial {
+    padding: $padding-size-x-axis-section-page-for-desktop;
+  }
+}
+
+@media screen and (max-width: $tablet-width) {
+  .testimonial {
+    padding: $padding-size-x-axis-section-page-for-mobile;
+  }
+}
+@media screen and (max-width: $mobile-width) {
+  .testimonial {
+    padding: $padding-size-x-axis-section-page-for-mobile;
+    &__title-section {
+      @include title-section-mobile-mixin;
+    }
+  }
+}

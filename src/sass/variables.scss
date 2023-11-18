@@ -1,15 +1,31 @@
+$mobile-width: 480px;
+$tablet-width: 768px;
+$desktop-width: 1024px;
+
 $main-text-color: #181a20;
+$secondary-text-color: #939393;
 $background-white: #fff;
 $secondary-background-color: #f7f7f7;
 $text-hero-white: #fff;
 $secondary-color: #eb6753;
 
 $normal-font-size: 1.4rem;
+
 $header-section-font-size: 3rem;
+$header-section-font-size-mobile: 2.5rem;
 $service-secondary-font-size: 2.5rem;
 
 $item-name-font-size: 1.5rem;
 
+$small-font-size-mobile: 1.2rem;
+$normal-font-size-mobile: 1.4rem;
+$medium-font-size-mobile: 1.6rem;
+$big-font-size-mobile: 1.8rem;
+
 $footer-background-color: #181a20;
 
 $text-footer-white: #fff;
+
+$padding-size-x-axis-section-page-for-desktop: 8rem 5rem;
+$padding-size-x-axis-section-page-for-tablet: 8rem 4rem;
+$padding-size-x-axis-section-page-for-mobile: 8rem 3rem;

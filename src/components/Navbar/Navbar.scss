@@ -11,7 +11,7 @@
   padding: 1.5rem 0;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-  z-index: 1000;
+  z-index: 500;
   ul {
     display: flex;
     justify-content: center;
@@ -43,6 +43,13 @@
         width: 100%;
       }
     }
+    .close-icon {
+      display: none;
+    }
+  }
+  .menuIcon {
+    cursor: pointer;
+    display: none;
   }
 }
 .logout-btn button {
@@ -59,4 +66,56 @@
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
       rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
   }
+}
+
+@media screen and (max-width: 1050px) {
+  .navbar {
+    justify-content: space-between;
+    padding-left: 4rem;
+    padding-right: 3rem;
+    ul {
+      flex-direction: column;
+      justify-content: flex-start;
+      top: 0;
+      padding-top: 3rem;
+      padding-right: 10rem;
+      padding-left: 2rem;
+      position: fixed;
+      background-color: $background-white;
+      min-height: 100vh;
+      right: -50rem;
+      transition: all 0.3s;
+      z-index: 600;
+      box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
+        rgba(0, 0, 0, 0.23) 0px 6px 6px;
+      .close-icon {
+        display: block;
+        position: absolute;
+        right: 1rem;
+        top: 1rem;
+        font-size: 3rem;
+        cursor: pointer;
+      }
+      &.visibleMenu {
+        right: 0;
+      }
+      & li:last-child.logout-btn {
+        padding-left: 2rem;
+      }
+    }
+    .menuIcon {
+      cursor: pointer;
+      display: block;
+    }
+  }
+}
+
+.backdrop {
+  position: fixed;
+  background-color: rgba(69, 69, 82, 0.2);
+  z-index: 510;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
 }

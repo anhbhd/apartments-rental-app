@@ -68,13 +68,13 @@ const Testimonial = () => {
             slidesPerView: 1,
             spaceBetween: 20,
           },
-          800: {
+          600: {
             slidesPerView: 2,
             spaceBetween: 20,
           },
-          1200: {
+          1300: {
             slidesPerView: 3,
-            spaceBetween: 50,
+            spaceBetween: 20,
           },
         }}
       >

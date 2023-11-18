@@ -5,6 +5,11 @@
   color: $main-text-color;
   line-height: 1.8rem;
 }
+@mixin normal-text-mobile-mixin {
+  font-size: $normal-font-size-mobile;
+  color: $main-text-color;
+  line-height: 1.8rem;
+}
 
 @mixin header-section-text-mixin {
   font-size: $header-section-font-size;
@@ -13,9 +18,23 @@
   letter-spacing: 0.1rem;
   line-height: 4rem;
 }
+@mixin header-section-text-mobile-mixin {
+  font-size: $header-section-font-size-mobile;
+  color: $main-text-color;
+  font-weight: 700;
+  letter-spacing: 0.1rem;
+  line-height: 4rem;
+}
 
 @mixin title-section-mixin {
   @include header-section-text-mixin;
+  margin-bottom: 1rem;
+  span {
+    color: $secondary-color;
+  }
+}
+@mixin title-section-mobile-mixin {
+  @include header-section-text-mobile-mixin;
   margin-bottom: 1rem;
   span {
     color: $secondary-color;

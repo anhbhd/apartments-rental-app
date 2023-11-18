@@ -1,16 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import "./PropertyDescription.scss";
 import { Apartment } from "../../../type/Apartment";
 import { formatter } from "../../../utils/FormatMoney";
+import { Amenity } from "../../../type/Amenity";
 
 interface IPropertyDescriptionProps {
   apartment: Apartment;
+  amenities: Amenity[];
   className?: string;
 }
 
 const PropertyDescription = ({
   apartment,
+  amenities,
   className,
 }: IPropertyDescriptionProps) => {
   return (
@@ -79,13 +82,9 @@ const PropertyDescription = ({
       <section className="features-amenities">
         <h3 className="features-amenities__title">Features & Amenities</h3>
         <ul className="features-amenities__items-container">
-          <li>Air Conditioning</li>
-          <li>Air Conditioning</li>
-          <li>Air Conditioning</li>
-          <li>Air Conditioning</li>
-          <li>Air Conditioning</li>
-          <li>Air Conditioning</li>
-          <li>Air Conditioning</li>
+          {amenities?.map((amenity, index) => (
+            <li key={index}>{amenity.name}</li>
+          ))}
         </ul>
       </section>
     </section>

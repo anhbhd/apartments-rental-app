@@ -23,3 +23,14 @@
     gap: 2rem;
   }
 }
+@media screen and (min-width: $mobile-width) {
+  .wishlist-page {
+    padding: $padding-size-x-axis-section-page-for-mobile;
+    padding-top: 12rem;
+    &__wishlist-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+}

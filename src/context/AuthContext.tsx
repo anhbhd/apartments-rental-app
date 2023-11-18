@@ -36,10 +36,10 @@ const UserAuthContextProvider = ({
   const { removeItem, setItem } = useLocalStorage();
 
   const logout = async () => {
-    console.log("logging out");
+    // console.log("logging out");
     removeItem("uid");
     await signOut(auth);
-    navigate("/");
+    navigate("/login");
   };
 
   const setCredentialUserForApp = useCallback(
@@ -50,7 +50,7 @@ const UserAuthContextProvider = ({
     },
 
     []
-  ); // Empty dependency array means the callback doesn't depend on any variables
+  );
 
   useLayoutEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {

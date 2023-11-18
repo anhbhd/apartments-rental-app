@@ -12,6 +12,7 @@ import MyRentalApplications from "./pages/MyRentalApplications/MyRentalApplicati
 import ScrollToTop from "./utils/ScrollToTop";
 import MainLayout from "./layouts/MainLayout/MainLayout";
 import DetailedRentalApplication from "./pages/DetailedRentalApplication/DetailedRentalApplication";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -27,7 +28,7 @@ function App() {
           <Route path="signup" element={<Register />} />
           <Route path="personal_info" element={<PersonalInfo />} />
           <Route path="my_rental_apps" element={<MyRentalApplications />} />
-          <Route path="my_rental_apps" element={<MyRentalApplications />} />
+
           <Route
             path="my_rental_apps/:rentalAppId"
             element={<DetailedRentalApplication />}
@@ -37,6 +38,8 @@ function App() {
             element={<ApartmentDetails />}
           />
         </Route>
+
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );

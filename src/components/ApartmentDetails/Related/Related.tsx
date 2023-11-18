@@ -3,15 +3,19 @@ import React from "react";
 import "./Related.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
 import FeatureItem from "../../FeaturesList/ApartmentItem/ApartmentItem";
+import { Apartment } from "../../../type/Apartment";
 
-import imgItem from "./../../../assets/FeatureSection/feature-item-image.jpg";
-
-const Related = () => {
+interface IRelatedProps {
+  relatedList: Apartment[];
+  className?: string;
+  style?: React.CSSProperties;
+}
+const Related = ({ relatedList, className, style }: IRelatedProps) => {
   return (
-    <section className="related">
+    <section style={style} className={`related ${className}`}>
       <h3 className="related__text-lg">You might be interested</h3>
       <p className="related__text-sm">Find out some more our features</p>
-      {/* <Swiper
+      <Swiper
         className="features-list__feature-item-container"
         spaceBetween={50}
         slidesPerView={3}
@@ -30,22 +34,12 @@ const Related = () => {
           },
         }}
       >
-        <SwiperSlide>
-          <FeatureItem  />
-        </SwiperSlide>
-        <SwiperSlide>
-          <FeatureItem  />
-        </SwiperSlide>
-        <SwiperSlide>
-          <FeatureItem  />
-        </SwiperSlide>
-        <SwiperSlide>
-          <FeatureItem  />
-        </SwiperSlide>
-        <SwiperSlide>
-          <FeatureItem  />
-        </SwiperSlide>
-      </Swiper> */}
+        {relatedList.map((apartment) => (
+          <SwiperSlide key={apartment.id}>
+            <FeatureItem apartment={apartment} />
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </section>
   );
 };

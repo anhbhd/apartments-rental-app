@@ -50,3 +50,38 @@
     }
   }
 }
+
+@media (max-width: $tablet-width) {
+  .testimonial-item {
+    &__review {
+      .detail {
+        font-size: $normal-font-size-mobile;
+      }
+      .quotation-marks {
+        display: none;
+      }
+      .detail {
+        width: 100%;
+        height: 22rem;
+        font-weight: 400;
+        font-size: 1.6rem;
+        margin-top: 2rem;
+      }
+    }
+  }
+}
+@media (max-width: $mobile-width) {
+  .testimonial-item {
+    &__review {
+      position: relative;
+      .quotation-marks {
+        position: absolute;
+        right: 2rem;
+        top: -1rem;
+      }
+      .detail {
+        font-size: $normal-font-size-mobile;
+      }
+    }
+  }
+}
