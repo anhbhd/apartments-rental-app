@@ -3,6 +3,8 @@
 
 .wishlist-page {
   @include css-space-for-all-page-desktop-mixin;
+  padding-left: 6rem;
+  padding-right: 6rem;
   &__header-text {
     font-size: 3rem;
     margin-bottom: 2rem;
@@ -23,14 +25,30 @@
     gap: 2rem;
   }
 }
-@media screen and (min-width: $mobile-width) {
+
+@media (max-width: $desktop-width) {
   .wishlist-page {
-    padding: $padding-size-x-axis-section-page-for-mobile;
+    padding: $padding-size-x-axis-section-page-for-desktop;
     padding-top: 12rem;
     &__wishlist-container {
       display: grid;
       grid-template-columns: 1fr;
       gap: 2rem;
     }
+  }
+}
+
+@media (max-width: $tablet-width) {
+  .wishlist-page {
+    padding: $padding-size-x-axis-section-page-for-tablet;
+    padding-top: 12rem;
+  }
+}
+
+@media (max-width: $mobile-width) {
+  .wishlist-page {
+    padding-top: 12rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 }

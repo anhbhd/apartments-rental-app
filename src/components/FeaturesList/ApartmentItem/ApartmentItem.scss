@@ -90,8 +90,20 @@
     }
   }
 }
+
+@media (max-width: $desktop-width) {
+  .feature-item {
+    &__image {
+      height: 20rem;
+    }
+  }
+}
+
 @media (max-width: $tablet-width) {
   .feature-item {
+    .location {
+      font-size: $normal-font-size-mobile;
+    }
     .interior {
       font-size: $normal-font-size;
     }
@@ -99,6 +111,17 @@
 }
 @media (max-width: $mobile-width) {
   .feature-item {
+    &__image {
+      position: relative;
+      max-height: 15rem;
+      overflow: hidden;
+      width: 100%;
+      img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+      }
+    }
     .interior {
       font-size: $small-font-size-mobile;
     }

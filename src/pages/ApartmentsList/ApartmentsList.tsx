@@ -1,18 +1,27 @@
 import React, { useEffect, useState } from "react";
-import "./ApartmentsList.scss";
-
-import Filterbar from "../../components/ApartmentsList/Filterbar/Filterbar";
-import ApartmentsListResult from "../../components/ApartmentsList/ApartmentsListResult/ApartmentsListResult";
-import Pagination from "../../components/ApartmentsList/Pagination/Pagination";
 import { db } from "../../config/firebase_config";
 import { collection, getDocs } from "@firebase/firestore";
 import { Apartment } from "../../type/Apartment";
 
+import Filterbar from "../../components/ApartmentsList/Filterbar/Filterbar";
+import ApartmentsListResult from "../../components/ApartmentsList/ApartmentsListResult/ApartmentsListResult";
+import Pagination from "../../components/ApartmentsList/Pagination/Pagination";
+
+import "./ApartmentsList.scss";
+import ResulNumstAndSortBy from "../../components/ApartmentsList/ResultAndSortBy/ResulNumstAndSortBy";
+import { Backdrop } from "../../utils/Backdrop/Backdrop";
+
 const ApartmentsList: React.FC = () => {
   const [apartments, setApartments] = useState<Apartment[]>([]);
 
+  const [toggleFilterBar, setToggleFilterBar] = useState<boolean>(false);
   // const [isLoading, setIsLoading] = useState(true);
   // const [error, setError] = useState("");
+
+  const handleCloseFilterBar = () => {
+    setToggleFilterBar(false);
+  };
+
   useEffect(() => {
     const apartmentsCollectionRef = collection(db, "apartments");
     const getAllApartments = async () => {
@@ -40,7 +49,15 @@ const ApartmentsList: React.FC = () => {
         </p>
       </div>
       <div className="aparments-list__main-content">
-        <Filterbar />
+        <ResulNumstAndSortBy
+          onClick={() => setToggleFilterBar(true)}
+          className="result-sort"
+        />
+        {toggleFilterBar && <Backdrop onClose={handleCloseFilterBar} />}
+        <Filterbar
+          onCloseFilterBar={handleCloseFilterBar}
+          className={toggleFilterBar ? "visible" : ""}
+        />
         <ApartmentsListResult apartmentsList={apartments} />
       </div>
 

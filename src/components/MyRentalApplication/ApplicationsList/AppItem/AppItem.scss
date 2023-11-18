@@ -5,13 +5,27 @@
     rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
   padding: 1.6rem 2rem;
   display: grid;
-  cursor: pointer;
+  gap: 2rem;
   border-radius: 0.5rem;
   margin-top: 1rem;
-  grid-template-columns: 20rem 1fr 10rem auto;
+  grid-template-columns: 10rem 1fr 10rem auto;
   font-size: $normal-font-size;
   background-color: $background-white;
+  cursor: pointer;
   a {
     color: $main-text-color;
+  }
+  &__name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-wrap: nowrap;
+  }
+}
+
+@media (max-width: $mobile-width) {
+  .app-item {
+    &__created-date {
+      display: none;
+    }
   }
 }

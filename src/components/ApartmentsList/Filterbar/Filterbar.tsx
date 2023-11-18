@@ -7,7 +7,13 @@ import { starsSelections } from "./StarSelections";
 import { citiesSelections } from "./CitySelection";
 import "./Filterbar.scss";
 import CustomSelect from "../../../utils/CustomDropdown/CustomSelect";
-const Filterbar = () => {
+import { IoMdClose } from "react-icons/io";
+interface IFilterbarProps {
+  className: string;
+  onCloseFilterBar: () => void;
+}
+
+const Filterbar = ({ className, onCloseFilterBar }: IFilterbarProps) => {
   const [selectedStars, setSelectedStars] = useState<Option>(
     starsSelections[0]
   );
@@ -28,7 +34,11 @@ const Filterbar = () => {
   };
 
   return (
-    <div className="filterbar">
+    <div className={`filterbar ${className}`}>
+      <IoMdClose
+        onClick={onCloseFilterBar}
+        className="filterbar__close-filterbar-icon"
+      />
       <div className="filterbar__section">
         <p className="field-label">Find your apartment</p>
         <div className="search-field">

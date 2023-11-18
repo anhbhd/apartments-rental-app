@@ -19,11 +19,15 @@
   &__main-content {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-template-areas: "filterbar results results";
+    grid-template-areas:
+      "res-select res-select res-select"
+      "filterbar results results";
     gap: 4rem;
     .filterbar {
       grid-area: filterbar;
       padding: 4rem;
+      background-color: $background-white;
+      transition: all 0.4s;
     }
     .apartments-result {
       grid-area: results;
@@ -32,6 +36,149 @@
       grid-auto-rows: max-content;
       column-gap: 2rem;
       row-gap: 3rem;
+    }
+    .result-sort {
+      grid-area: res-select;
+      display: flex;
+      justify-content: space-between;
+      p {
+        font-size: $normal-font-size;
+      }
+    }
+  }
+}
+@media (max-width: 1400px) {
+  .aparments-list {
+    padding: $padding-size-x-axis-section-page-for-desktop;
+    padding-top: 15rem;
+  }
+}
+@media (max-width: 1100px) {
+  .aparments-list {
+    padding: $padding-size-x-axis-section-page-for-desktop;
+    padding-top: 15rem;
+
+    &__main-content {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "res-select"
+        "results";
+      gap: 4rem;
+      .filterbar {
+        position: fixed;
+        top: -160rem;
+        z-index: 600;
+        right: 0;
+        max-height: 100vh;
+        overflow-y: scroll;
+      }
+      .filterbar.visible {
+        top: 0;
+      }
+    }
+  }
+}
+@media (max-width: $tablet-width) {
+  .aparments-list {
+    padding: $padding-size-x-axis-section-page-for-desktop;
+    padding-top: 15rem;
+
+    &__main-content {
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas:
+        "res-select res-select res-select"
+        "filterbar results results";
+      gap: 2rem;
+      grid-auto-rows: max-content;
+      .filterbar {
+        grid-area: filterbar;
+        padding: 3rem;
+        background-color: $background-white;
+        position: unset;
+        overflow: visible;
+        max-height: fit-content;
+        z-index: 0;
+      }
+      .apartments-result {
+        grid-area: results;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-auto-rows: max-content;
+        column-gap: 2rem;
+        row-gap: 3rem;
+      }
+    }
+  }
+}
+@media (max-width: 700px) {
+  .aparments-list {
+    padding: $padding-size-x-axis-section-page-for-desktop;
+    padding-top: 15rem;
+    &__textheader {
+      padding-left: 4rem;
+      padding-right: 4rem;
+    }
+    &__main-content {
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas:
+        "res-select res-select "
+        "results results ";
+      gap: 2rem;
+      grid-auto-rows: max-content;
+      padding-left: 4rem;
+      padding-right: 4rem;
+      .filterbar {
+        position: fixed;
+        top: -100rem;
+        z-index: 600;
+        right: 0;
+        max-height: 100vh;
+        overflow-y: scroll;
+      }
+      .apartments-result {
+        grid-area: results;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-auto-rows: max-content;
+        column-gap: 2rem;
+        row-gap: 3rem;
+      }
+    }
+  }
+}
+@media (max-width: 500px) {
+  .aparments-list {
+    padding: 8rem 1rem;
+    padding-top: 15rem;
+    &__textheader {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+    &__main-content {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "res-select  "
+        "results  ";
+      gap: 2rem;
+      grid-auto-rows: max-content;
+      padding-left: 2rem;
+      padding-right: 2rem;
+      .filterbar {
+        position: fixed;
+        top: -100rem;
+        z-index: 600;
+        right: 0;
+        max-height: 100vh;
+        overflow-y: scroll;
+      }
+      .apartments-result {
+        grid-area: results;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-auto-rows: max-content;
+        column-gap: 2rem;
+        row-gap: 3rem;
+      }
     }
   }
 }

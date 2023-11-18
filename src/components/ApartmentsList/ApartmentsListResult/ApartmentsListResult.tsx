@@ -2,8 +2,6 @@ import React from "react";
 import ApartmentItem from "../../FeaturesList/ApartmentItem/ApartmentItem";
 
 import { Apartment } from "../../../type/Apartment";
-import { addDoc, collection } from "firebase/firestore";
-import { db } from "../../../config/firebase_config";
 
 interface IApartmentsListResultProps {
   className?: string;

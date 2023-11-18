@@ -7,3 +7,22 @@
     margin-bottom: 2rem;
   }
 }
+
+@media (max-width: $desktop-width) {
+  .my-rental-app {
+    padding: $padding-size-x-axis-section-page-for-desktop;
+    padding-top: 12rem;
+  }
+}
+@media (max-width: $mobile-width) {
+  .my-rental-app {
+    padding-left: 2rem;
+    padding-right: 2rem;
+
+    padding-top: 12rem;
+    &__title {
+      @include title-section-mobile-mixin;
+      margin-bottom: 2rem;
+    }
+  }
+}

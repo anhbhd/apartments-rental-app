@@ -1,0 +1,48 @@
+@import "./../../../sass/variables.scss";
+@import "./../../../sass/mixins.scss";
+
+.result-sort {
+  align-items: center;
+  .select-box-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .filter-button {
+    font-size: 2.5rem;
+    cursor: pointer;
+    display: none;
+  }
+}
+
+@media (max-width: 1100px) {
+  .result-sort {
+    .filter-button {
+      display: block;
+    }
+  }
+}
+@media (max-width: $tablet-width) {
+  .result-sort {
+    .filter-button {
+      display: none;
+    }
+  }
+}
+@media (max-width: 700px) {
+  .result-sort {
+    .filter-button {
+      display: block;
+    }
+  }
+}
+@media (max-width: 500px) {
+  .result-sort {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    gap: 2rem;
+    .filter-button {
+      display: block;
+    }
+  }
+}

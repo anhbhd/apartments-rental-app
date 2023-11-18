@@ -3,7 +3,7 @@
   display: inline-block;
   font-size: 1.6rem;
   min-width: 20rem;
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   background-color: white;
   ::-webkit-scrollbar {
     width: 4px;
@@ -28,17 +28,17 @@
 }
 
 .select-header {
-  padding: 1.5rem;
+  padding: 1rem;
   border: 1px solid #ccc;
   cursor: pointer;
-  border-radius: 1rem;
+  border-radius: 0.51rem;
   font-weight: 500;
   position: relative;
 
   .icon-down {
     position: absolute;
     right: 2rem;
-    font-size: 2rem;
+    font-size: 1.6rem;
     transform: translateY(-50%);
     top: 45%;
   }
@@ -73,4 +73,10 @@
 .custom-select.open .options-list {
   display: block;
   z-index: 10;
+}
+
+@media (max-width: 480px) {
+  .custom-select {
+    font-size: 1.4rem;
+  }
 }
