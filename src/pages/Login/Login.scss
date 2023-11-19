@@ -89,3 +89,41 @@
     border: 0.08rem solid rgb(241, 174, 181);
   }
 }
+
+@media (max-width: $desktop-width) {
+  .loginpage {
+    padding: $padding-size-x-axis-section-page-for-desktop;
+    padding-top: 12rem;
+  }
+}
+@media (max-width: $tablet-width) {
+  .loginpage {
+    padding: 12rem 2rem;
+  }
+}
+@media (max-width: 376px) {
+  .loginpage {
+    padding: 12rem 2rem;
+
+    .login {
+      padding: 2rem;
+      &__text-header {
+        margin-bottom: 1rem;
+        h3 {
+          font-size: 2rem;
+        }
+      }
+      &__field {
+        label {
+          margin-top: 0;
+        }
+      }
+      &__text-or {
+        margin-top: 1rem;
+      }
+      &__google-button {
+        margin-top: 1rem;
+      }
+    }
+  }
+}

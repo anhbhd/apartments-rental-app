@@ -10,7 +10,18 @@ body {
   box-sizing: border-box;
 }
 html {
-  font-size: 62.5%;
+  font-size: 10px;
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 60% !important;
+  }
+}
+@media (max-width: 480px) {
+  html {
+    font-size: 54% !important;
+  }
 }
 
 ::-webkit-scrollbar {

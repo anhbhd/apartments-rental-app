@@ -1,6 +1,5 @@
 @import "./../index.scss";
 .related {
-  margin-top: 3rem;
   @include apartment-detail-base-style-section-mixin;
   &__text-lg {
     @include title-section-mixin;
@@ -9,5 +8,11 @@
   &__text-sm {
     font-size: $normal-font-size;
     margin-bottom: 3rem;
+  }
+}
+
+@media (max-width: $mobile-width) {
+  .related {
+    padding: 2rem;
   }
 }

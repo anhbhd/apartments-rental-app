@@ -16,11 +16,12 @@
   .property-details {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    gap: 2rem;
     &__item {
       @include normal-text-mixin;
       display: flex;
       flex-wrap: wrap;
-      gap: 2rem;
+      gap: 1rem;
       max-width: 100%;
       margin-bottom: 1rem;
       label {
@@ -38,8 +39,7 @@
 
   &__info-container {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
+    grid-template-columns: 1fr;
   }
   &__text-details {
     font-size: $normal-font-size;
@@ -47,6 +47,7 @@
       display: grid;
       grid-template-columns: 1fr 4fr;
       margin-bottom: 1.5rem;
+      gap: 1rem;
       label {
         font-weight: 600;
       }
@@ -65,5 +66,25 @@
     gap: 1.5rem;
     grid-template-columns: repeat(3, 1fr);
     margin: 1.5rem;
+  }
+}
+
+@media (max-width: $mobile-width) {
+  .property-description {
+    padding: 2rem;
+  }
+  .features-amenities {
+    margin-top: 3rem;
+
+    &__title {
+      @include title-medium-section-mixin;
+    }
+    &__items-container {
+      font-size: $normal-font-size;
+      display: grid;
+      gap: 4rem;
+      grid-template-columns: repeat(2, 1fr);
+      margin: 1.5rem;
+    }
   }
 }

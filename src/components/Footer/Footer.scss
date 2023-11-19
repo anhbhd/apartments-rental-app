@@ -100,7 +100,7 @@ a {
 }
 @media (max-width: $mobile-width) {
   .footer {
-    padding: $padding-size-x-axis-section-page-for-mobile;
+    padding: 4rem 3rem;
     grid-template-columns: 1fr;
     grid-template-rows: auto;
     grid-template-areas:

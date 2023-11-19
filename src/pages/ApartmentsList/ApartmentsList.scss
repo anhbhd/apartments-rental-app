@@ -86,8 +86,8 @@
     &__main-content {
       grid-template-columns: 1fr 1fr;
       grid-template-areas:
-        "res-select res-select res-select"
-        "filterbar results results";
+        "res-select res-select "
+        "filterbar results";
       gap: 2rem;
       grid-auto-rows: max-content;
       .filterbar {
@@ -98,6 +98,7 @@
         overflow: visible;
         max-height: fit-content;
         z-index: 0;
+        align-self: start;
       }
       .apartments-result {
         grid-area: results;

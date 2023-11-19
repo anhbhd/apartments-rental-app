@@ -40,13 +40,13 @@
   .name,
   .location,
   .interior {
-    padding: 0 0 0.8rem 0;
+    padding: 0 0 0.8rem;
   }
   .location {
     min-height: 5rem;
   }
   &__info {
-    padding: 1rem 2.5rem;
+    padding: 1rem 2rem;
     font-size: $item-name-font-size;
     font-weight: 300;
     .name {
@@ -121,9 +121,6 @@
         width: 100%;
         object-fit: cover;
       }
-    }
-    .interior {
-      font-size: $small-font-size-mobile;
     }
   }
 }

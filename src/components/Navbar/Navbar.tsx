@@ -73,7 +73,7 @@ const Navbar = () => {
       <MenuIcon
         className="menuIcon"
         height="45"
-        width="30"
+        width="3rem"
         onClick={() => setToggleMenu(true)}
       />
     </nav>

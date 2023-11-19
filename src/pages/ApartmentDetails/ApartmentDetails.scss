@@ -62,3 +62,35 @@
     }
   }
 }
+
+@media (max-width: $desktop-width) {
+  .apartment-details-page {
+    padding-top: 12rem;
+    padding-left: 5rem;
+    padding-right: 5rem;
+  }
+}
+@media (max-width: $mobile-width) {
+  .apartment-details-page {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    .apartment-details {
+      .apartment-details__info {
+        grid-template-columns: 1fr;
+        padding: 2rem;
+        .action-and-price {
+          text-align: left;
+          .action {
+            text-align: right;
+            margin-top: 2rem;
+            font-size: 4rem;
+          }
+        }
+        .text-info .name {
+          font-size: 2.4rem;
+          line-height: 3rem;
+        }
+      }
+    }
+  }
+}

@@ -18,6 +18,9 @@
       gap: 2rem;
       font-weight: 500;
       margin-bottom: 3rem;
+      & span:first-child {
+        font-size: 1.6rem;
+      }
     }
     .post-btn {
       @include button-animation-onclick-mixin;

@@ -70,7 +70,7 @@
 
 @media (max-width: $desktop-width) {
   .hero-section {
-    min-height: 90vh;
+    min-height: 95vh;
     padding-top: 4rem;
     &__text {
       h2 {
@@ -82,25 +82,18 @@
 
 @media (max-width: $tablet-width) {
   .hero-section {
-    min-height: 70vh;
+    min-height: 100vh;
     padding-top: 15rem;
     padding-bottom: 10rem;
-    &__text {
-      h2 {
-        font-size: 5rem;
-      }
-    }
   }
 }
 
 @media (max-width: $mobile-width) {
   .hero-section {
-    padding-top: 15rem;
+    min-height: 80vh;
+    padding-top: 22rem;
     padding-bottom: 15rem;
     &__text {
-      h2 {
-        font-size: 4rem;
-      }
       p {
         font-size: $normal-font-size-mobile;
         &:first-child {

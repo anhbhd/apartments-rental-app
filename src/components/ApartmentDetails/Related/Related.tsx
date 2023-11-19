@@ -24,7 +24,7 @@ const Related = ({ relatedList, className, style }: IRelatedProps) => {
             slidesPerView: 1,
             spaceBetween: 20,
           },
-          900: {
+          700: {
             slidesPerView: 2,
             spaceBetween: 20,
           },

@@ -1,3 +1,6 @@
+@import "./../../../sass/variables.scss";
+@import "./../../../sass/mixins.scss";
+
 .images-show {
   margin-top: 3rem;
   display: grid;
@@ -14,5 +17,11 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
+  }
+}
+
+@media (max-width: $tablet-width) {
+  .images-show {
+    grid-template-columns: 1fr;
   }
 }

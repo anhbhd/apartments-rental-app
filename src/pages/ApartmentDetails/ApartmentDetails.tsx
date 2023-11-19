@@ -142,9 +142,12 @@ const ApartmentDetails = () => {
         <div className="apartment-details__info">
           <div className="text-info">
             <h3 className="name">{apartment?.name}</h3>
-            <p className="address"> Address: {apartment?.detailedAddress}</p>
+            <p className="address">
+              {" "}
+              <strong>Address:</strong> {apartment?.detailedAddress}
+            </p>
             <p className="created-date">
-              Posted date:{" "}
+              <strong>Posted date:</strong>{" "}
               {secondsToDateTime(
                 apartment?.createdDate.seconds as number
               ).toDateString()}
