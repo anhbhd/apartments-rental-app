@@ -7,7 +7,7 @@ import ImagesShow from "../../components/ApartmentDetails/ImagesShow/ImagesShow"
 import PropertyDescription from "../../components/ApartmentDetails/PropertyDescription/PropertyDescription";
 import CommentsSection from "../../components/ApartmentDetails/CommentSection/CommentsSection";
 import Related from "../../components/ApartmentDetails/Related/Related";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import {
   Timestamp,
   addDoc,
@@ -53,43 +53,49 @@ const ApartmentDetails = () => {
 
   const apartmentId = pathname.split("/").pop() as string;
 
+  // f1
   useEffect(() => {
     // try to fetch a record in wishlist if the record contain this item id and the user id exist
     const fetchLikeStateOfUserToThisItem = async () => {
-      try {
-        const wishlistcollectionRef = collection(db, "wishlist");
-        const q = query(
-          wishlistcollectionRef,
-          where("apartmentId", "==", apartmentId),
-          where("userId", "==", currentUser.uid)
-        );
-        const wishlistCollectionSnapshot = await getDocs(q);
-        // console.log(wishlistCollectionSnapshot.docs.at(0)?.data());
-        const fetchedWishlistItemId = wishlistCollectionSnapshot.docs.at(0)?.id;
-        // console.log(wishlistCollectionSnapshot.docs.at(0)?.id);
-        if (fetchedWishlistItemId) {
-          setLike(true);
-          setWishlistItemId(fetchedWishlistItemId);
+      if (currentUser) {
+        try {
+          const wishlistcollectionRef = collection(db, "wishlist");
+          const q = query(
+            wishlistcollectionRef,
+            where("apartmentId", "==", apartmentId),
+            where("userId", "==", currentUser.uid)
+          );
+          const wishlistCollectionSnapshot = await getDocs(q);
+          // console.log(wishlistCollectionSnapshot.docs.at(0)?.data());
+          const fetchedWishlistItemId =
+            wishlistCollectionSnapshot.docs.at(0)?.id;
+          // console.log(wishlistCollectionSnapshot.docs.at(0)?.id);
+          if (fetchedWishlistItemId) {
+            setLike(true);
+            setWishlistItemId(fetchedWishlistItemId);
+          }
+        } catch (err: any) {
+          console.log(err);
         }
-      } catch (err: any) {
-        console.log(err);
-      }
+      } else return;
     };
     fetchLikeStateOfUserToThisItem();
-  }, [apartmentId, currentUser.uid, like]);
+  }, [apartmentId, currentUser, like]);
 
   const handleDislikeThisApartment = async () => {
     setLike(false);
     await deleteDoc(doc(db, "wishlist", wishlistItemId as string));
   };
   const handleLikeThisApartment = async () => {
-    setLike(true);
-    const newDoc = await addDoc(collection(db, "wishlist"), {
-      userId: currentUser.uid,
-      createdDate: Timestamp.now(),
-      apartmentId: apartmentId,
-    });
-    console.log(newDoc);
+    if (currentUser) {
+      setLike(true);
+      const newDoc = await addDoc(collection(db, "wishlist"), {
+        userId: currentUser.uid,
+        createdDate: Timestamp.now(),
+        apartmentId: apartmentId,
+      });
+      console.log(newDoc);
+    } else return;
   };
 
   // get the apartment doc
@@ -193,82 +199,86 @@ const ApartmentDetails = () => {
 
   useEffect(() => {
     const fetchCurrentApartmentStatus = async () => {
-      try {
-        // check if this user is already request for renting before
-        const rentalApplicationsCollectionRef = collection(
-          db,
-          "rentalApplications"
-        );
+      if (currentUser) {
+        try {
+          // check if this user is already request for renting before
+          const rentalApplicationsCollectionRef = collection(
+            db,
+            "rentalApplications"
+          );
 
-        const q = query(
-          rentalApplicationsCollectionRef,
-          where("apartmentId", "==", apartmentId as string),
-          where("tenantId", "==", currentUser.uid),
-          where("status", "in", [
-            RentAppStatus.PENDING,
-            RentAppStatus.PROCESSING,
-            RentAppStatus.RENTING,
-          ])
-        );
+          const q = query(
+            rentalApplicationsCollectionRef,
+            where("apartmentId", "==", apartmentId as string),
+            where("tenantId", "==", currentUser.uid),
+            where("status", "in", [
+              RentAppStatus.PENDING,
+              RentAppStatus.PROCESSING,
+              RentAppStatus.RENTING,
+            ])
+          );
 
-        const apartmentsCollectionSnapshot = await getDocs(q);
+          const apartmentsCollectionSnapshot = await getDocs(q);
 
-        setThisApartmentStatus(
-          apartmentsCollectionSnapshot.docs.at(0)?.data().status
-        );
-      } catch (err: any) {
-        console.error(err.message);
-      }
+          setThisApartmentStatus(
+            apartmentsCollectionSnapshot.docs.at(0)?.data().status
+          );
+        } catch (err: any) {
+          console.error(err.message);
+        }
+      } else return;
     };
     fetchCurrentApartmentStatus();
-  }, [apartmentId, currentUser.uid, successfulRent]);
+  }, [apartmentId, currentUser, successfulRent]);
 
   // console.log(thisApartmentStatus);
 
   const handleClickRentBtn = () => {
     const fetchDetailCurrentUserData = async () => {
-      const userDocRef = doc(db, `users/${currentUser.uid}`);
-      const userDocSnapshot = await getDoc(userDocRef);
-      const currentUserInfo = userDocSnapshot.data() as User;
+      if (currentUser) {
+        const userDocRef = doc(db, `users/${currentUser.uid}`);
+        const userDocSnapshot = await getDoc(userDocRef);
+        const currentUserInfo = userDocSnapshot.data() as User;
 
-      if (
-        !currentUserInfo.email ||
-        !currentUserInfo.fullName ||
-        !currentUserInfo.phoneNumber ||
-        !currentUserInfo.yearOfBirth
-      ) {
-        setIsModalClose(false);
-      } else {
-        const oneYear = 365 * 24 * 60 * 60 * 1000;
-        const rentalAplicationDocRef = collection(db, "rentalApplications");
-        const rentalApplicationData: RentalApplication = {
-          apartmentId: apartmentId,
-          createdDate: Timestamp.now(),
-          startDate: Timestamp.now(),
-          // Convert endDate to Timestamp
-          endDate: Timestamp.fromMillis(
-            Timestamp.now().toDate().getTime() +
-              (apartment?.contractDuration as number) * oneYear
-          ),
-          note: "",
-          status: RentAppStatus.PENDING,
-          tenantId: currentUser.uid,
-        };
+        if (
+          !currentUserInfo.email ||
+          !currentUserInfo.fullName ||
+          !currentUserInfo.phoneNumber ||
+          !currentUserInfo.yearOfBirth
+        ) {
+          setIsModalClose(false);
+        } else {
+          const oneYear = 365 * 24 * 60 * 60 * 1000;
+          const rentalAplicationDocRef = collection(db, "rentalApplications");
+          const rentalApplicationData: RentalApplication = {
+            apartmentId: apartmentId,
+            createdDate: Timestamp.now(),
+            startDate: Timestamp.now(),
+            // Convert endDate to Timestamp
+            endDate: Timestamp.fromMillis(
+              Timestamp.now().toDate().getTime() +
+                (apartment?.contractDuration as number) * oneYear
+            ),
+            note: "",
+            status: RentAppStatus.PENDING,
+            tenantId: currentUser.uid,
+          };
 
-        try {
-          if (!apartment?.rented && !thisApartmentStatus) {
-            const addedData = await addDoc(
-              rentalAplicationDocRef,
-              rentalApplicationData
-            );
-            if (addedData.id) {
-              setSuccessfulRent(true);
+          try {
+            if (!apartment?.rented && !thisApartmentStatus) {
+              const addedData = await addDoc(
+                rentalAplicationDocRef,
+                rentalApplicationData
+              );
+              if (addedData.id) {
+                setSuccessfulRent(true);
+              }
             }
+          } catch (err: any) {
+            console.error(err.message);
           }
-        } catch (err: any) {
-          console.error(err.message);
         }
-      }
+      } else return;
     };
 
     fetchDetailCurrentUserData();
@@ -299,7 +309,7 @@ const ApartmentDetails = () => {
             <p className="created-date">
               <strong>Posted date:</strong>{" "}
               {secondsToDateTime(
-                apartment?.createdDate.seconds as number
+                apartment?.createdDate?.seconds as number
               ).toDateString()}
             </p>
             <p className="amenities">

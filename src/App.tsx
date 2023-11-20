@@ -13,6 +13,7 @@ import ScrollToTop from "./utils/ScrollToTop";
 import MainLayout from "./layouts/MainLayout/MainLayout";
 import DetailedRentalApplication from "./pages/DetailedRentalApplication/DetailedRentalApplication";
 import NotFound from "./pages/NotFound";
+import GeneralProtectedRoute from "./routes/GeneralProtectedRoute";
 
 function App() {
   return (
@@ -23,18 +24,21 @@ function App() {
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
           <Route path="search" element={<ApartmentsList />} />
-          <Route path="wishlist" element={<Wishlist />} />
+
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<Register />} />
-          <Route path="personal_info" element={<PersonalInfo />} />
-          <Route path="my_rental_apps" element={<MyRentalApplications />} />
 
+          <Route path="/" element={<GeneralProtectedRoute />}>
+            <Route path="my_rental_apps" element={<MyRentalApplications />} />
+            <Route path="personal_info" element={<PersonalInfo />} />
+            <Route
+              path="my_rental_apps/:rentalAppId"
+              element={<DetailedRentalApplication />}
+            />
+            <Route path="wishlist" element={<Wishlist />} />
+          </Route>
           <Route
-            path="my_rental_apps/:rentalAppId"
-            element={<DetailedRentalApplication />}
-          />
-          <Route
-            path="/apartments/:apartmentId"
+            path="apartments/:apartmentId"
             element={<ApartmentDetails />}
           />
         </Route>

@@ -30,39 +30,46 @@ const ApartmentItem = ({ className, apartment }: IApartmentProps) => {
   useEffect(() => {
     // try to fetch a record in wishlist if the record contain this item id and the user id exist
     const fetchLikeStateOfUserToThisItem = async () => {
-      try {
-        const wishlistcollectionRef = collection(db, "wishlist");
-        const q = query(
-          wishlistcollectionRef,
-          where("apartmentId", "==", apartment.id),
-          where("userId", "==", currentUser.uid)
-        );
-        const wishlistCollectionSnapshot = await getDocs(q);
-        // console.log(wishlistCollectionSnapshot.docs.at(0)?.data());
-        const fetchedWishlistItemId = wishlistCollectionSnapshot.docs.at(0)?.id;
-        // console.log(wishlistCollectionSnapshot.docs.at(0)?.id);
-        if (fetchedWishlistItemId) {
-          setLike(true);
-          setWishlistItemId(fetchedWishlistItemId);
+      if (currentUser) {
+        try {
+          const wishlistcollectionRef = collection(db, "wishlist");
+          const q = query(
+            wishlistcollectionRef,
+            where("apartmentId", "==", apartment.id),
+            where("userId", "==", currentUser.uid)
+          );
+          const wishlistCollectionSnapshot = await getDocs(q);
+          // console.log(wishlistCollectionSnapshot.docs.at(0)?.data());
+          const fetchedWishlistItemId =
+            wishlistCollectionSnapshot.docs.at(0)?.id;
+          // console.log(wishlistCollectionSnapshot.docs.at(0)?.id);
+          if (fetchedWishlistItemId) {
+            setLike(true);
+            setWishlistItemId(fetchedWishlistItemId);
+          }
+        } catch (err: any) {
+          console.log(err);
         }
-      } catch (err: any) {
-        console.log(err);
-      }
+      } else return;
     };
     fetchLikeStateOfUserToThisItem();
-  }, [apartment.id, currentUser?.uid, like]);
+  }, [apartment.id, currentUser, like]);
 
   const handleDislikeItem = async () => {
-    setLike(false);
-    await deleteDoc(doc(db, "wishlist", wishlistItemId as string));
+    if (currentUser) {
+      setLike(false);
+      await deleteDoc(doc(db, "wishlist", wishlistItemId as string));
+    } else return;
   };
   const handleLikeItem = async () => {
-    setLike(true);
-    const newDoc = await addDoc(collection(db, "wishlist"), {
-      userId: currentUser.uid,
-      createdDate: Timestamp.now(),
-      apartmentId: apartment.id,
-    });
+    if (currentUser) {
+      setLike(true);
+      const newDoc = await addDoc(collection(db, "wishlist"), {
+        userId: currentUser.uid,
+        createdDate: Timestamp.now(),
+        apartmentId: apartment.id,
+      });
+    } else return;
     // console.log(newDoc);
   };
 
