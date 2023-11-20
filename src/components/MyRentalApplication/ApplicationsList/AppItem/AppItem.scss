@@ -8,12 +8,12 @@
   gap: 2rem;
   border-radius: 0.5rem;
   margin-top: 1rem;
-  grid-template-columns: 10rem 1fr 10rem auto;
+  grid-template-columns: auto 1fr auto auto;
   font-size: $normal-font-size;
   background-color: $background-white;
   cursor: pointer;
   a {
-    color: $main-text-color;
+    color: $secondary-color;
   }
   &__name {
     overflow: hidden;

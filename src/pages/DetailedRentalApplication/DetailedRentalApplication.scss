@@ -9,3 +9,14 @@
     font-size: 2.4rem;
   }
 }
+
+@media (max-width: $desktop-width) {
+  .detailed-rental-app {
+    padding: 12rem 5rem;
+  }
+}
+@media (max-width: 320px) {
+  .detailed-rental-app {
+    padding: 12rem 2rem;
+  }
+}

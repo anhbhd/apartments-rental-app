@@ -48,7 +48,6 @@ const UserAuthContextProvider = ({
       setItem("uid", user?.uid || "");
       setLoading(false);
     },
-
     []
   );
 

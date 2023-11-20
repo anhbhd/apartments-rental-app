@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
 
 import "./ApartmentDetails.scss";
-import { AiOutlineHeart } from "react-icons/ai";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import ImagesShow from "../../components/ApartmentDetails/ImagesShow/ImagesShow";
 
 import PropertyDescription from "../../components/ApartmentDetails/PropertyDescription/PropertyDescription";
 import CommentsSection from "../../components/ApartmentDetails/CommentSection/CommentsSection";
 import Related from "../../components/ApartmentDetails/Related/Related";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
+  Timestamp,
+  addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -24,22 +27,74 @@ import { formatter } from "./../../utils/FormatMoney";
 import { secondsToDateTime } from "../../utils/SecondToDate";
 import { Amenity } from "../../type/Amenity";
 import { Review } from "../../type/Review";
+import { useAuth } from "../../context/AuthContext";
+import ModalBackToPersonalInfo from "../../components/ApartmentDetails/ModalBackToPersonalInfo/ModalBackToPersonalInfo";
+import { User } from "../../type/User";
+import { RentalApplication } from "../../type/RentalApplication";
+import { RentAppStatus } from "../../common/constants/RentalAppStatus";
+import SuccessRentModal from "../../components/ApartmentDetails/SuccessRentModal/SuccessRentModal";
 
 const ApartmentDetails = () => {
   const { pathname } = useLocation();
   const [apartment, setApartment] = useState<Apartment>();
   const [amenities, setAmenities] = useState<Amenity[] | null>(null);
   const [relatedList, setRelatedList] = useState<Apartment[]>([]);
-  const [reviews, setReviews] = useState<Review[]>([]);
+  // const [reviews, setReviews] = useState<Review[]>([]);
   const [numOfReviews, setNumOfReviews] = useState<number>(3);
-  const [totalReviews, setTotalReviews] = useState<number>(0);
+  // const [totalReviews, setTotalReviews] = useState<number>(0);
+
+  const [wishlistItemId, setWishlistItemId] = useState<string | null>(null);
+  const [like, setLike] = useState<boolean>(false);
+
+  const [isModalClose, setIsModalClose] = useState<boolean>(true);
+  const [successfulRent, setSuccessfulRent] = useState<boolean>(false);
+  const [thisApartmentStatus, setThisApartmentStatus] = useState<string>("");
+  const { currentUser } = useAuth();
 
   const apartmentId = pathname.split("/").pop() as string;
 
-  // get the apartment doc
-
   useEffect(() => {
-    const getApartment = async () => {
+    // try to fetch a record in wishlist if the record contain this item id and the user id exist
+    const fetchLikeStateOfUserToThisItem = async () => {
+      try {
+        const wishlistcollectionRef = collection(db, "wishlist");
+        const q = query(
+          wishlistcollectionRef,
+          where("apartmentId", "==", apartmentId),
+          where("userId", "==", currentUser.uid)
+        );
+        const wishlistCollectionSnapshot = await getDocs(q);
+        // console.log(wishlistCollectionSnapshot.docs.at(0)?.data());
+        const fetchedWishlistItemId = wishlistCollectionSnapshot.docs.at(0)?.id;
+        // console.log(wishlistCollectionSnapshot.docs.at(0)?.id);
+        if (fetchedWishlistItemId) {
+          setLike(true);
+          setWishlistItemId(fetchedWishlistItemId);
+        }
+      } catch (err: any) {
+        console.log(err);
+      }
+    };
+    fetchLikeStateOfUserToThisItem();
+  }, [apartmentId, currentUser.uid, like]);
+
+  const handleDislikeThisApartment = async () => {
+    setLike(false);
+    await deleteDoc(doc(db, "wishlist", wishlistItemId as string));
+  };
+  const handleLikeThisApartment = async () => {
+    setLike(true);
+    const newDoc = await addDoc(collection(db, "wishlist"), {
+      userId: currentUser.uid,
+      createdDate: Timestamp.now(),
+      apartmentId: apartmentId,
+    });
+    console.log(newDoc);
+  };
+
+  // get the apartment doc
+  useEffect(() => {
+    const fetchThisApartment = async () => {
       const apartmentDocRef = doc(db, `apartments/${apartmentId}`);
       const apartmentSnapshot = await getDoc(apartmentDocRef);
       const apartmentData = apartmentSnapshot.data();
@@ -49,7 +104,7 @@ const ApartmentDetails = () => {
         id: apartmentId as string,
       });
     };
-    getApartment();
+    fetchThisApartment();
   }, [apartmentId]);
 
   useEffect(() => {
@@ -76,7 +131,7 @@ const ApartmentDetails = () => {
       setAmenities(amenities);
     };
     fetchAmenities(apartmentId);
-  }, []);
+  }, [apartmentId]);
 
   // fetch reviews data for this apartment
 
@@ -98,7 +153,7 @@ const ApartmentDetails = () => {
       });
     };
     fetchReviews(numOfReviews);
-  }, [numOfReviews]);
+  }, [apartmentId, numOfReviews]);
 
   //fetch related apartment (have the same category :)) )
 
@@ -134,10 +189,105 @@ const ApartmentDetails = () => {
       }
     };
     fetchRelatedList();
-  }, [apartment?.categoryId, apartmentId]);
+  }, [apartment, apartment?.categoryId, apartmentId]);
+
+  useEffect(() => {
+    const fetchCurrentApartmentStatus = async () => {
+      try {
+        // check if this user is already request for renting before
+        const rentalApplicationsCollectionRef = collection(
+          db,
+          "rentalApplications"
+        );
+
+        const q = query(
+          rentalApplicationsCollectionRef,
+          where("apartmentId", "==", apartmentId as string),
+          where("tenantId", "==", currentUser.uid),
+          where("status", "in", [
+            RentAppStatus.PENDING,
+            RentAppStatus.PROCESSING,
+            RentAppStatus.RENTING,
+          ])
+        );
+
+        const apartmentsCollectionSnapshot = await getDocs(q);
+
+        setThisApartmentStatus(
+          apartmentsCollectionSnapshot.docs.at(0)?.data().status
+        );
+      } catch (err: any) {
+        console.error(err.message);
+      }
+    };
+    fetchCurrentApartmentStatus();
+  }, [apartmentId, currentUser.uid, successfulRent]);
+
+  // console.log(thisApartmentStatus);
+
+  const handleClickRentBtn = () => {
+    const fetchDetailCurrentUserData = async () => {
+      const userDocRef = doc(db, `users/${currentUser.uid}`);
+      const userDocSnapshot = await getDoc(userDocRef);
+      const currentUserInfo = userDocSnapshot.data() as User;
+
+      if (
+        !currentUserInfo.email ||
+        !currentUserInfo.fullName ||
+        !currentUserInfo.phoneNumber ||
+        !currentUserInfo.yearOfBirth
+      ) {
+        setIsModalClose(false);
+      } else {
+        const oneYear = 365 * 24 * 60 * 60 * 1000;
+        const rentalAplicationDocRef = collection(db, "rentalApplications");
+        const rentalApplicationData: RentalApplication = {
+          apartmentId: apartmentId,
+          createdDate: Timestamp.now(),
+          startDate: Timestamp.now(),
+          // Convert endDate to Timestamp
+          endDate: Timestamp.fromMillis(
+            Timestamp.now().toDate().getTime() +
+              (apartment?.contractDuration as number) * oneYear
+          ),
+          note: "",
+          status: RentAppStatus.PENDING,
+          tenantId: currentUser.uid,
+        };
+
+        try {
+          if (!apartment?.rented && !thisApartmentStatus) {
+            const addedData = await addDoc(
+              rentalAplicationDocRef,
+              rentalApplicationData
+            );
+            if (addedData.id) {
+              setSuccessfulRent(true);
+            }
+          }
+        } catch (err: any) {
+          console.error(err.message);
+        }
+      }
+    };
+
+    fetchDetailCurrentUserData();
+  };
+
+  const handleCloseModalRemindUpdateProfile = () => {
+    setIsModalClose(true);
+  };
 
   return (
     <main className="apartment-details-page">
+      {!isModalClose && (
+        <ModalBackToPersonalInfo
+          onClose={handleCloseModalRemindUpdateProfile}
+        />
+      )}
+      {successfulRent && (
+        <SuccessRentModal onClose={() => setSuccessfulRent(false)} />
+      )}
       <div className="apartment-details">
         <div className="apartment-details__info">
           <div className="text-info">
@@ -166,14 +316,32 @@ const ApartmentDetails = () => {
           </div>
           <div className="action-and-price">
             <p className="action">
-              <AiOutlineHeart className="icon " />
-              {/* <AiFillHeart className="icon " style={{ color: "#eb6753" }} /> */}
+              {like ? (
+                <AiFillHeart
+                  onClick={handleDislikeThisApartment}
+                  className="icon "
+                  style={{ color: "#eb6753" }}
+                />
+              ) : (
+                <AiOutlineHeart
+                  className="icon"
+                  onClick={handleLikeThisApartment}
+                />
+              )}
             </p>
             <h3 className="price">
               {apartment && formatter.format(apartment.pricePerMonth)}
               <em>/month</em>
             </h3>
-            <button className="rent-btn">Ask for Rent</button>
+            {apartment?.rented ? (
+              <p>rented</p>
+            ) : thisApartmentStatus ? (
+              <p>{thisApartmentStatus}</p>
+            ) : (
+              <button onClick={handleClickRentBtn} className="rent-btn">
+                Ask for Rent
+              </button>
+            )}
           </div>
         </div>
 

@@ -1,16 +1,71 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { BiBed, BiBath, BiHomeAlt } from "react-icons/bi";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { Apartment } from "../../../type/Apartment";
 import "./ApartmentItem.scss";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../../context/AuthContext";
+import {
+  Timestamp,
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
+import { db } from "../../../config/firebase_config";
 interface IApartmentProps {
   className?: string;
   apartment: Apartment;
 }
 
 const ApartmentItem = ({ className, apartment }: IApartmentProps) => {
+  const [wishlistItemId, setWishlistItemId] = useState<string | null>(null);
+  const [like, setLike] = useState<boolean>(false);
+  const { currentUser } = useAuth();
+
+  useEffect(() => {
+    // try to fetch a record in wishlist if the record contain this item id and the user id exist
+    const fetchLikeStateOfUserToThisItem = async () => {
+      try {
+        const wishlistcollectionRef = collection(db, "wishlist");
+        const q = query(
+          wishlistcollectionRef,
+          where("apartmentId", "==", apartment.id),
+          where("userId", "==", currentUser.uid)
+        );
+        const wishlistCollectionSnapshot = await getDocs(q);
+        // console.log(wishlistCollectionSnapshot.docs.at(0)?.data());
+        const fetchedWishlistItemId = wishlistCollectionSnapshot.docs.at(0)?.id;
+        // console.log(wishlistCollectionSnapshot.docs.at(0)?.id);
+        if (fetchedWishlistItemId) {
+          setLike(true);
+          setWishlistItemId(fetchedWishlistItemId);
+        }
+      } catch (err: any) {
+        console.log(err);
+      }
+    };
+    fetchLikeStateOfUserToThisItem();
+  }, [apartment.id, currentUser?.uid, like]);
+
+  const handleDislikeItem = async () => {
+    setLike(false);
+    await deleteDoc(doc(db, "wishlist", wishlistItemId as string));
+  };
+  const handleLikeItem = async () => {
+    setLike(true);
+    const newDoc = await addDoc(collection(db, "wishlist"), {
+      userId: currentUser.uid,
+      createdDate: Timestamp.now(),
+      apartmentId: apartment.id,
+    });
+    // console.log(newDoc);
+  };
+
   return (
     <div className={`feature-item ${className}`}>
       <div className="feature-item__image">
@@ -44,8 +99,15 @@ const ApartmentItem = ({ className, apartment }: IApartmentProps) => {
         <div className="actions">
           <span className="actions__quantity-available">Apartment</span>
           <span className="actions__watch-later">
-            <AiOutlineHeart className="icon " />
-            {/* <AiFillHeart className="icon " style={{ color: "#eb6753" }} /> */}
+            {like ? (
+              <AiFillHeart
+                className="icon"
+                onClick={handleDislikeItem}
+                style={{ color: "#eb6753" }}
+              />
+            ) : (
+              <AiOutlineHeart onClick={handleLikeItem} className="icon" />
+            )}
           </span>
         </div>
       </div>

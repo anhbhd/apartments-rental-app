@@ -1,69 +1,145 @@
-import React from "react";
+import { useEffect, useState } from "react";
+import { Apartment } from "../../../type/Apartment";
+import { RentalApplication } from "../../../type/RentalApplication";
+import { secondsToDateTime } from "../../../utils/SecondToDate";
 import "./RentalAppContent.scss";
 import { Link } from "react-router-dom";
-const RentalAppContent = () => {
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { db } from "../../../config/firebase_config";
+import { User } from "../../../type/User";
+import { RentAppStatus } from "../../../common/constants/RentalAppStatus";
+
+interface IRentalAppContentProps {
+  rental: RentalApplication;
+  onSetRentalApp: (rentalapp: RentalApplication) => void;
+}
+
+const RentalAppContent = ({
+  rental,
+  onSetRentalApp,
+}: IRentalAppContentProps) => {
+  const [apartment, setApartment] = useState<Apartment | null>(null);
+  const [userData, setUserData] = useState<User | null>(null);
+  useEffect(() => {
+    async function fetchRental() {
+      const docSnapshot = await getDoc(
+        doc(db, `apartments/${rental?.apartmentId}`)
+      );
+      if (!docSnapshot.exists) {
+        console.log("No such document!");
+      } else {
+        setApartment({
+          ...(docSnapshot.data() as Apartment),
+          id: docSnapshot.id as string,
+        });
+      }
+    }
+
+    fetchRental();
+  }, [rental?.apartmentId]);
+
+  useEffect(() => {
+    async function fetchRental() {
+      const docSnapshot = await getDoc(doc(db, `users/${rental?.tenantId}`));
+      if (!docSnapshot.exists) {
+        console.log("No such document!");
+      } else {
+        setUserData({
+          ...(docSnapshot.data() as User),
+          id: docSnapshot.id as string,
+        });
+      }
+    }
+
+    fetchRental();
+  }, [rental?.tenantId]);
+
+  const handleCancelRequest = async () => {
+    if (
+      rental.status === RentAppStatus.PENDING ||
+      rental.status === RentAppStatus.PROCESSING
+    ) {
+      try {
+        const docRef = doc(db, `rentalApplications/${rental.id}`);
+        await updateDoc(docRef, {
+          status: RentAppStatus.CANCELED,
+        });
+        onSetRentalApp({
+          ...rental,
+          status: RentAppStatus.CANCELED,
+        });
+        console.log("Document written");
+      } catch (error) {
+        console.error("Error adding document: ", error);
+      }
+    }
+  };
+
   return (
     <div className="rental-app-content">
       <div className="rental-app-content__info">
         <p className="line">
           <label>Created date</label>
-          <span>Nov 22, 2023</span>
+          <span>
+            {secondsToDateTime(rental?.createdDate.seconds).toDateString()}
+          </span>
         </p>
         <p className="line">
           <label>Start date</label>
-          <span>Nov 22, 2023</span>
+          <span>
+            {secondsToDateTime(rental?.startDate.seconds).toDateString()}
+          </span>
         </p>
         <p className="line">
           <label>End date</label>
-          <span>Nov 22, 2023</span>
+          <span>
+            {secondsToDateTime(rental?.endDate.seconds).toDateString()}
+          </span>
         </p>
         <p className="line">
           <label>Deposit</label>
-          <span>1154545</span>
+          <span>{apartment?.depositMoney} $</span>
         </p>
         <p className="line">
           <label>Status</label>
-          <span>Pending</span>
+          <span>{rental?.status}</span>
         </p>
-        <div className="note">
+        <div className="line">
           <label>Note</label>
-          <p>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Alias
-            totam ratione impedit doloremque, adipisci dolorem, non sequi animi
-            cumque architecto, voluptas quia voluptate a fuga quae consectetur
-            debitis aliquid! Libero!
-          </p>
+          <p>{rental?.note || "N/A"}</p>
         </div>
       </div>
       <div className="rental-app-content__tenant-info">
         <p className="line">
           <label>Fullname</label>
-          <span>Luke deVilos</span>
+          <span>{userData?.fullName || "N/A"}</span>
         </p>
+
         <p className="line">
-          <label>Gender</label>
-          <span>Luke deVilos</span>
-        </p>
-        <p className="line">
-          <label>Date of birth</label>
-          <span>Luke deVilos</span>
+          <label>Year of birth</label>
+          <span>{userData?.yearOfBirth}</span>
         </p>
         <p className="line">
           <label>Phone number</label>
-          <span>032548484</span>
+          <span>{userData?.phoneNumber}</span>
         </p>
         <p className="line">
           <label>Email</label>
-          <span>Luke deVilos</span>
+          <span>{userData?.email}</span>
         </p>
       </div>
       <div className="rental-app-content__apartment-info">
         <p>Click here to view the apartment information:</p>
-        <Link to="/">Link to the apartment info</Link>
+        <Link to={`/apartments/${rental?.apartmentId}`}>
+          Link to the apartment info
+        </Link>
       </div>
 
       <div className="rental-app-content__actions">
-        <button>Request to cancel</button>
+        {(rental?.status === RentAppStatus.PENDING ||
+          rental?.status === RentAppStatus.PROCESSING) && (
+          <button onClick={handleCancelRequest}>Request to cancel</button>
+        )}
       </div>
     </div>
   );

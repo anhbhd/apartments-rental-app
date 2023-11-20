@@ -36,6 +36,14 @@
             font-size: 1.5rem;
           }
         }
+        p {
+          &:last-child {
+            font-size: 2rem;
+            text-transform: uppercase;
+            font-weight: 800;
+            color: $secondary-color;
+          }
+        }
         .rent-btn {
           cursor: pointer;
           border-radius: 0.5rem;

@@ -41,18 +41,6 @@ const InfoForm: React.FC<IInfoFormProps> = ({
       className={`info-form ${className}`}
     >
       <div className="info-form__input-field">
-        <label>Email</label>
-        <input
-          type="text"
-          value={formState.email}
-          name="email"
-          onChange={(e) =>
-            setFormState({ ...formState, email: e.target.value })
-          }
-          disabled={!isEditing}
-        />
-      </div>
-      <div className="info-form__input-field">
         <label>Full name</label>
         <input
           type="text"
@@ -77,7 +65,7 @@ const InfoForm: React.FC<IInfoFormProps> = ({
         />
       </div>
       <div className="info-form__input-field">
-        <label>Gender</label>
+        <label>Year of Birth</label>
         <input
           type="text"
           name="gender"
@@ -98,7 +86,7 @@ const InfoForm: React.FC<IInfoFormProps> = ({
           className="edit-btn"
           onClick={() => setIsEditting(true)}
         >
-          Edit
+          Edit or Update
         </button>
       )}
     </form>

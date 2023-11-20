@@ -1,3 +1,5 @@
+@import "./../../../sass/variables.scss";
+@import "./../../../sass/mixins.scss";
 .rental-app-content {
   box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px,
     rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
@@ -21,13 +23,6 @@
     label {
       font-weight: 600;
     }
-    .note {
-      margin-bottom: 5rem;
-      label {
-        display: inline-block;
-        margin-bottom: 1rem;
-      }
-    }
   }
   &__apartment-info {
     p {
@@ -35,6 +30,7 @@
     }
     a {
       display: inline-block;
+      color: #d75642;
     }
   }
   &__actions {
@@ -54,8 +50,20 @@
       background-color: rgba($color: #d75642, $alpha: 0.8);
       &:active,
       &:focus {
-        box-shadow: rgba(3, 102, 214, 0.3) 0px 0px 0px 3px;
+        box-shadow: rgba($color: #c7948c, $alpha: 0.8) 0px 0px 0px 3px;
       }
     }
+  }
+}
+@media (max-width: $desktop-width) {
+  .rental-app-content {
+    &__actions {
+      margin-top: 3rem;
+    }
+  }
+}
+@media (max-width: 320px) {
+  .rental-app-content {
+    padding: 2rem;
   }
 }

@@ -5,6 +5,7 @@
   @include css-space-for-all-page-desktop-mixin;
   padding-left: 6rem;
   padding-right: 6rem;
+
   &__header-text {
     font-size: 3rem;
     margin-bottom: 2rem;
@@ -23,6 +24,8 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
+    min-height: 50vh;
+    grid-auto-rows: max-content;
   }
 }
 
@@ -48,7 +51,7 @@
 @media (max-width: $mobile-width) {
   .wishlist-page {
     padding-top: 12rem;
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
   }
 }

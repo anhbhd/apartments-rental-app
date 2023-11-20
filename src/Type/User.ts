@@ -9,5 +9,6 @@ export type User = {
   avatarUrl?: string;
   isAdmin?: boolean;
   email: string;
+  yearOfBirth: number;
   createdDate: FirebaseDate;
 };

@@ -5,6 +5,8 @@
   &__title {
     @include title-section-mixin;
     margin-bottom: 2rem;
+    text-transform: capitalize;
+    font-size: 3rem;
   }
 }
 
@@ -18,11 +20,6 @@
   .my-rental-app {
     padding-left: 2rem;
     padding-right: 2rem;
-
     padding-top: 12rem;
-    &__title {
-      @include title-section-mobile-mixin;
-      margin-bottom: 2rem;
-    }
   }
 }

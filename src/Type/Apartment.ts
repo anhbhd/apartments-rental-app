@@ -26,4 +26,6 @@ export type Apartment = {
   terms: string[];
   baths: number;
   beds: number;
+  depositMoney: number;
+  contractDuration: number;
 };

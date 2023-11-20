@@ -1,30 +1,76 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
 import "./WishlistItem.scss";
 
-import tmpImg from "../../../assets/FeatureSection/feature-item-image.jpg";
+import { Link } from "react-router-dom";
+import { WishListItem } from "../../../type/WishListItem";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../../config/firebase_config";
+import { Apartment } from "../../../type/Apartment";
 
-const WishlistItem = () => {
+interface IWishlistItemProps {
+  wishlistItem: WishListItem;
+}
+
+const WishlistItem = ({ wishlistItem }: IWishlistItemProps) => {
+  const [apartmentInWishlist, setApartmentInWishList] =
+    useState<Apartment | null>(null);
+
+  useEffect(() => {
+    const fetchDataOfWishlistItem = async () => {
+      const apartmentDocRef = doc(db, "apartments", wishlistItem.apartmentId);
+
+      const apartmentDocSnapshot = await getDoc(apartmentDocRef);
+      // console.log(apartmentDocSnapshot.data(), apartmentDocSnapshot.id);
+
+      const apartmentData = apartmentDocSnapshot.data();
+
+      setApartmentInWishList({
+        ...(apartmentData as Apartment),
+        id: wishlistItem.apartmentId,
+      });
+    };
+    fetchDataOfWishlistItem();
+  }, []);
+
   return (
     <div className="wishlist-item">
       <div className="wishlist-item__img-container">
-        <img src={tmpImg} alt="item" />
+        <img src={apartmentInWishlist?.avatar} alt="item" />
       </div>
       <div className="wishlist-item__info">
-        <p className="name">Equestrian Family Home</p>
-        <p className="address">New York City, CA, USA</p>
-        <p className="price">$1400</p>
+        <Link
+          style={{ color: "black" }}
+          to={`/apartments/${apartmentInWishlist?.id}`}
+        >
+          <p className="name">{apartmentInWishlist?.name}</p>
+        </Link>
+        <p className="address">{apartmentInWishlist?.detailedAddress}</p>
+        <p className="price">${apartmentInWishlist?.pricePerMonth}</p>
         <p className="amenities">
-          <span>1 bed</span>
-          <span>1 bath</span>
-          <span>1200 sqm</span>
+          <span>
+            {apartmentInWishlist?.beds}{" "}
+            {apartmentInWishlist && apartmentInWishlist.beds > 1
+              ? "beds"
+              : "bed"}
+          </span>
+          <span>
+            {apartmentInWishlist?.baths}{" "}
+            {apartmentInWishlist && apartmentInWishlist.baths > 1
+              ? "baths"
+              : "bath"}
+          </span>
+          <span>{apartmentInWishlist?.area} sqm</span>
         </p>
         <p className="type">
           <em>Apartment</em>
         </p>
       </div>
       <div className="wishlist-item__actions">
-        <FaRegTrashAlt className="icon" />
+        <FaRegTrashAlt
+          style={{ color: "rgba(215, 86, 66, 0.8)" }}
+          className="icon"
+        />
       </div>
     </div>
   );

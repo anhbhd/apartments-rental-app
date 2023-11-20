@@ -1,13 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Option } from "../../../type/Option";
 
 import SearchIcon from "../../../icons/SearchIcon";
 import { starsSelections } from "./StarSelections";
 
-import { citiesSelections } from "./CitySelection";
 import "./Filterbar.scss";
-import CustomSelect from "../../../utils/CustomDropdown/CustomSelect";
+
 import { IoMdClose } from "react-icons/io";
+import CustomSelect from "../../../utils/CustomDropdown/CustomSelect";
 interface IFilterbarProps {
   className: string;
   onCloseFilterBar: () => void;
@@ -17,21 +17,91 @@ const Filterbar = ({ className, onCloseFilterBar }: IFilterbarProps) => {
   const [selectedStars, setSelectedStars] = useState<Option>(
     starsSelections[0]
   );
-  const [selectedCity, setSelectedCity] = useState<Option>(starsSelections[0]);
-  const [starsSeletectBoxIsOpen, setStarsSeletecBoxtIsOpen] =
-    useState<boolean>(false);
+  const [selectedProvince, setSelectedProvince] = useState<Option>({
+    label: "All",
+    value: 0,
+  });
+  const [selectedDistrict, setSelectedDistrict] = useState<Option>({
+    label: "All",
+    value: 0,
+  });
 
-  const [citiesSeletectBoxIsOpen, setCitiesSeletecBoxtIsOpen] =
-    useState<boolean>(false);
+  const [provinces, setProvinces] = useState<Option[]>([
+    { label: "All", value: 0 },
+  ]);
+  const [districts, setDistricts] = useState<Option[]>([
+    { label: "All", value: 0 },
+  ]);
 
   const handleStarSelection = (option: Option) => {
     setSelectedStars(option);
-    setStarsSeletecBoxtIsOpen(!starsSeletectBoxIsOpen);
   };
-  const handleCitySelection = (option: Option) => {
-    setSelectedCity(option);
-    setCitiesSeletecBoxtIsOpen(!citiesSeletectBoxIsOpen);
+
+  const handleProvinceSelection = (option: Option) => {
+    setSelectedProvince(option);
   };
+  const handleDistrictSelection = (option: Option) => {
+    setSelectedDistrict(option);
+  };
+
+  // fetch province
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch("https://provinces.open-api.vn/api/p");
+        const provinceData = await res.json();
+
+        // Transform response to match select options format
+        const provinces = provinceData.map(
+          (province: { name: any; code: any }) => ({
+            label: province.name,
+            value: province.code,
+          })
+        );
+
+        setProvinces((prevState) => [...prevState, ...provinces]);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // fetch district base on the province
+  // console.log(selectedProvince);
+  useEffect(() => {
+    const handleProvinceSelect = async () => {
+      if (selectedProvince.value !== 0) {
+        try {
+          const url = `https://provinces.open-api.vn/api/p/${selectedProvince.value}?depth=2`;
+          const res = await fetch(url);
+          const province = await res.json();
+
+          // Extract districts array
+          const fetchedDistrictsData = province.districts;
+
+          const districts = fetchedDistrictsData.map(
+            (district: { name: any; code: any }) => ({
+              label: district.name,
+              value: district.code,
+            })
+          );
+
+          setDistricts(() => [
+            {
+              label: "All",
+              value: 0,
+            },
+            ...districts,
+          ]);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    };
+    handleProvinceSelect();
+  }, [selectedProvince]);
 
   return (
     <div className={`filterbar ${className}`}>
@@ -106,7 +176,7 @@ const Filterbar = ({ className, onCloseFilterBar }: IFilterbarProps) => {
 
       {/* custom select box for stars selection */}
       <div className="filterbar__section">
-        <p className="field-label">Fill by Stars</p>
+        <p className="field-label">Filter by Stars</p>
         <CustomSelect
           className="select-box"
           onSelect={handleStarSelection}
@@ -117,24 +187,24 @@ const Filterbar = ({ className, onCloseFilterBar }: IFilterbarProps) => {
 
       {/* custom select box for city selection */}
       <div className="filterbar__section">
-        <p className="field-label">Fill by City</p>
+        <p className="field-label">Filter by City</p>
         <CustomSelect
           className="select-box"
-          onSelect={handleCitySelection}
-          options={citiesSelections}
-          selected={citiesSelections[0]}
+          onSelect={handleProvinceSelection}
+          options={provinces}
+          selected={provinces[0]}
         />
       </div>
 
       {/* custom select box for District selection */}
       <div className="filterbar__section">
-        <p className="field-label">Fill by District</p>
+        <p className="field-label">Filter by District</p>
 
         <CustomSelect
           className="select-box"
-          onSelect={handleCitySelection}
-          options={citiesSelections}
-          selected={citiesSelections[0]}
+          onSelect={handleDistrictSelection}
+          options={districts}
+          selected={districts[0]}
         />
       </div>
 

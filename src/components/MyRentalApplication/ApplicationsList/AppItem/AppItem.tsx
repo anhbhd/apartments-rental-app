@@ -1,15 +1,47 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./AppItem.scss";
 import { Link } from "react-router-dom";
-const AppItem = () => {
+import { RentalApplication } from "../../../../type/RentalApplication";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../../../config/firebase_config";
+import { Apartment } from "../../../../type/Apartment";
+import { secondsToDateTime } from "../../../../utils/SecondToDate";
+
+interface IAppItemProps {
+  rentalApplication: RentalApplication;
+}
+
+const AppItem = ({ rentalApplication }: IAppItemProps) => {
+  const [apartment, setApartment] = useState<Apartment>();
+  useEffect(() => {
+    const fetchThisApartment = async () => {
+      const apartmentId = rentalApplication.apartmentId;
+      const apartmentDocRef = doc(db, `apartments/${apartmentId}`);
+      const apartmentSnapshot = await getDoc(apartmentDocRef);
+      const apartmentData = apartmentSnapshot.data();
+
+      setApartment({
+        ...(apartmentData as Apartment),
+        id: apartmentId as string,
+      });
+    };
+    fetchThisApartment();
+  }, [rentalApplication.apartmentId]);
   return (
     <div className="app-item">
       <span className="app-item__code">
-        <strong>codetets1xasy</strong>
+        <strong>{rentalApplication.id}</strong>
       </span>
-      <span className="app-item__name">Best house ever</span>
-      <span className="app-item__created-date">26/11/2020</span>
-      <Link to={`/my_rental_apps/1`} className="app-item__view-details">
+      <span className="app-item__name">{apartment?.name}</span>
+      <span className="app-item__created-date">
+        {secondsToDateTime(
+          rentalApplication.createdDate.seconds
+        ).toDateString()}
+      </span>
+      <Link
+        to={`/my_rental_apps/${rentalApplication?.id}`}
+        className="app-item__view-details"
+      >
         View details
       </Link>
     </div>

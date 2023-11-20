@@ -1,5 +1,3 @@
-import React, { useEffect, useState } from "react";
-
 import "./PropertyDescription.scss";
 import { Apartment } from "../../../type/Apartment";
 import { formatter } from "../../../utils/FormatMoney";

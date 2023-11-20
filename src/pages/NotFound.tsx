@@ -5,7 +5,7 @@ const NotFound = () => {
   return (
     <>
       <h1
-        style={{ fontSize: "10rem", textAlign: "center", paddingTop: "10rem" }}
+        style={{ fontSize: "5rem", textAlign: "center", paddingTop: "10rem" }}
       >
         404 NOT FOUND
       </h1>
