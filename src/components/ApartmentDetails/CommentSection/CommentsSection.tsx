@@ -9,7 +9,7 @@ const CommentsSection = () => {
       <div className="comments-section__reviews-sorting">
         <span className="num-reviews">3 Reviews</span>
         <div className="sorting">
-          <span>Sort by</span>
+          <span>Filter by</span>
           <select name="sortByStar" id="">
             <option value="1">1 Star</option>
             <option value="1">2 Stars</option>

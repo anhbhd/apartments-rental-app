@@ -3,17 +3,19 @@
 
 .personal-info {
   @include css-space-for-all-page-desktop-mixin;
-  min-height: unset;
+  min-height: 100vh;
   padding-top: 12rem;
-  padding-bottom: 5rem;
 
   &__container {
     background-color: $background-white;
-    padding: 8rem 5rem;
-    padding-top: 3rem;
+    padding: 2rem 4rem;
+    max-width: 50rem;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
       rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-    border-radius: 0.5rem;
+
+    margin-left: 50%;
+    transform: translateX(-50%);
+    border-radius: 3rem;
     .title {
       @include title-section-mixin;
       font-size: 2.5rem;
@@ -21,20 +23,24 @@
       text-transform: capitalize;
     }
     .grid-container {
-      display: grid;
-      grid-template-columns: 2fr 3fr;
       .current-info {
         font-size: $normal-font-size;
 
         .img-container {
-          max-width: 15rem;
           margin-bottom: 3rem;
+          max-width: 20rem;
+          margin-left: 50%;
+          transform: translateX(-50%);
           img {
             width: 100%;
             border-radius: 100%;
           }
         }
         &__field {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          margin-bottom: 2rem;
+          gap: 1rem;
           span {
             display: inline-block;
             line-height: 3rem;
@@ -45,8 +51,70 @@
               margin-left: 1rem;
             }
             &.color-red {
-              color: red;
+              color: $secondary-color;
               font-style: italic;
+              font-weight: bold;
+            }
+          }
+          input {
+            border: none;
+            border-radius: 5px;
+            box-sizing: border-box;
+            padding: 2px 5px;
+            box-shadow: rgba($secondary-color, 0.3) 0px 0px 0px 3px;
+            &:focus {
+              outline: none;
+            }
+          }
+        }
+      }
+    }
+    .btn-container {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      .btn {
+        margin-top: 2rem;
+        padding: 1rem 3rem;
+        border: none;
+        border-radius: 1rem;
+        cursor: pointer;
+        font-weight: 550;
+      }
+      .edit-btn {
+        background-color: $secondary-color;
+        color: white;
+      }
+      .save-btn {
+        background-color: $secondary-color;
+        color: white;
+      }
+    }
+  }
+}
+
+@media (max-width: $desktop-width) {
+  .personal-info {
+    padding-left: 3rem;
+    padding-right: 3rem;
+    &__container {
+      max-width: 50rem;
+    }
+  }
+}
+@media (max-width: $mobile-width) {
+  .personal-info {
+    &__container {
+      width: 100%;
+      .grid-container {
+        .current-info {
+          width: 100%;
+          .current-info {
+            &__field {
+              grid-template-columns: 1fr;
+              & span:last-child {
+                margin-left: 0;
+              }
             }
           }
         }

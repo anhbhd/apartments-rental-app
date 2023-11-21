@@ -4,15 +4,16 @@ import "./WishlistItem.scss";
 
 import { Link } from "react-router-dom";
 import { WishListItem } from "../../../type/WishListItem";
-import { doc, getDoc } from "firebase/firestore";
+import { deleteDoc, doc, getDoc } from "firebase/firestore";
 import { db } from "../../../config/firebase_config";
 import { Apartment } from "../../../type/Apartment";
 
 interface IWishlistItemProps {
   wishlistItem: WishListItem;
+  onDeleteItem: (id: string) => void;
 }
 
-const WishlistItem = ({ wishlistItem }: IWishlistItemProps) => {
+const WishlistItem = ({ wishlistItem, onDeleteItem }: IWishlistItemProps) => {
   const [apartmentInWishlist, setApartmentInWishList] =
     useState<Apartment | null>(null);
 
@@ -31,7 +32,17 @@ const WishlistItem = ({ wishlistItem }: IWishlistItemProps) => {
       });
     };
     fetchDataOfWishlistItem();
-  }, []);
+  }, [wishlistItem?.apartmentId]);
+
+  const handleDeleteWishlistItem = async () => {
+    try {
+      onDeleteItem(wishlistItem.id);
+      const docRef = doc(db, "wishlist", wishlistItem.id);
+      await deleteDoc(docRef);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
 
   return (
     <div className="wishlist-item">
@@ -68,6 +79,7 @@ const WishlistItem = ({ wishlistItem }: IWishlistItemProps) => {
       </div>
       <div className="wishlist-item__actions">
         <FaRegTrashAlt
+          onClick={handleDeleteWishlistItem}
           style={{ color: "rgba(215, 86, 66, 0.8)" }}
           className="icon"
         />

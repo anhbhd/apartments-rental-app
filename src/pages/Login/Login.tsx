@@ -2,12 +2,13 @@ import React, { ChangeEvent, FormEvent, useState } from "react";
 
 import "./Login.scss";
 import GoogleIcon from "../../icons/GoogleIcon";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, db, provider } from "../../config/firebase_config";
 import { useAuth } from "../../context/AuthContext";
 import { emailRegex } from "../../utils/regex";
 import { Timestamp, doc, getDoc, setDoc } from "firebase/firestore";
+import FullLoadingScreen from "../../utils/FullLoadingScreen/FullLoadingScreen";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -16,25 +17,27 @@ const Login = () => {
   const [isValidEmail, setIsValidEmail] = useState(true);
   const [promisedError, setPromisedError] = useState<string>();
   const { setCredentialUserForApp } = useAuth();
-
+  const [isLogging, setIsLogging] = useState<boolean>(false);
   const validateEmail = (email: string): boolean => {
     return emailRegex.test(email);
   };
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-
+    setIsLogging(true);
     if (isValidEmail && email && password) {
       await signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
+          setIsLogging(false);
           navigate("/");
           console.log("login successfully");
           console.log(user);
         })
         .catch((error: any) => {
           setPromisedError(error.code);
+          setIsLogging(false);
         });
     } else {
       setIsValidEmail(false);
@@ -92,6 +95,7 @@ const Login = () => {
 
   return (
     <div className="loginpage">
+      {isLogging && <FullLoadingScreen />}
       <div className="login">
         <div className="login__text-header">
           <h3 className="login__text-header--text-lg">Sign in</h3>
@@ -123,7 +127,9 @@ const Login = () => {
               value={password}
             />
           </div>
-
+          <Link className="create-account" to="/signup">
+            Create an account
+          </Link>
           <button className="login__signin-button" type="submit">
             Sign in
           </button>

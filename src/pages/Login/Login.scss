@@ -28,7 +28,12 @@
       @include normal-text-mixin;
     }
   }
-
+  .create-account {
+    font-size: $normal-font-size;
+    color: $secondary-color;
+    margin-bottom: 2rem;
+    display: inline-block;
+  }
   &__field {
     position: relative;
     margin-bottom: 3rem;

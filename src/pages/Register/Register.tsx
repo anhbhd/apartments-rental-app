@@ -5,7 +5,7 @@ import { auth, db, provider } from "./../../config/firebase_config";
 import "./Register.scss";
 import GoogleIcon from "../../icons/GoogleIcon";
 import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { emailRegex } from "../../utils/regex";
 
@@ -170,6 +170,9 @@ const Register: React.FC = () => {
             />
             <p className="error-msg-form">{confirmPasswordError}</p>
           </div>
+          <Link className="login-link" to="/login">
+            Already have an account?
+          </Link>
           <button className="register__register-button" type="submit">
             Sign up
           </button>

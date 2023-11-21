@@ -1,8 +1,10 @@
 import React from "react";
 import "./HeroSection.scss";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 const HeroSection = () => {
+  const { currentUser } = useAuth();
   return (
     <section className="hero-section">
       <div className="hero-section__text">
@@ -14,10 +16,16 @@ const HeroSection = () => {
         <button className="button">
           <Link to="/search">Our available Apartments</Link>
         </button>
-
-        <button className="button">
-          <Link to="/signup">Create an Account</Link>
-        </button>
+        {!currentUser && (
+          <button className="button signup">
+            <Link to="/signup">Create an Account</Link>
+          </button>
+        )}
+        {currentUser && (
+          <button className="button signup">
+            <Link to="/wishlist">Your Wishlist</Link>
+          </button>
+        )}
       </div>
     </section>
   );

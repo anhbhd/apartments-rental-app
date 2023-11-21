@@ -89,12 +89,12 @@ const ApartmentDetails = () => {
   const handleLikeThisApartment = async () => {
     if (currentUser) {
       setLike(true);
-      const newDoc = await addDoc(collection(db, "wishlist"), {
+      await addDoc(collection(db, "wishlist"), {
         userId: currentUser.uid,
         createdDate: Timestamp.now(),
         apartmentId: apartmentId,
       });
-      console.log(newDoc);
+      // console.log(newDoc);
     } else return;
   };
 

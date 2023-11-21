@@ -64,7 +64,7 @@ const ApartmentItem = ({ className, apartment }: IApartmentProps) => {
   const handleLikeItem = async () => {
     if (currentUser) {
       setLike(true);
-      const newDoc = await addDoc(collection(db, "wishlist"), {
+      await addDoc(collection(db, "wishlist"), {
         userId: currentUser.uid,
         createdDate: Timestamp.now(),
         apartmentId: apartment.id,

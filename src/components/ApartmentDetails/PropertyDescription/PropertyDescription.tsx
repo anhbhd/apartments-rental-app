@@ -54,6 +54,34 @@ const PropertyDescription = ({
             <label>Property Status</label>
             <span>{apartment?.rented ? "Rented" : "Available"}</span>
           </div>
+          <div className="property-details__item">
+            <label>Number of floors</label>
+            <span>{apartment?.numberOfFloors}</span>
+          </div>
+          <div className="property-details__item">
+            <label>Direction</label>
+            <span>{apartment?.direction}</span>
+          </div>
+          <div className="property-details__item">
+            <label>Front width</label>
+            <span>{apartment?.frontWidth} m</span>
+          </div>
+          <div className="property-details__item">
+            <label>Owner</label>
+            <span>{apartment?.owner}</span>
+          </div>
+          <div className="property-details__item">
+            <label>Owner's phone number</label>
+            <span>{apartment?.ownerPhoneNumber}</span>
+          </div>
+          <div className="property-details__item">
+            <label>Contract duration</label>
+            <span>{apartment?.contractDuration} year(s)</span>
+          </div>
+          <div className="property-details__item">
+            <label>Deposit Money</label>
+            <span>{apartment?.depositMoney} dollars</span>
+          </div>
         </div>
       </div>
 
@@ -73,6 +101,21 @@ const PropertyDescription = ({
               <label>District</label>
               <span>{apartment?.district}</span>
             </p>
+          </div>
+        </div>
+      </div>
+      <div className="address-section">
+        <h3 className="address-section__title">Terms</h3>
+        <div className="address-section__info-container">
+          <div className="address-section__text-details">
+            {apartment?.terms.map((term, index) => {
+              return (
+                <p key={index} className="item">
+                  <label>{index + 1}</label>
+                  <span>{term}</span>
+                </p>
+              );
+            })}
           </div>
         </div>
       </div>

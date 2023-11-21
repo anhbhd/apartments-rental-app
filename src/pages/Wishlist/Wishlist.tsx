@@ -12,9 +12,19 @@ import {
 } from "firebase/firestore";
 import { db } from "../../config/firebase_config";
 import { useAuth } from "../../context/AuthContext";
+import FullLoadingScreen from "../../utils/FullLoadingScreen/FullLoadingScreen";
 const Wishlist = () => {
   const [wishlist, setWishlist] = useState<WishListItem[]>([]);
   const { currentUser } = useAuth();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const handleDeleteWishlist = (id: string) => {
+    setWishlist(
+      wishlist.filter((item) => {
+        return item.id !== id;
+      })
+    );
+  };
+
   useEffect(() => {
     const fetchUserWishlist = async () => {
       const wishlistRef = collection(db, "wishlist");
@@ -29,6 +39,7 @@ const Wishlist = () => {
           } as WishListItem)
       );
       setWishlist(items);
+      setIsLoading(false);
     };
 
     fetchUserWishlist();
@@ -56,20 +67,32 @@ const Wishlist = () => {
       <h3 className="wishlist-page__header-text">
         Your <span>Wishlist</span>
       </h3>
-      <p
-        onClick={handleClearAllWishlist}
-        className="wishlist-page__clear-button"
-      >
-        Clear all
-      </p>
-
-      <div className="wishlist-page__wishlist-container">
-        {wishlist.map((wishlistItem) => (
-          <WishlistItem wishlistItem={wishlistItem} key={wishlistItem.id} />
-        ))}
-      </div>
-
-      <Pagination />
+      {isLoading && <FullLoadingScreen />}
+      {!isLoading && (
+        <>
+          {wishlist.length > 0 && (
+            <p
+              onClick={handleClearAllWishlist}
+              className="wishlist-page__clear-button"
+            >
+              Clear all
+            </p>
+          )}
+          <div className="wishlist-page__wishlist-container">
+            {wishlist.length < 1 && (
+              <p style={{ fontSize: "2rem" }}>Your wishlist is empty</p>
+            )}
+            {wishlist.map((wishlistItem) => (
+              <WishlistItem
+                onDeleteItem={handleDeleteWishlist}
+                wishlistItem={wishlistItem}
+                key={wishlistItem.id}
+              />
+            ))}
+          </div>
+          <Pagination />
+        </>
+      )}
     </main>
   );
 };

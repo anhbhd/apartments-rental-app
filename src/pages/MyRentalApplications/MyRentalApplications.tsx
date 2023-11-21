@@ -8,9 +8,11 @@ import { RentalApplication } from "../../type/RentalApplication";
 import { useAuth } from "../../context/AuthContext";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../config/firebase_config";
+import FullLoadingScreen from "../../utils/FullLoadingScreen/FullLoadingScreen";
 
 const MyRentalApplications = () => {
   const [rentalApps, setRentalApps] = useState<RentalApplication[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const { currentUser } = useAuth();
   useEffect(() => {
     const fetchRentalApps = async () => {
@@ -32,6 +34,7 @@ const MyRentalApplications = () => {
         );
 
         setRentalApps(applicationsData);
+        setLoading(false);
       } catch (err: any) {
         console.error(err.message);
       }
@@ -45,8 +48,14 @@ const MyRentalApplications = () => {
         My <span>rental applications</span>
       </h3>
       <Filter />
-      <ApplicationsList rentalApps={rentalApps} />
-      {rentalApps.length > 6 && <Pagination />}
+      {loading && <FullLoadingScreen />}
+
+      {!loading && (
+        <>
+          <ApplicationsList rentalApps={rentalApps} />
+          {rentalApps.length > 6 && <Pagination />}
+        </>
+      )}
     </main>
   );
 };

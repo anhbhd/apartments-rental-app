@@ -9,10 +9,8 @@ import { RentalApplication } from "../../type/RentalApplication";
 const DetailedRentalApplication = () => {
   const location = useLocation();
 
-  const rentalAppId = location.pathname.split("/").pop();
-
   const [rental, setRental] = useState<RentalApplication | null>(null);
-
+  const rentalAppId = location.pathname.split("/").pop();
   useEffect(() => {
     async function fetchRental() {
       const docSnapshot = await getDoc(
