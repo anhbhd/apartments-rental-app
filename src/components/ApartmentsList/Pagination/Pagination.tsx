@@ -1,4 +1,3 @@
-// Pagination.tsx
 import React, { useState, useEffect } from "react";
 import "./Pagination.scss";
 

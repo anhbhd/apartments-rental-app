@@ -13,7 +13,7 @@ import { Backdrop } from "../../utils/Backdrop/Backdrop";
 import { SortBy } from "../../components/ApartmentsList/ResultAndSortBy/SortBy";
 import { FilterbarType } from "../../type/Filterbar";
 import { Option } from "../../type/Option";
-import { limit, query, where } from "firebase/firestore";
+import { limit, orderBy, query, where } from "firebase/firestore";
 
 const initalFilterValue: FilterbarType = {
   sortby: SortBy.ALL,
@@ -32,39 +32,119 @@ const ApartmentsList: React.FC = () => {
   const [apartments, setApartments] = useState<Apartment[]>([]);
 
   const [toggleFilterBar, setToggleFilterBar] = useState<boolean>(false);
-  // const [isLoading, setIsLoading] = useState(true);
-  // const [error, setError] = useState("");
 
-  // object for filter
   const [apartmentListFilter, setApartmentListFilter] =
     useState<FilterbarType>(initalFilterValue);
+
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [totalItem, setTotalItems] = useState<number>(0);
-  const [lastVisible, setLastVisible] = useState<any>();
-  const itemsPerPage = 2; // Set your desired items per page
+  const [totalItems, setTotalItems] = useState<number>(0);
+  const itemsPerPage = 4;
 
   console.log(apartmentListFilter);
 
   useEffect(() => {
     const getAllApartments = async () => {
       const apartmentsCollectionRef = collection(db, "apartments");
-      const totalItem = (await getDocs(apartmentsCollectionRef)).size;
-      let q = query(apartmentsCollectionRef, limit(itemsPerPage));
-      const apartmentsSnapshot = await getDocs(q);
-
-      console.log(totalItem);
       let apartmentsData: Apartment[] = [];
-      if (apartmentsSnapshot) {
-        apartmentsSnapshot.docs.forEach((doc: any) => {
-          apartmentsData.push({
-            ...doc.data(),
-            id: doc.id,
+
+      // trường hợp bộ lọc trống
+      if (
+        JSON.stringify(apartmentListFilter) ===
+        JSON.stringify(initalFilterValue)
+      ) {
+        const totalItem = (await getDocs(apartmentsCollectionRef)).size;
+
+        const apartmentsSnapshot = await getDocs(apartmentsCollectionRef);
+        if (apartmentsSnapshot) {
+          apartmentsSnapshot.docs.forEach((doc: any) => {
+            apartmentsData.push({
+              ...doc.data(),
+              id: doc.id,
+            });
           });
-        });
+        }
+
+        setApartments(apartmentsData);
+        setTotalItems(totalItem);
+        setCurrentPage(1);
+      } else {
+        try {
+          let q = query(apartmentsCollectionRef);
+
+          // Filter by categories
+          if (apartmentListFilter.categories.length) {
+            q = query(
+              q,
+              where("categoryId", "in", apartmentListFilter.categories)
+            );
+          }
+
+          // Filter by average rating
+          if (apartmentListFilter.stars) {
+            q = query(q, where("avgRate", "==", apartmentListFilter.stars));
+          }
+          if (apartmentListFilter.cityCode) {
+            q = query(q, where("city", "==", apartmentListFilter.cityCode));
+          }
+          if (apartmentListFilter.districtCode) {
+            q = query(
+              q,
+              where("district", "==", apartmentListFilter.districtCode)
+            );
+          }
+          // Sort by
+          if (apartmentListFilter.sortby === SortBy.NEWEST) {
+            q = query(q, orderBy("createdDate", "desc"));
+          } else if (apartmentListFilter.sortby === SortBy.OLDEST) {
+            q = query(q, orderBy("createdDate", "asc"));
+          } else if (apartmentListFilter.sortby === SortBy.HIGHTOLOWPRICE) {
+            q = query(q, orderBy("pricePerMonth", "desc"));
+          } else if (apartmentListFilter.sortby === SortBy.LOWTOHIGHPRICE) {
+            q = query(q, orderBy("pricePerMonth", "asc"));
+          }
+
+          // !!Paginate
+
+          // Query and return data
+          const apartmentsSnapshot = await getDocs(q);
+
+          let apartmentsData: Apartment[] = [];
+
+          apartmentsSnapshot.forEach((doc) => {
+            apartmentsData.push({
+              ...(doc.data() as Apartment),
+              id: doc.id,
+            });
+          });
+
+          //todo Filter by keyword
+          if (apartmentListFilter.keyword) {
+            const keyword = apartmentListFilter.keyword.toLowerCase();
+            apartmentsData = apartmentsData.filter((apartment) =>
+              apartment.name.toLowerCase().includes(keyword)
+            );
+          }
+          //todo Filter by price range
+          if (apartmentListFilter.price.from) {
+            apartmentsData = apartmentsData.filter(
+              (apartment) =>
+                apartment.pricePerMonth >= apartmentListFilter.price.from
+            );
+          }
+
+          if (apartmentListFilter.price.to) {
+            apartmentsData = apartmentsData.filter(
+              (apartment) =>
+                apartment.pricePerMonth <= apartmentListFilter.price.to
+            );
+          }
+
+          setTotalItems(apartmentsData.length);
+          setApartments(apartmentsData);
+        } catch (err) {
+          console.error(err);
+        }
       }
-      setApartments(apartmentsData);
-      setLastVisible(apartmentsData[apartmentsData.length - 1]);
-      setTotalItems(totalItem);
     };
     getAllApartments();
   }, [currentPage]);
@@ -90,25 +170,15 @@ const ApartmentsList: React.FC = () => {
       if (apartmentListFilter.districtCode) {
         q = query(q, where("district", "==", apartmentListFilter.districtCode));
       }
-
-      // Filter and sort by price
-      if (apartmentListFilter.price.from) {
-        q = query(
-          q,
-          where("pricePerMonth", ">=", apartmentListFilter.price.from)
-        );
+      if (apartmentListFilter.sortby === SortBy.NEWEST) {
+        q = query(q, orderBy("createdDate", "desc"));
+      } else if (apartmentListFilter.sortby === SortBy.OLDEST) {
+        q = query(q, orderBy("createdDate", "asc"));
+      } else if (apartmentListFilter.sortby === SortBy.HIGHTOLOWPRICE) {
+        q = query(q, orderBy("pricePerMonth", "desc"));
+      } else if (apartmentListFilter.sortby === SortBy.LOWTOHIGHPRICE) {
+        q = query(q, orderBy("pricePerMonth", "asc"));
       }
-      if (apartmentListFilter.price.to) {
-        q = query(
-          q,
-          where("pricePerMonth", "<=", apartmentListFilter.price.to)
-        );
-      }
-      // get total before paginate
-      const totalItems = (await getDocs(q)).size;
-
-      // Paginate
-      q = query(q, limit(itemsPerPage));
 
       // Query and return data
       const apartmentsSnapshot = await getDocs(q);
@@ -122,21 +192,6 @@ const ApartmentsList: React.FC = () => {
         });
       });
 
-      // Sort by date
-      if (apartmentListFilter.sortby === SortBy.NEWEST) {
-        apartmentsData.sort(
-          (a, b) => b.createdDate.seconds - a.createdDate.seconds
-        );
-      } else if (apartmentListFilter.sortby === SortBy.OLDEST) {
-        apartmentsData.sort(
-          (a, b) => a.createdDate.seconds - b.createdDate.seconds
-        );
-      } else if (apartmentListFilter.sortby === SortBy.HIGHTOLOWPRICE) {
-        apartmentsData.sort((a, b) => b.pricePerMonth - a.pricePerMonth);
-      } else if (apartmentListFilter.sortby === SortBy.LOWTOHIGHPRICE) {
-        apartmentsData.sort((a, b) => a.pricePerMonth - b.pricePerMonth);
-      }
-
       // Filter by keyword
       if (apartmentListFilter.keyword) {
         const keyword = apartmentListFilter.keyword.toLowerCase();
@@ -144,11 +199,22 @@ const ApartmentsList: React.FC = () => {
           apartment.name.toLowerCase().includes(keyword)
         );
       }
+      //todo Filter by price range
+      if (apartmentListFilter.price.from) {
+        apartmentsData = apartmentsData.filter(
+          (apartment) =>
+            apartment.pricePerMonth >= apartmentListFilter.price.from
+        );
+      }
 
-      setTotalItems(totalItems);
+      if (apartmentListFilter.price.to) {
+        apartmentsData = apartmentsData.filter(
+          (apartment) => apartment.pricePerMonth <= apartmentListFilter.price.to
+        );
+      }
+
+      setTotalItems(apartmentsData.length);
       setApartments(apartmentsData);
-      setLastVisible(apartmentsData[apartmentsData.length - 1]);
-      console.log(apartmentsData);
     } catch (err) {
       console.error(err);
     }
@@ -166,18 +232,7 @@ const ApartmentsList: React.FC = () => {
 
   const [clearFilterClicked, setClearFilterClicked] = useState<boolean>(false);
   const handleClearFilter = () => {
-    setApartmentListFilter({
-      sortby: SortBy.ALL,
-      keyword: "",
-      categories: [],
-      price: {
-        from: 0,
-        to: 0,
-      },
-      stars: 0,
-      cityCode: 0,
-      districtCode: 0,
-    });
+    setApartmentListFilter(initalFilterValue);
     setClearFilterClicked(true);
   };
 
@@ -205,7 +260,7 @@ const ApartmentsList: React.FC = () => {
       </div>
       <div className="aparments-list__main-content">
         <ResulNumstAndSortBy
-          totalItems={totalItem}
+          totalItems={totalItems}
           clearFilterClicked={clearFilterClicked}
           setClearFilterClicked={setClearFilterClicked}
           onClick={() => setToggleFilterBar(true)}
@@ -225,9 +280,9 @@ const ApartmentsList: React.FC = () => {
       </div>
 
       <nav className="aparments-list__pagination">
-        {totalItem > itemsPerPage && (
+        {totalItems > itemsPerPage && (
           <Pagination
-            totalItems={totalItem} // Update to the actual total number of items
+            totalItems={totalItems}
             itemsPerPage={itemsPerPage}
             onPageChange={handlePageChange}
             initialPage={currentPage}

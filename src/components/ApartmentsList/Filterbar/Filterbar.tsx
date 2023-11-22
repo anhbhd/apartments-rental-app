@@ -54,63 +54,6 @@ const Filterbar = ({
 
   const [checkboxIdsChecked, setCheckboxIdsChecked] = useState<string[]>([]);
 
-  const handleStarSelection = (option: Option) => {
-    setSelectedStars(option);
-
-    onChangeFilter((prevFilter) => {
-      return {
-        ...prevFilter,
-        stars: option.value as number,
-      };
-    });
-  };
-
-  const handleChangeMinValue = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setMinPrice(Number(event.target.value));
-    onChangeFilter((prevFilter) => {
-      return {
-        ...prevFilter,
-        price: {
-          ...prevFilter.price,
-          from: Number(event.target.value),
-        },
-      };
-    });
-  };
-  const handleChangeMaxValue = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setMaxPrice(Number(event.target.value));
-    onChangeFilter((prevFilter) => {
-      return {
-        ...prevFilter,
-        price: {
-          ...prevFilter.price,
-          to: Number(event.target.value),
-        },
-      };
-    });
-  };
-
-  const handleProvinceSelection = (option: Option) => {
-    setSelectedProvince(option);
-    onChangeFilter((prevFilter) => {
-      return {
-        ...prevFilter,
-        districtCode: 0,
-        cityCode: option.value as number,
-      };
-    });
-  };
-
-  const handleDistrictSelection = (option: Option) => {
-    setSelectedDistrict(option);
-    onChangeFilter((prevFilter) => {
-      return {
-        ...prevFilter,
-        districtCode: option.value as number,
-      };
-    });
-  };
-
   useEffect(() => {
     const fetchApartmentTypeForSelect = async () => {
       try {
@@ -191,10 +134,68 @@ const Filterbar = ({
     handleProvinceSelect();
   }, [selectedProvince]);
 
-  // console.log(checkboxIdsChecked);
+  const handleStarSelection = (option: Option) => {
+    setSelectedStars(option);
+
+    onChangeFilter((prevFilter) => {
+      return {
+        ...prevFilter,
+        stars: option.value as number,
+      };
+    });
+  };
+
+  const handleChangeMinValue = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setMinPrice(Number(event.target.value));
+    onChangeFilter((prevFilter) => {
+      return {
+        ...prevFilter,
+        price: {
+          ...prevFilter.price,
+          from: Number(event.target.value),
+        },
+      };
+    });
+  };
+  const handleChangeMaxValue = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setMaxPrice(Number(event.target.value));
+    onChangeFilter((prevFilter) => {
+      return {
+        ...prevFilter,
+        price: {
+          ...prevFilter.price,
+          to: Number(event.target.value),
+        },
+      };
+    });
+  };
+
+  const handleProvinceSelection = (option: Option) => {
+    setSelectedProvince(option);
+    onChangeFilter((prevFilter) => {
+      return {
+        ...prevFilter,
+        districtCode: 0,
+        cityCode: option.value as number,
+      };
+    });
+  };
+
+  const handleDistrictSelection = (option: Option) => {
+    setSelectedDistrict(option);
+    onChangeFilter((prevFilter) => {
+      return {
+        ...prevFilter,
+        districtCode: option.value as number,
+      };
+    });
+  };
 
   const handleOnChangeCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (checkboxIdsChecked.includes(e.target.value)) {
+      setCheckboxIdsChecked(
+        checkboxIdsChecked.filter((item) => item !== e.target.value)
+      );
     } else {
       setCheckboxIdsChecked([...checkboxIdsChecked, e.target.value]);
     }
