@@ -18,6 +18,7 @@ const Wishlist = () => {
   const { currentUser } = useAuth();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const itemPerpage = 6;
   const handleDeleteWishlist = (id: string) => {
     setWishlist(
       wishlist.filter((item) => {
@@ -95,12 +96,14 @@ const Wishlist = () => {
               />
             ))}
           </div>
-          <Pagination
-            totalItems={wishlist.length} // Update to the actual total number of items
-            itemsPerPage={6}
-            onPageChange={handlePageChange}
-            initialPage={currentPage}
-          />
+          {wishlist.length > itemPerpage && (
+            <Pagination
+              totalItems={wishlist.length}
+              itemsPerPage={itemPerpage}
+              onPageChange={handlePageChange}
+              initialPage={currentPage}
+            />
+          )}
         </>
       )}
     </main>

@@ -13,7 +13,8 @@ import { Backdrop } from "../../utils/Backdrop/Backdrop";
 import { SortBy } from "../../components/ApartmentsList/ResultAndSortBy/SortBy";
 import { FilterbarType } from "../../type/Filterbar";
 import { Option } from "../../type/Option";
-import { limit, orderBy, query, where } from "firebase/firestore";
+import { orderBy, query, where } from "firebase/firestore";
+import FullLoadingScreen from "../../utils/FullLoadingScreen/FullLoadingScreen";
 
 const initalFilterValue: FilterbarType = {
   sortby: SortBy.ALL,
@@ -28,6 +29,17 @@ const initalFilterValue: FilterbarType = {
   districtCode: 0,
 };
 
+// Function to paginate an array
+function paginate<T>(
+  array: T[],
+  currentPage: number,
+  itemsPerPage: number
+): T[] {
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  return array.slice(startIndex, endIndex);
+}
+
 const ApartmentsList: React.FC = () => {
   const [apartments, setApartments] = useState<Apartment[]>([]);
 
@@ -35,9 +47,16 @@ const ApartmentsList: React.FC = () => {
 
   const [apartmentListFilter, setApartmentListFilter] =
     useState<FilterbarType>(initalFilterValue);
+  const [clearFilterClicked, setClearFilterClicked] = useState<boolean>(false);
+  const [toggleSearchBtn, setToggleSearchBtn] = useState<boolean>(false);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalItems, setTotalItems] = useState<number>(0);
+
+  const [itemsDisplayedOnPage, setItemDisplayOnPage] = useState<Apartment[]>(
+    []
+  );
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const itemsPerPage = 4;
 
   console.log(apartmentListFilter);
@@ -48,105 +67,33 @@ const ApartmentsList: React.FC = () => {
       let apartmentsData: Apartment[] = [];
 
       // trường hợp bộ lọc trống
-      if (
-        JSON.stringify(apartmentListFilter) ===
-        JSON.stringify(initalFilterValue)
-      ) {
-        const totalItem = (await getDocs(apartmentsCollectionRef)).size;
+      const totalItem = (await getDocs(apartmentsCollectionRef)).size;
 
-        const apartmentsSnapshot = await getDocs(apartmentsCollectionRef);
-        if (apartmentsSnapshot) {
-          apartmentsSnapshot.docs.forEach((doc: any) => {
-            apartmentsData.push({
-              ...doc.data(),
-              id: doc.id,
-            });
+      const apartmentsSnapshot = await getDocs(apartmentsCollectionRef);
+      if (apartmentsSnapshot) {
+        apartmentsSnapshot.docs.forEach((doc: any) => {
+          apartmentsData.push({
+            ...doc.data(),
+            id: doc.id,
           });
-        }
-
-        setApartments(apartmentsData);
-        setTotalItems(totalItem);
-        setCurrentPage(1);
-      } else {
-        try {
-          let q = query(apartmentsCollectionRef);
-
-          // Filter by categories
-          if (apartmentListFilter.categories.length) {
-            q = query(
-              q,
-              where("categoryId", "in", apartmentListFilter.categories)
-            );
-          }
-
-          // Filter by average rating
-          if (apartmentListFilter.stars) {
-            q = query(q, where("avgRate", "==", apartmentListFilter.stars));
-          }
-          if (apartmentListFilter.cityCode) {
-            q = query(q, where("city", "==", apartmentListFilter.cityCode));
-          }
-          if (apartmentListFilter.districtCode) {
-            q = query(
-              q,
-              where("district", "==", apartmentListFilter.districtCode)
-            );
-          }
-          // Sort by
-          if (apartmentListFilter.sortby === SortBy.NEWEST) {
-            q = query(q, orderBy("createdDate", "desc"));
-          } else if (apartmentListFilter.sortby === SortBy.OLDEST) {
-            q = query(q, orderBy("createdDate", "asc"));
-          } else if (apartmentListFilter.sortby === SortBy.HIGHTOLOWPRICE) {
-            q = query(q, orderBy("pricePerMonth", "desc"));
-          } else if (apartmentListFilter.sortby === SortBy.LOWTOHIGHPRICE) {
-            q = query(q, orderBy("pricePerMonth", "asc"));
-          }
-
-          // !!Paginate
-
-          // Query and return data
-          const apartmentsSnapshot = await getDocs(q);
-
-          let apartmentsData: Apartment[] = [];
-
-          apartmentsSnapshot.forEach((doc) => {
-            apartmentsData.push({
-              ...(doc.data() as Apartment),
-              id: doc.id,
-            });
-          });
-
-          //todo Filter by keyword
-          if (apartmentListFilter.keyword) {
-            const keyword = apartmentListFilter.keyword.toLowerCase();
-            apartmentsData = apartmentsData.filter((apartment) =>
-              apartment.name.toLowerCase().includes(keyword)
-            );
-          }
-          //todo Filter by price range
-          if (apartmentListFilter.price.from) {
-            apartmentsData = apartmentsData.filter(
-              (apartment) =>
-                apartment.pricePerMonth >= apartmentListFilter.price.from
-            );
-          }
-
-          if (apartmentListFilter.price.to) {
-            apartmentsData = apartmentsData.filter(
-              (apartment) =>
-                apartment.pricePerMonth <= apartmentListFilter.price.to
-            );
-          }
-
-          setTotalItems(apartmentsData.length);
-          setApartments(apartmentsData);
-        } catch (err) {
-          console.error(err);
-        }
+        });
       }
+
+      setApartments(apartmentsData);
+      setTotalItems(totalItem);
+      // !!Paginate
+      setItemDisplayOnPage(paginate(apartmentsData, currentPage, itemsPerPage));
+      setIsLoading(false);
     };
+
     getAllApartments();
+  }, []);
+
+  console.log("run");
+
+  useEffect(() => {
+    // !!Paginate
+    setItemDisplayOnPage(paginate(apartments, currentPage, itemsPerPage));
   }, [currentPage]);
 
   const handleSearch = async () => {
@@ -180,7 +127,7 @@ const ApartmentsList: React.FC = () => {
         q = query(q, orderBy("pricePerMonth", "asc"));
       }
 
-      // Query and return data
+      //todo Query and return data
       const apartmentsSnapshot = await getDocs(q);
 
       let apartmentsData: Apartment[] = [];
@@ -192,7 +139,7 @@ const ApartmentsList: React.FC = () => {
         });
       });
 
-      // Filter by keyword
+      //todo Filter by keyword
       if (apartmentListFilter.keyword) {
         const keyword = apartmentListFilter.keyword.toLowerCase();
         apartmentsData = apartmentsData.filter((apartment) =>
@@ -212,9 +159,12 @@ const ApartmentsList: React.FC = () => {
           (apartment) => apartment.pricePerMonth <= apartmentListFilter.price.to
         );
       }
-
       setTotalItems(apartmentsData.length);
       setApartments(apartmentsData);
+      setItemDisplayOnPage(apartmentsData.slice(0, itemsPerPage));
+      setToggleSearchBtn(!toggleSearchBtn);
+
+      // console.log(apartmentsData);
     } catch (err) {
       console.error(err);
     }
@@ -230,7 +180,6 @@ const ApartmentsList: React.FC = () => {
     }));
   };
 
-  const [clearFilterClicked, setClearFilterClicked] = useState<boolean>(false);
   const handleClearFilter = () => {
     setApartmentListFilter(initalFilterValue);
     setClearFilterClicked(true);
@@ -249,7 +198,7 @@ const ApartmentsList: React.FC = () => {
     };
 
     scrollToTop();
-  }, [apartments]);
+  }, [apartments, currentPage]);
   return (
     <main className="aparments-list">
       <div className="aparments-list__textheader">
@@ -258,37 +207,45 @@ const ApartmentsList: React.FC = () => {
           Lorem ipsum dolor sit amet consectetur adipisicing elit.
         </p>
       </div>
-      <div className="aparments-list__main-content">
-        <ResulNumstAndSortBy
-          totalItems={totalItems}
-          clearFilterClicked={clearFilterClicked}
-          setClearFilterClicked={setClearFilterClicked}
-          onClick={() => setToggleFilterBar(true)}
-          className="result-sort"
-          onSelectSortBy={handleSelectSortBy}
-        />
-        {toggleFilterBar && <Backdrop onClose={handleCloseFilterBar} />}
+      {isLoading && <FullLoadingScreen />}
 
-        <Filterbar
-          onCloseFilterBar={handleCloseFilterBar}
-          className={toggleFilterBar ? "visible" : ""}
-          onClearFilter={handleClearFilter}
-          onChangeFilter={setApartmentListFilter}
-          onSearch={handleSearch}
-        />
-        <ApartmentsListResult apartmentsList={apartments} />
+      <div className="aparments-list__main-content">
+        {!isLoading && (
+          <>
+            <ResulNumstAndSortBy
+              totalItems={totalItems}
+              clearFilterClicked={clearFilterClicked}
+              setClearFilterClicked={setClearFilterClicked}
+              onClick={() => setToggleFilterBar(true)}
+              className="result-sort"
+              onSelectSortBy={handleSelectSortBy}
+            />
+            {toggleFilterBar && <Backdrop onClose={handleCloseFilterBar} />}
+            <Filterbar
+              onCloseFilterBar={handleCloseFilterBar}
+              className={toggleFilterBar ? "visible" : ""}
+              onClearFilter={handleClearFilter}
+              onChangeFilter={setApartmentListFilter}
+              onSearch={handleSearch}
+            />
+            <ApartmentsListResult apartmentsList={itemsDisplayedOnPage} />
+          </>
+        )}
       </div>
 
-      <nav className="aparments-list__pagination">
-        {totalItems > itemsPerPage && (
-          <Pagination
-            totalItems={totalItems}
-            itemsPerPage={itemsPerPage}
-            onPageChange={handlePageChange}
-            initialPage={currentPage}
-          />
-        )}
-      </nav>
+      {!isLoading && (
+        <nav className="aparments-list__pagination">
+          {totalItems > itemsPerPage && (
+            <Pagination
+              toggleSearchBtn={toggleSearchBtn}
+              totalItems={totalItems}
+              itemsPerPage={itemsPerPage}
+              onPageChange={handlePageChange}
+              initialPage={currentPage}
+            />
+          )}
+        </nav>
+      )}
     </main>
   );
 };

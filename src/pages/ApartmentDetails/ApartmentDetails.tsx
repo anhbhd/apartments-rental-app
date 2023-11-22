@@ -33,6 +33,7 @@ import { User } from "../../type/User";
 import { RentalApplication } from "../../type/RentalApplication";
 import { RentAppStatus } from "../../common/constants/RentalAppStatus";
 import SuccessRentModal from "../../components/ApartmentDetails/SuccessRentModal/SuccessRentModal";
+import FullLoadingScreen from "../../utils/FullLoadingScreen/FullLoadingScreen";
 
 const ApartmentDetails = () => {
   const { pathname } = useLocation();
@@ -50,10 +51,9 @@ const ApartmentDetails = () => {
   const [successfulRent, setSuccessfulRent] = useState<boolean>(false);
   const [thisApartmentStatus, setThisApartmentStatus] = useState<string>("");
   const { currentUser } = useAuth();
-
+  const [loadedNum, setLoadedNum] = useState<number>(0);
   const apartmentId = pathname.split("/").pop() as string;
 
-  // f1
   useEffect(() => {
     // try to fetch a record in wishlist if the record contain this item id and the user id exist
     const fetchLikeStateOfUserToThisItem = async () => {
@@ -74,6 +74,7 @@ const ApartmentDetails = () => {
             setLike(true);
             setWishlistItemId(fetchedWishlistItemId);
           }
+          setLoadedNum((prevNumState) => prevNumState + 1);
         } catch (err: any) {
           console.log(err);
         }
@@ -109,6 +110,7 @@ const ApartmentDetails = () => {
         ...(apartmentData as Apartment),
         id: apartmentId as string,
       });
+      setLoadedNum((prevNumState) => prevNumState + 1);
     };
     fetchThisApartment();
   }, [apartmentId]);
@@ -135,6 +137,7 @@ const ApartmentDetails = () => {
         console.log(err);
       }
       setAmenities(amenities);
+      setLoadedNum((prevNumState) => prevNumState + 1);
     };
     fetchAmenities(apartmentId);
   }, [apartmentId]);
@@ -290,6 +293,7 @@ const ApartmentDetails = () => {
 
   return (
     <main className="apartment-details-page">
+      {loadedNum < 3 && <FullLoadingScreen />}
       {!isModalClose && (
         <ModalBackToPersonalInfo
           onClose={handleCloseModalRemindUpdateProfile}
@@ -298,76 +302,77 @@ const ApartmentDetails = () => {
       {successfulRent && (
         <SuccessRentModal onClose={() => setSuccessfulRent(false)} />
       )}
-      <div className="apartment-details">
-        <div className="apartment-details__info">
-          <div className="text-info">
-            <h3 className="name">{apartment?.name}</h3>
-            <p className="address">
-              {" "}
-              <strong>Address:</strong> {apartment?.detailedAddress}
-            </p>
-            <p className="created-date">
-              <strong>Posted date:</strong>{" "}
-              {secondsToDateTime(
-                apartment?.createdDate?.seconds as number
-              ).toDateString()}
-            </p>
-            <p className="amenities">
-              <span>
-                {apartment?.beds}{" "}
-                {(apartment?.beds as number) > 1 ? "beds" : "bed"}
-              </span>
-              <span>
-                {apartment?.baths}{" "}
-                {(apartment?.baths as number) > 1 ? "baths" : "bath"}
-              </span>
-              <span>{apartment?.area} sqm</span>
-            </p>
-          </div>
-          <div className="action-and-price">
-            <p className="action">
-              {like ? (
-                <AiFillHeart
-                  onClick={handleDislikeThisApartment}
-                  className="icon "
-                  style={{ color: "#eb6753" }}
-                />
+      {loadedNum >= 3 && (
+        <div className="apartment-details">
+          <div className="apartment-details__info">
+            <div className="text-info">
+              <h3 className="name">{apartment?.name}</h3>
+              <p className="address">
+                <strong>Address:</strong> {apartment?.detailedAddress}
+              </p>
+              <p className="created-date">
+                <strong>Posted date:</strong>{" "}
+                {secondsToDateTime(
+                  apartment?.createdDate?.seconds as number
+                ).toDateString()}
+              </p>
+              <p className="amenities">
+                <span>
+                  {apartment?.beds}{" "}
+                  {(apartment?.beds as number) > 1 ? "beds" : "bed"}
+                </span>
+                <span>
+                  {apartment?.baths}{" "}
+                  {(apartment?.baths as number) > 1 ? "baths" : "bath"}
+                </span>
+                <span>{apartment?.area} sqm</span>
+              </p>
+            </div>
+            <div className="action-and-price">
+              <p className="action">
+                {like ? (
+                  <AiFillHeart
+                    onClick={handleDislikeThisApartment}
+                    className="icon "
+                    style={{ color: "#eb6753" }}
+                  />
+                ) : (
+                  <AiOutlineHeart
+                    className="icon"
+                    onClick={handleLikeThisApartment}
+                  />
+                )}
+              </p>
+              <h3 className="price">
+                {apartment && formatter.format(apartment.pricePerMonth)}
+                <em>/month</em>
+              </h3>
+              {apartment?.rented ? (
+                <p>rented</p>
+              ) : thisApartmentStatus ? (
+                <p>{thisApartmentStatus}</p>
               ) : (
-                <AiOutlineHeart
-                  className="icon"
-                  onClick={handleLikeThisApartment}
-                />
+                <button onClick={handleClickRentBtn} className="rent-btn">
+                  Ask for Rent
+                </button>
               )}
-            </p>
-            <h3 className="price">
-              {apartment && formatter.format(apartment.pricePerMonth)}
-              <em>/month</em>
-            </h3>
-            {apartment?.rented ? (
-              <p>rented</p>
-            ) : thisApartmentStatus ? (
-              <p>{thisApartmentStatus}</p>
-            ) : (
-              <button onClick={handleClickRentBtn} className="rent-btn">
-                Ask for Rent
-              </button>
-            )}
+            </div>
           </div>
+
+          {/* images showing */}
+          <ImagesShow images={apartment?.images as string[]} />
+
+          {/* property description */}
+          <PropertyDescription
+            amenities={amenities as Amenity[]}
+            apartment={apartment as Apartment}
+          />
+          {/* comments section */}
+          <CommentsSection />
+
+          {relatedList.length > 0 && <Related relatedList={relatedList} />}
         </div>
-
-        {/* images showing */}
-        <ImagesShow images={apartment?.images as string[]} />
-
-        {/* property description */}
-        <PropertyDescription
-          amenities={amenities as Amenity[]}
-          apartment={apartment as Apartment}
-        />
-        {/* comments section */}
-        <CommentsSection />
-
-        {relatedList.length > 0 && <Related relatedList={relatedList} />}
-      </div>
+      )}
     </main>
   );
 };

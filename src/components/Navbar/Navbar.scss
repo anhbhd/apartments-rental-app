@@ -17,10 +17,17 @@
     justify-content: center;
     list-style: none;
     gap: 2rem;
+    & .perinfo {
+      img {
+        max-height: 4.5rem;
+        border-radius: 5rem;
+      }
+    }
     li:not(.logout-btn) {
       border-radius: 1rem;
       overflow: hidden;
       position: relative;
+
       a {
         text-decoration: none;
         padding: 1.4rem 2rem;
@@ -88,6 +95,11 @@
       z-index: 600;
       box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
         rgba(0, 0, 0, 0.23) 0px 6px 6px;
+
+      & .perinfo {
+        padding-left: 2rem;
+      }
+
       .close-icon {
         display: block;
         position: absolute;

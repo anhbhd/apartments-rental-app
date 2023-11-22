@@ -48,8 +48,8 @@ const Filterbar = ({
     { label: "All", value: 0 },
   ]);
 
-  const [minPrice, setMinPrice] = useState<number>(0);
-  const [maxPrice, setMaxPrice] = useState<number>(0);
+  const [minPrice, setMinPrice] = useState<number | string>("");
+  const [maxPrice, setMaxPrice] = useState<number | string>("");
   const [textSearch, setTextSearch] = useState<string>("");
 
   const [checkboxIdsChecked, setCheckboxIdsChecked] = useState<string[]>([]);
@@ -232,8 +232,8 @@ const Filterbar = ({
     setSelectedStars(starsSelections[0]); // Reset selectedStars state
     setSelectedProvince({ label: "All", value: 0 }); // Reset selectedProvince state
     setSelectedDistrict({ label: "All", value: 0 }); // Reset selectedDistrict state
-    setMinPrice(0);
-    setMaxPrice(0);
+    setMinPrice("");
+    setMaxPrice("");
     setTextSearch("");
     setCheckboxIdsChecked([]);
   };

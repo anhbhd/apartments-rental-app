@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import HeaderLogo from "../HeaderLogo/HeaderLogo";
 
 import "./Navbar.scss";
@@ -6,8 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import MenuIcon from "../../icons/MenuIcon";
 import { IoCloseSharp } from "react-icons/io5";
-import ReactDOM from "react-dom";
-
+import anonyImg from "./../../assets/anonymous-avatarjpg.jpg";
 interface BackdropProps {
   onClose: () => void;
 }
@@ -28,7 +27,7 @@ const Navbar = () => {
   useEffect(() => {
     closeMenu(); // Close the menu when the route changes
   }, [pathname]);
-
+  console.log();
   return (
     <nav className="navbar">
       <Link to="/">
@@ -51,9 +50,10 @@ const Navbar = () => {
             <li>
               <Link to="/my_rental_apps">Rental applications</Link>
             </li>
-            <li>
-              <Link to="/personal_info">Personal Info</Link>
-            </li>
+
+            <Link className="perinfo" to="/personal_info">
+              <img src={`${currentUser.photoURL || anonyImg}`} alt="" />
+            </Link>
             <li className="logout-btn">
               <button onClick={logout}>Logout</button>
             </li>
