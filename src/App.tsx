@@ -13,7 +13,7 @@ import MainLayout from "./layouts/MainLayout/MainLayout";
 import DetailedRentalApplication from "./pages/DetailedRentalApplication/DetailedRentalApplication";
 import NotFound from "./pages/NotFound";
 import GeneralProtectedRoute from "./routes/GeneralProtectedRoute";
-import FobiddenLoggedinRoute from "./routes/FobiddenLoggedinRoute";
+import ForbiddenLoggedinRoute from "./routes/ForbiddenLoggedinRoute";
 
 function App() {
   return (
@@ -25,7 +25,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="search" element={<ApartmentsList />} />
 
-          <Route path="/" element={<FobiddenLoggedinRoute />}>
+          <Route path="/" element={<ForbiddenLoggedinRoute />}>
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<Register />} />
           </Route>

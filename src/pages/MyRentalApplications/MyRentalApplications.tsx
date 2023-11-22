@@ -53,7 +53,15 @@ const MyRentalApplications = () => {
       {!loading && (
         <>
           <ApplicationsList rentalApps={rentalApps} />
-          {rentalApps.length > 6 && <Pagination />}
+          {rentalApps.length > 6 && (
+            <Pagination
+              totalItems={0}
+              itemsPerPage={0}
+              onPageChange={function (page: number): void {
+                throw new Error("Function not implemented.");
+              }}
+            />
+          )}
         </>
       )}
     </main>

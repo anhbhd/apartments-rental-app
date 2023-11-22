@@ -12,6 +12,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   query,
   where,
@@ -26,6 +27,21 @@ const ApartmentItem = ({ className, apartment }: IApartmentProps) => {
   const [wishlistItemId, setWishlistItemId] = useState<string | null>(null);
   const [like, setLike] = useState<boolean>(false);
   const { currentUser } = useAuth();
+  const [category, setCategory] = useState<string>("");
+
+  useEffect(() => {
+    const fetchCategoryName = async () => {
+      try {
+        const categoryDocRef = doc(db, `categories/${apartment.categoryId}`);
+        const categorySnapshot = await getDoc(categoryDocRef);
+
+        setCategory(categorySnapshot.data()?.name);
+      } catch (err: any) {
+        console.error(err.message);
+      }
+    };
+    fetchCategoryName();
+  }, [apartment.categoryId, apartment.id]);
 
   useEffect(() => {
     // try to fetch a record in wishlist if the record contain this item id and the user id exist
@@ -104,7 +120,7 @@ const ApartmentItem = ({ className, apartment }: IApartmentProps) => {
           </span>
         </div>
         <div className="actions">
-          <span className="actions__quantity-available">Apartment</span>
+          <span className="actions__quantity-available">{category}</span>
           <span className="actions__watch-later">
             {like ? (
               <AiFillHeart

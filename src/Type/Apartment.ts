@@ -8,12 +8,12 @@ export type Apartment = {
   area: number;
   avatar: string;
   categoryId: string;
-  city: string;
+  city: number;
   createdDate: FirebaseDate;
   detailedAddress: string;
   detailedDescription: string;
   direction: string;
-  district: string;
+  district: number;
   frontWidth: number;
   name: string;
   numberOfFloors: number;
@@ -28,4 +28,5 @@ export type Apartment = {
   beds: number;
   depositMoney: number;
   contractDuration: number;
+  avgRate: number;
 };

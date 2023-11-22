@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import "./CustomSelect.scss";
 import { FaSortDown } from "react-icons/fa";
+import "./CustomSelect.scss";
 import { Option } from "../../type/Option";
 interface ICustomSelectProps {
   options: Option[];
@@ -18,10 +18,8 @@ const CustomSelect: React.FC<ICustomSelectProps> = ({
   className = "",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<Option>(selected);
 
   const handleOptionClick = (option: Option) => {
-    setSelectedOption(option);
     onSelect(option);
     setIsOpen(false);
   };
@@ -47,7 +45,7 @@ const CustomSelect: React.FC<ICustomSelectProps> = ({
       className={`custom-select ${isOpen ? "open" : ""} ${className}`}
     >
       <div className="select-header" onClick={() => setIsOpen(!isOpen)}>
-        {selectedOption ? selectedOption.label : "Select an option"}
+        {selected ? selected.label : "Select an option"}
         <FaSortDown className="icon-down" />
       </div>
       {isOpen && (

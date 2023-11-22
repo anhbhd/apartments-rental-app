@@ -22,6 +22,6 @@ export const starsSelections: Option[] = [
   },
   {
     label: "5 Stars",
-    value: 4,
+    value: 5,
   },
 ];

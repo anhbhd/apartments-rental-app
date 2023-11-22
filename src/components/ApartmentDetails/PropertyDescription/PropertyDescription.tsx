@@ -2,6 +2,7 @@ import "./PropertyDescription.scss";
 import { Apartment } from "../../../type/Apartment";
 import { formatter } from "../../../utils/FormatMoney";
 import { Amenity } from "../../../type/Amenity";
+import { useEffect, useState } from "react";
 
 interface IPropertyDescriptionProps {
   apartment: Apartment;
@@ -14,6 +15,33 @@ const PropertyDescription = ({
   amenities,
   className,
 }: IPropertyDescriptionProps) => {
+  const [cityName, setCityName] = useState<string>("");
+  const [district, setDistrictName] = useState<string>("");
+
+  useEffect(() => {
+    const fetchCityName = async () => {
+      try {
+        const res = await fetch(
+          `https://provinces.open-api.vn/api/p/${apartment.city}`
+        );
+        const provinceData = await res.json();
+        setCityName(provinceData.name);
+        try {
+          const res = await fetch(
+            `https://provinces.open-api.vn/api/d/${apartment.district}`
+          );
+          const districtData = await res.json();
+          setDistrictName(districtData.name);
+        } catch (err: any) {
+          console.error(err.message);
+        }
+      } catch (err: any) {
+        console.error(err.message);
+      }
+    };
+    fetchCityName();
+  }, [apartment?.city, apartment?.district]);
+
   return (
     <section className={`property-description ${className || ""}`}>
       <div className="property-description-container">
@@ -95,11 +123,11 @@ const PropertyDescription = ({
             </p>
             <p className="item">
               <label>City</label>
-              <span>{apartment?.city}</span>
+              <span>{cityName}</span>
             </p>
             <p className="item">
               <label>District</label>
-              <span>{apartment?.district}</span>
+              <span>{district}</span>
             </p>
           </div>
         </div>
