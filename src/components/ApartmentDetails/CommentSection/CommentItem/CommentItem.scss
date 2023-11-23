@@ -14,9 +14,9 @@
     margin-bottom: 3rem;
     .ava-container {
       width: 6rem;
-      border-radius: 5rem;
-      overflow: hidden;
+
       img {
+        border-radius: 5rem;
         width: 100%;
         object-fit: contain;
       }
@@ -30,7 +30,7 @@
     .text-container,
     .stars-rating {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
     }
     .stars-rating {
       color: gold;

@@ -19,7 +19,8 @@
       }
     }
   }
-  .show-more {
+  .show-more,
+  .hide-all {
     font-weight: 600;
     text-decoration: underline;
 
@@ -28,5 +29,12 @@
     span {
       cursor: pointer;
     }
+  }
+  .hide-all {
+    text-align: left;
+  }
+  .reviewed-and-rated-message {
+    font-size: 1.6rem;
+    color: $secondary-color;
   }
 }

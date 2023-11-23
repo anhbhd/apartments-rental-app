@@ -14,7 +14,10 @@ import DetailedRentalApplication from "./pages/DetailedRentalApplication/Detaile
 import NotFound from "./pages/NotFound";
 import GeneralProtectedRoute from "./routes/GeneralProtectedRoute";
 import ForbiddenLoggedinRoute from "./routes/ForbiddenLoggedinRoute";
-
+import { Dashboard } from "./pages/ADMIN/Dashboard/Dashboard";
+import AdminLayout from "./layouts/AdminLayout/AdminLayout";
+import AddOrEditApartments from "./pages/ADMIN/ApartmentsManagement/AddOrEditApartments/AddOrEditApartments";
+import ApartmentListAdmin from "./pages/ADMIN/ApartmentsManagement/ApartmentsList/ApartmentsList";
 function App() {
   return (
     <div className="App">
@@ -43,6 +46,18 @@ function App() {
             path="apartments/:apartmentId"
             element={<ApartmentDetails />}
           />
+        </Route>
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route
+            path="apartments/add_or_edit"
+            element={<AddOrEditApartments />}
+          />
+          <Route
+            path="apartments/add_or_edit/:apartmentId"
+            element={<AddOrEditApartments />}
+          />
+          <Route path="apartments" element={<ApartmentListAdmin />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

@@ -25,7 +25,7 @@ const Pagination: React.FC<IPaginationProps> = ({
   useEffect(() => {
     setCurrentPage(1);
   }, [toggleSearchBtn]);
-  console.log("currentpage :", currentPage);
+  // console.log("currentpage :", currentPage);
 
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 

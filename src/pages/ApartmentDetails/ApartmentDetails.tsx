@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import "./ApartmentDetails.scss";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
@@ -19,6 +19,7 @@ import {
   limit,
   orderBy,
   query,
+  startAfter,
   where,
 } from "firebase/firestore";
 import { db } from "../../config/firebase_config";
@@ -40,9 +41,9 @@ const ApartmentDetails = () => {
   const [apartment, setApartment] = useState<Apartment>();
   const [amenities, setAmenities] = useState<Amenity[] | null>(null);
   const [relatedList, setRelatedList] = useState<Apartment[]>([]);
-  // const [reviews, setReviews] = useState<Review[]>([]);
-  const [numOfReviews, setNumOfReviews] = useState<number>(3);
-  // const [totalReviews, setTotalReviews] = useState<number>(0);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const reviewsNumPerFetch = 6;
+  const [totalReviews, setTotalReviews] = useState<number>(0);
 
   const [wishlistItemId, setWishlistItemId] = useState<string | null>(null);
   const [like, setLike] = useState<boolean>(false);
@@ -51,9 +52,12 @@ const ApartmentDetails = () => {
   const [successfulRent, setSuccessfulRent] = useState<boolean>(false);
   const [thisApartmentStatus, setThisApartmentStatus] = useState<string>("");
   const { currentUser } = useAuth();
-  const [loadedNum, setLoadedNum] = useState<number>(0);
+  const [loadedPromises, setLoadedPromises] = useState<number>(0);
+  const [lastDoc, setLastDoc] = useState<any>();
+  const [toggleRefetchReviews, setToggleRefetchReviews] =
+    useState<boolean>(false);
   const apartmentId = pathname.split("/").pop() as string;
-
+  // console.log(toggleRefetchReviews);
   useEffect(() => {
     // try to fetch a record in wishlist if the record contain this item id and the user id exist
     const fetchLikeStateOfUserToThisItem = async () => {
@@ -74,7 +78,7 @@ const ApartmentDetails = () => {
             setLike(true);
             setWishlistItemId(fetchedWishlistItemId);
           }
-          setLoadedNum((prevNumState) => prevNumState + 1);
+          setLoadedPromises((prevNumState) => prevNumState + 1);
         } catch (err: any) {
           console.log(err);
         }
@@ -110,7 +114,7 @@ const ApartmentDetails = () => {
         ...(apartmentData as Apartment),
         id: apartmentId as string,
       });
-      setLoadedNum((prevNumState) => prevNumState + 1);
+      setLoadedPromises((prevNumState) => prevNumState + 1);
     };
     fetchThisApartment();
   }, [apartmentId]);
@@ -137,7 +141,7 @@ const ApartmentDetails = () => {
         console.log(err);
       }
       setAmenities(amenities);
-      setLoadedNum((prevNumState) => prevNumState + 1);
+      setLoadedPromises((prevNumState) => prevNumState + 1);
     };
     fetchAmenities(apartmentId);
   }, [apartmentId]);
@@ -145,26 +149,86 @@ const ApartmentDetails = () => {
   // fetch reviews data for this apartment
 
   useEffect(() => {
-    const fetchReviews = async (numOfReviews: number) => {
+    const fetchReviews = async () => {
       const reviewsCollectionRef = collection(db, "reviews");
 
-      const baseQuery = query(
+      let baseQuery = query(
         reviewsCollectionRef,
         where("apartmentId", "==", apartmentId),
-        limit(numOfReviews),
         orderBy("createdDate", "desc")
       );
 
+      const totalReviews = (await getDocs(baseQuery)).size;
+      setTotalReviews(totalReviews);
+
+      baseQuery = query(baseQuery, limit(reviewsNumPerFetch));
+      const reviewsData: Review[] = [];
       const fetchedReviewsCollectionSnapshot = await getDocs(query(baseQuery));
 
+      setLastDoc(
+        fetchedReviewsCollectionSnapshot.docs[
+          fetchedReviewsCollectionSnapshot.docs.length - 1
+        ]
+      );
       fetchedReviewsCollectionSnapshot.docs.forEach((doc) => {
-        console.log(doc.data());
+        reviewsData.push({
+          ...(doc.data() as Review),
+          id: doc.id,
+        });
       });
-    };
-    fetchReviews(numOfReviews);
-  }, [apartmentId, numOfReviews]);
 
-  //fetch related apartment (have the same category :)) )
+      setReviews(reviewsData);
+    };
+    fetchReviews();
+  }, [apartmentId, toggleRefetchReviews]);
+
+  // todo handle show more than three first review
+
+  const handleShowmore = () => {
+    if (reviews.length < totalReviews) {
+      try {
+        const fetchNextThreeReviews = async () => {
+          const reviewsCollectionRef = collection(db, "reviews");
+
+          let baseQuery = query(
+            reviewsCollectionRef,
+            where("apartmentId", "==", apartmentId),
+
+            orderBy("createdDate", "desc")
+          );
+
+          const totalReviews = (await getDocs(baseQuery)).size;
+          setTotalReviews(totalReviews);
+
+          baseQuery = query(baseQuery, limit(reviewsNumPerFetch));
+          baseQuery = query(baseQuery, startAfter(lastDoc));
+          const reviewsData: Review[] = [];
+          const fetchedReviewsCollectionSnapshot = await getDocs(
+            query(baseQuery)
+          );
+
+          setLastDoc(
+            fetchedReviewsCollectionSnapshot.docs[
+              fetchedReviewsCollectionSnapshot.docs.length - 1
+            ]
+          );
+          fetchedReviewsCollectionSnapshot.docs.forEach((doc) => {
+            reviewsData.push({
+              ...(doc.data() as Review),
+              id: doc.id,
+            });
+          });
+
+          setReviews([...reviews, ...reviewsData]);
+        };
+        fetchNextThreeReviews();
+      } catch (err: any) {
+        console.log(err.message);
+      }
+    }
+  };
+
+  //todo fetch related apartment (have the same category :)) )
 
   useEffect(() => {
     const fetchRelatedList = async () => {
@@ -287,13 +351,13 @@ const ApartmentDetails = () => {
     fetchDetailCurrentUserData();
   };
 
-  const handleCloseModalRemindUpdateProfile = () => {
+  const handleCloseModalRemindUpdateProfile = (): void => {
     setIsModalClose(true);
   };
 
   return (
     <main className="apartment-details-page">
-      {loadedNum < 3 && <FullLoadingScreen />}
+      {loadedPromises < 3 && <FullLoadingScreen />}
       {!isModalClose && (
         <ModalBackToPersonalInfo
           onClose={handleCloseModalRemindUpdateProfile}
@@ -302,7 +366,7 @@ const ApartmentDetails = () => {
       {successfulRent && (
         <SuccessRentModal onClose={() => setSuccessfulRent(false)} />
       )}
-      {loadedNum >= 3 && (
+      {loadedPromises >= 3 && (
         <div className="apartment-details">
           <div className="apartment-details__info">
             <div className="text-info">
@@ -368,7 +432,13 @@ const ApartmentDetails = () => {
             apartment={apartment as Apartment}
           />
           {/* comments section */}
-          <CommentsSection />
+          <CommentsSection
+            setToggleRefetchReviews={setToggleRefetchReviews}
+            apartment={apartment}
+            onShowMore={handleShowmore}
+            totalReviews={totalReviews}
+            reviews={reviews}
+          />
 
           {relatedList.length > 0 && <Related relatedList={relatedList} />}
         </div>

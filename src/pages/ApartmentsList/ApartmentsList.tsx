@@ -89,8 +89,6 @@ const ApartmentsList: React.FC = () => {
     getAllApartments();
   }, []);
 
-  console.log("run");
-
   useEffect(() => {
     // !!Paginate
     setItemDisplayOnPage(paginate(apartments, currentPage, itemsPerPage));
