@@ -20,6 +20,27 @@ import Modal from "./ValidationFormModal";
 import { Button } from "@material-tailwind/react";
 import { Apartment } from "../../../../type/Apartment";
 import { uploadImage } from "../../../../utils/uploadImage";
+import { addDocument } from "../../../../services/addDocs";
+
+const initialFormValue = {
+  name: "",
+  categoryId: "",
+  area: "",
+  direction: "",
+  yearBuild: "",
+  contractDuration: "",
+  depositMoney: "",
+  pricePerMonth: "",
+  numberOfFloors: "",
+  frontWidth: "",
+  owner: "",
+  ownerPhoneNumber: "",
+  baths: "",
+  beds: "",
+  city: "",
+  district: "",
+  detailedAddress: "",
+};
 
 const AddApartments = () => {
   const [description, setDescription] = useState("");
@@ -51,52 +72,52 @@ const AddApartments = () => {
       avatars.length < 1
     ) {
       setIsOpenModal(true);
+      setSubmitting(false);
       return;
     }
-    console.log(avatars, images);
+
     const createNewApartment = async (data: any) => {
-      const res = await uploadImagesAndAvartar(images, avatars);
-      console.log(res);
-      const newApartment: Apartment = {
-        ...data,
-        rented: false,
-        createdDate: Timestamp.now(),
-        avgRate: 0,
-        images: res?.imageUrls,
-        avatar: res?.avatarUrl,
-      };
-      console.log(newApartment);
+      try {
+        const res = await uploadImagesAndAvartar(images, avatars);
+        console.log(res);
+        const newApartment: Apartment = {
+          ...data,
+          rented: false,
+          createdDate: Timestamp.now(),
+          avgRate: 0,
+          detailedDescription: description,
+          terms: rentalTerms,
+          images: res?.imageUrls,
+          avatar: res?.avatarUrl,
+        };
+        console.log(newApartment);
+        addDocument("apartments", newApartment);
+      } catch (err: any) {
+        console.error(err);
+      }
     };
+
     createNewApartment(values);
+    resetForm({ values: initialFormValue });
+    setDescription("");
+    setRentalTerms("");
+    setAdditionalFees("");
+    setAvatars([]);
+    setImages([]);
   };
   const {
     values,
     handleBlur,
     handleChange,
+    resetForm,
     errors,
     touched,
-
+    setSubmitting,
+    isSubmitting,
     handleSubmit,
   } = useFormik({
-    initialValues: {
-      name: "",
-      categoryId: "",
-      area: "",
-      direction: "",
-      yearBuild: "",
-      contractDuration: "",
-      depositMoney: "",
-      pricePerMonth: "",
-      numberOfFloors: "",
-      frontWidth: "",
-      owner: "",
-      ownerPhoneNumber: "",
-      baths: "",
-      beds: "",
-      city: "",
-      district: "",
-      detailedAddress: "",
-    },
+    initialValues: initialFormValue,
+
     onSubmit,
     validationSchema: validationSchema,
   });
@@ -480,7 +501,7 @@ const AddApartments = () => {
         </div>
 
         <div className="grid grid-cols-5 mb-4 mt-20">
-          <div className="col-span-1">
+          <div className="col-span-2">
             <label className={labelCSSBase}>Avatar</label>
             <ImageUploading
               multiple
@@ -547,7 +568,7 @@ const AddApartments = () => {
               </p>
             )}
           </div>
-          <div className="col-span-4">
+          <div className="col-span-3">
             <label className={labelCSSBase}>Images</label>
             <ImageUploading
               multiple
@@ -591,7 +612,7 @@ const AddApartments = () => {
                           <img
                             src={image.dataURL}
                             alt=""
-                            className="mt-4 mb-4 rounded max-h-32 object-cover"
+                            className="mt-4 mb-4 rounded h-28 object-cover"
                             width="200"
                           />
                           <div className="flex justify-between">
@@ -625,10 +646,15 @@ const AddApartments = () => {
             )}
           </div>
         </div>
-
-        <button type="submit" className={submitButtonCSSBase}>
+        <Button
+          disabled={isSubmitting}
+          className="mt-10"
+          type="submit"
+          variant="outlined"
+          color="blue"
+        >
           Create new Apartment
-        </button>
+        </Button>
       </form>
     </div>
   );

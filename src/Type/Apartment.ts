@@ -4,7 +4,7 @@ export type FirebaseDate = {
 };
 
 export type Apartment = {
-  id: string;
+  id?: string;
   area: number;
   avatar: string;
   categoryId: string;
@@ -23,7 +23,7 @@ export type Apartment = {
   rented: boolean;
   yearBuild: string;
   images: string[];
-  terms: string[];
+  terms: string;
   baths: number;
   beds: number;
   depositMoney: number;

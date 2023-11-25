@@ -92,8 +92,10 @@ const CommentsSection: React.FC<ICommentsSectionProps> = ({
       }
     };
 
-    checkUserAlreadyCommentOrDidNotRent();
-  }, [apartment?.id, currentUser.uid]);
+    if (currentUser?.uid) {
+      checkUserAlreadyCommentOrDidNotRent();
+    }
+  }, [apartment?.id, currentUser?.uid]);
 
   const handleUserMakeANewComment = () => {
     setUserAlreadyCommentOrDidNotRent(true);

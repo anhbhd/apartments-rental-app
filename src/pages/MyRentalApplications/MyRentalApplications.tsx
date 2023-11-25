@@ -6,6 +6,7 @@ import ApplicationsList from "../../components/MyRentalApplication/ApplicationsL
 import Pagination from "../../components/ApartmentsList/Pagination/Pagination";
 import { RentalApplication } from "../../type/RentalApplication";
 import { useAuth } from "../../context/AuthContext";
+import { mapCollectionToArrayObject } from "./../../utils/Mapper";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../config/firebase_config";
 import FullLoadingScreen from "../../utils/FullLoadingScreen/FullLoadingScreen";
@@ -19,19 +20,14 @@ const MyRentalApplications = () => {
       const rentalAppsCollectionRef = collection(db, "rentalApplications");
 
       try {
-        const applicationsData: RentalApplication[] = [];
         const q = query(
           rentalAppsCollectionRef,
           where("tenantId", "==", currentUser.uid)
         );
 
         const rentalApplicationCollectionSnapshot = await getDocs(q);
-        rentalApplicationCollectionSnapshot.docs.forEach((doc) =>
-          applicationsData.push({
-            ...(doc.data() as RentalApplication),
-            id: doc.id as string,
-          })
-        );
+        const applicationsData: RentalApplication[] =
+          mapCollectionToArrayObject(rentalApplicationCollectionSnapshot);
 
         setRentalApps(applicationsData);
         setLoading(false);

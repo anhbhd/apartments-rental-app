@@ -12,7 +12,7 @@ const AdminLayout = () => {
     <>
       <Navbar />
       <Sidebar />
-      <div className="mt-16">
+      <div className="mt-16 ml-72">
         <Outlet />
       </div>
     </>

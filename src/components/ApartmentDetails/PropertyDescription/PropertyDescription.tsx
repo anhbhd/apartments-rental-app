@@ -46,9 +46,10 @@ const PropertyDescription = ({
     <section className={`property-description ${className || ""}`}>
       <div className="property-description-container">
         <h3 className="property-description__title">Property Description</h3>
-        <p className="property-description__des-text">
-          {apartment?.detailedDescription}
-        </p>
+        <p
+          className="property-description__des-text"
+          dangerouslySetInnerHTML={{ __html: apartment?.detailedDescription }}
+        ></p>
       </div>
 
       <div className="property-description-container">
@@ -135,16 +136,10 @@ const PropertyDescription = ({
       <div className="address-section">
         <h3 className="address-section__title">Terms</h3>
         <div className="address-section__info-container">
-          <div className="address-section__text-details">
-            {apartment?.terms.map((term, index) => {
-              return (
-                <p key={index} className="item">
-                  <label>{index + 1}</label>
-                  <span>{term}</span>
-                </p>
-              );
-            })}
-          </div>
+          <div
+            className="address-section__text-details"
+            dangerouslySetInnerHTML={{ __html: apartment?.terms }}
+          ></div>
         </div>
       </div>
 

@@ -70,10 +70,10 @@ const ApartmentDetails = () => {
             where("userId", "==", currentUser.uid)
           );
           const wishlistCollectionSnapshot = await getDocs(q);
-          // console.log(wishlistCollectionSnapshot.docs.at(0)?.data());
+
           const fetchedWishlistItemId =
             wishlistCollectionSnapshot.docs.at(0)?.id;
-          // console.log(wishlistCollectionSnapshot.docs.at(0)?.id);
+
           if (fetchedWishlistItemId) {
             setLike(true);
             setWishlistItemId(fetchedWishlistItemId);
@@ -357,7 +357,7 @@ const ApartmentDetails = () => {
 
   return (
     <main className="apartment-details-page">
-      {loadedPromises < 3 && <FullLoadingScreen />}
+      {loadedPromises < 2 && <FullLoadingScreen />}
       {!isModalClose && (
         <ModalBackToPersonalInfo
           onClose={handleCloseModalRemindUpdateProfile}
@@ -366,7 +366,7 @@ const ApartmentDetails = () => {
       {successfulRent && (
         <SuccessRentModal onClose={() => setSuccessfulRent(false)} />
       )}
-      {loadedPromises >= 3 && (
+      {loadedPromises >= 2 && (
         <div className="apartment-details">
           <div className="apartment-details__info">
             <div className="text-info">

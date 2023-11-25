@@ -18,6 +18,8 @@ import { Dashboard } from "./pages/ADMIN/Dashboard/Dashboard";
 import AdminLayout from "./layouts/AdminLayout/AdminLayout";
 import AddOrEditApartments from "./pages/ADMIN/ApartmentsManagement/AddOrEditApartments/AddOrEditApartments";
 import ApartmentListAdmin from "./pages/ADMIN/ApartmentsManagement/ApartmentsList/ApartmentsList";
+import UsersManagement from "./pages/ADMIN/UsersManagement/UsersManagement";
+import RentalApplicationsManagement from "./pages/ADMIN/RentalsManagement/RentalsManagement";
 function App() {
   return (
     <div className="App">
@@ -56,6 +58,11 @@ function App() {
           <Route
             path="apartments/add_or_edit/:apartmentId"
             element={<AddOrEditApartments />}
+          />
+          <Route path="users" element={<UsersManagement />} />
+          <Route
+            path="rental_applications"
+            element={<RentalApplicationsManagement />}
           />
           <Route path="apartments" element={<ApartmentListAdmin />} />
         </Route>

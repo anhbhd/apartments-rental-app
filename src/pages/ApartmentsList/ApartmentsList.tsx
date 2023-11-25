@@ -15,6 +15,8 @@ import { FilterbarType } from "../../type/Filterbar";
 import { Option } from "../../type/Option";
 import { orderBy, query, where } from "firebase/firestore";
 import FullLoadingScreen from "../../utils/FullLoadingScreen/FullLoadingScreen";
+import { getDataCollection } from "../../services/getDataCollection";
+import { mapCollectionToArrayObject } from "../../utils/Mapper";
 
 const initalFilterValue: FilterbarType = {
   sortby: SortBy.ALL,
@@ -62,22 +64,11 @@ const ApartmentsList: React.FC = () => {
   console.log(apartmentListFilter);
 
   useEffect(() => {
+    async function fetchApartmentsData(): Promise<[Apartment[], number]> {
+      return await getDataCollection<Apartment>("apartments");
+    }
     const getAllApartments = async () => {
-      const apartmentsCollectionRef = collection(db, "apartments");
-      let apartmentsData: Apartment[] = [];
-
-      // trường hợp bộ lọc trống
-      const totalItem = (await getDocs(apartmentsCollectionRef)).size;
-
-      const apartmentsSnapshot = await getDocs(apartmentsCollectionRef);
-      if (apartmentsSnapshot) {
-        apartmentsSnapshot.docs.forEach((doc: any) => {
-          apartmentsData.push({
-            ...doc.data(),
-            id: doc.id,
-          });
-        });
-      }
+      const [apartmentsData, totalItem] = await fetchApartmentsData();
 
       setApartments(apartmentsData);
       setTotalItems(totalItem);
@@ -128,14 +119,8 @@ const ApartmentsList: React.FC = () => {
       //todo Query and return data
       const apartmentsSnapshot = await getDocs(q);
 
-      let apartmentsData: Apartment[] = [];
-
-      apartmentsSnapshot.forEach((doc) => {
-        apartmentsData.push({
-          ...(doc.data() as Apartment),
-          id: doc.id,
-        });
-      });
+      let apartmentsData: Apartment[] =
+        mapCollectionToArrayObject(apartmentsSnapshot);
 
       //todo Filter by keyword
       if (apartmentListFilter.keyword) {

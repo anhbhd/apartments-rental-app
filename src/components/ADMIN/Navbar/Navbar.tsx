@@ -1,6 +1,30 @@
+import { useEffect, useRef, useState } from "react";
 import logoImg from "./../../../assets/header-logo-admin.svg";
 
 const Navbar = () => {
+  const [toggleAvatar, setToggleAvatar] = useState<boolean>(false);
+  const menuAvatarRef = useRef<HTMLButtonElement>(null);
+  const handleToggleAvatar = () => {
+    setToggleAvatar(!toggleAvatar);
+  };
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      menuAvatarRef.current &&
+      !menuAvatarRef.current.contains(event.target as Node)
+    ) {
+      setToggleAvatar(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
       <div className="px-3 py-3 lg:px-5 lg:pl-3">
@@ -22,8 +46,8 @@ const Navbar = () => {
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  clip-rule="evenodd"
-                  fill-rule="evenodd"
+                  clipRule="evenodd"
+                  fillRule="evenodd"
                   d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
                 ></path>
               </svg>
@@ -36,6 +60,8 @@ const Navbar = () => {
             <div className="flex items-center ms-3">
               <div>
                 <button
+                  ref={menuAvatarRef}
+                  onClick={handleToggleAvatar}
                   type="button"
                   className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
                   aria-expanded="false"
@@ -50,8 +76,11 @@ const Navbar = () => {
                 </button>
               </div>
               <div
-                className="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600 fixed right-10 top-10"
                 id="dropdown-user"
+                className={`z-50 fixed right-6 top-12 ${
+                  !toggleAvatar ? `hidden` : ``
+                } my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600  "
+                `}
               >
                 <div className="px-4 py-3" role="none">
                   <p
@@ -77,24 +106,7 @@ const Navbar = () => {
                       Dashboard
                     </a>
                   </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                      role="menuitem"
-                    >
-                      Settings
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                      role="menuitem"
-                    >
-                      Earnings
-                    </a>
-                  </li>
+
                   <li>
                     <a
                       href="#"

@@ -13,6 +13,7 @@ import {
 import { db } from "../../config/firebase_config";
 import { useAuth } from "../../context/AuthContext";
 import FullLoadingScreen from "../../utils/FullLoadingScreen/FullLoadingScreen";
+import { mapCollectionToArrayObject } from "../../utils/Mapper";
 const Wishlist = () => {
   const [wishlist, setWishlist] = useState<WishListItem[]>([]);
   const { currentUser } = useAuth();
@@ -33,13 +34,8 @@ const Wishlist = () => {
       const q = query(wishlistRef, where("userId", "==", currentUser.uid));
       const userWishlistSnapshot = await getDocs(q);
 
-      const items = userWishlistSnapshot.docs.map(
-        (doc) =>
-          ({
-            id: doc.id,
-            ...doc.data(),
-          } as WishListItem)
-      );
+      const items: WishListItem[] =
+        mapCollectionToArrayObject(userWishlistSnapshot);
       setWishlist(items);
       setIsLoading(false);
     };
