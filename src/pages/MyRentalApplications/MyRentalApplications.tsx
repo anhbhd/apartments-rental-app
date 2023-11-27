@@ -10,11 +10,16 @@ import { mapCollectionToArrayObject } from "./../../utils/Mapper";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../config/firebase_config";
 import FullLoadingScreen from "../../utils/FullLoadingScreen/FullLoadingScreen";
+import { Option } from "../../type/Option";
 
 const MyRentalApplications = () => {
   const [rentalApps, setRentalApps] = useState<RentalApplication[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const { currentUser } = useAuth();
+  const [filter, setFilter] = useState<Option>({
+    value: "PENDING",
+    label: "Pending",
+  });
   useEffect(() => {
     const fetchRentalApps = async () => {
       const rentalAppsCollectionRef = collection(db, "rentalApplications");
@@ -26,9 +31,12 @@ const MyRentalApplications = () => {
         );
 
         const rentalApplicationCollectionSnapshot = await getDocs(q);
-        const applicationsData: RentalApplication[] =
-          mapCollectionToArrayObject(rentalApplicationCollectionSnapshot);
-
+        let applicationsData: RentalApplication[] = mapCollectionToArrayObject(
+          rentalApplicationCollectionSnapshot
+        );
+        applicationsData = applicationsData.filter(
+          (app) => app.status === filter.value
+        );
         setRentalApps(applicationsData);
         setLoading(false);
       } catch (err: any) {
@@ -36,20 +44,21 @@ const MyRentalApplications = () => {
       }
     };
     fetchRentalApps();
-  }, [currentUser.uid]);
+  }, [currentUser.uid, filter]);
 
   return (
     <main className="my-rental-app">
       <h3 className="my-rental-app__title">
         My <span>rental applications</span>
       </h3>
-      <Filter />
+      <Filter setFilter={setFilter} selectedOption={filter} />
       {loading && <FullLoadingScreen />}
 
       {!loading && (
         <>
-          <ApplicationsList rentalApps={rentalApps} />
-          {rentalApps.length > 6 && (
+          <ApplicationsList filter={filter} rentalApps={rentalApps} />
+
+          {/* {rentalApps.length > 6 && (
             <Pagination
               totalItems={0}
               itemsPerPage={0}
@@ -57,7 +66,7 @@ const MyRentalApplications = () => {
                 throw new Error("Function not implemented.");
               }}
             />
-          )}
+          )} */}
         </>
       )}
     </main>

@@ -1,35 +1,47 @@
+import { Button } from "@material-tailwind/react";
 import React from "react";
+import { Apartment } from "../../../../type/Apartment";
+import { Link } from "react-router-dom";
 
-const ApartmentRow = () => {
+interface IApartmentRowProps {
+  apartment: Apartment;
+  setDeleteId: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const ApartmentRow = ({ apartment, setDeleteId }: IApartmentRowProps) => {
   return (
-    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+    <tr className="bg-white border-b  dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
       <td className="p-4">
         <img
-          src="/docs/images/products/apple-watch.png"
-          className="w-16 md:w-32 max-w-full max-h-full"
-          alt="Apple Watch"
+          src={apartment?.avatar}
+          className="w-16 md:w-32 rounded-lg max-w-full"
+          alt={apartment?.avatar}
         />
       </td>
       <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">
-        Apple Watch
+        {apartment?.name}
       </td>
 
-      <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">
-        $599
+      <td className="px-6 py-4 font-semibold  text-gray-900 dark:text-white">
+        {apartment?.pricePerMonth}$
       </td>
-      <td className="px-6 py-4 flex justify-start gap-5">
-        <a
-          href="#"
-          className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
-        >
-          Remove
-        </a>
-        <a
-          href="#"
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-        >
-          Details
-        </a>
+      <td className="px-6 py-4  ">
+        <p className="min-h-full flex gap-4 justify-start items-center">
+          <Button
+            onClick={() => setDeleteId(apartment.id as string)}
+            variant="filled"
+            color="deep-orange"
+          >
+            Remove
+          </Button>
+          <Link
+            to={`http://localhost:3000/admin/apartments/add_or_edit/${apartment.id}`}
+          >
+            <Button variant="outlined" color="blue">
+              Details
+            </Button>
+          </Link>
+        </p>
       </td>
     </tr>
   );

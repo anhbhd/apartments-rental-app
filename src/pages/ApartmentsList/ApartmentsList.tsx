@@ -17,6 +17,7 @@ import { orderBy, query, where } from "firebase/firestore";
 import FullLoadingScreen from "../../utils/FullLoadingScreen/FullLoadingScreen";
 import { getDataCollection } from "../../services/getDataCollection";
 import { mapCollectionToArrayObject } from "../../utils/Mapper";
+import { paginate } from "../../utils/paginate";
 
 const initalFilterValue: FilterbarType = {
   sortby: SortBy.ALL,
@@ -26,21 +27,11 @@ const initalFilterValue: FilterbarType = {
     from: 0,
     to: 0,
   },
+  canBeRented: "",
   stars: 0,
   cityCode: 0,
   districtCode: 0,
 };
-
-// Function to paginate an array
-function paginate<T>(
-  array: T[],
-  currentPage: number,
-  itemsPerPage: number
-): T[] {
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  return array.slice(startIndex, endIndex);
-}
 
 const ApartmentsList: React.FC = () => {
   const [apartments, setApartments] = useState<Apartment[]>([]);
@@ -140,6 +131,11 @@ const ApartmentsList: React.FC = () => {
       if (apartmentListFilter.price.to) {
         apartmentsData = apartmentsData.filter(
           (apartment) => apartment.pricePerMonth <= apartmentListFilter.price.to
+        );
+      }
+      if (apartmentListFilter.canBeRented) {
+        apartmentsData = apartmentsData.filter(
+          (apartment) => !apartment.rented
         );
       }
       setTotalItems(apartmentsData.length);

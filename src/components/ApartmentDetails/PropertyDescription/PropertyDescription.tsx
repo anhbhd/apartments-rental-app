@@ -1,18 +1,15 @@
 import "./PropertyDescription.scss";
 import { Apartment } from "../../../type/Apartment";
 import { formatter } from "../../../utils/FormatMoney";
-import { Amenity } from "../../../type/Amenity";
 import { useEffect, useState } from "react";
 
 interface IPropertyDescriptionProps {
   apartment: Apartment;
-  amenities: Amenity[];
   className?: string;
 }
 
 const PropertyDescription = ({
   apartment,
-  amenities,
   className,
 }: IPropertyDescriptionProps) => {
   const [cityName, setCityName] = useState<string>("");
@@ -142,14 +139,17 @@ const PropertyDescription = ({
           ></div>
         </div>
       </div>
-
+      <div className="address-section">
+        <h3 className="address-section__title">Additional fees</h3>
+        <div className="address-section__info-container">
+          <div
+            className="address-section__text-details"
+            dangerouslySetInnerHTML={{ __html: apartment?.additionalFees }}
+          ></div>
+        </div>
+      </div>
       <section className="features-amenities">
         <h3 className="features-amenities__title">Features & Amenities</h3>
-        <ul className="features-amenities__items-container">
-          {amenities?.map((amenity, index) => (
-            <li key={index}>{amenity.name}</li>
-          ))}
-        </ul>
       </section>
     </section>
   );

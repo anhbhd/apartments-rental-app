@@ -18,12 +18,12 @@ const CustomSelect: React.FC<ICustomSelectProps> = ({
   className = "",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
   const handleOptionClick = (option: Option) => {
     onSelect(option);
     setIsOpen(false);
   };
-  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent): void => {

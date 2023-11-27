@@ -41,6 +41,7 @@
     outline: $main-text-color;
     transition: all 0.5s;
     font-weight: 600;
+    outline: 1px solid !important;
     &:hover {
       background-color: $main-text-color;
       color: $background-white;

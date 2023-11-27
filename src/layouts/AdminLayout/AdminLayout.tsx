@@ -5,7 +5,6 @@ import Sidebar from "../../components/ADMIN/Sidebar/Sidebar";
 
 const AdminLayout = () => {
   useEffect(() => {
-    // Set the root font size using a CSS variable
     document.documentElement.style.setProperty("font-size", `16px`);
   }, []);
   return (

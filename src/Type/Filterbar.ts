@@ -8,6 +8,7 @@ export type FilterbarType = {
     from: number;
     to: number;
   };
+  canBeRented: string;
   stars: number;
   cityCode: number;
   districtCode: number;

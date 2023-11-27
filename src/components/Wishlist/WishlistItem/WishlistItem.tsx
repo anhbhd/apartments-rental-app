@@ -16,6 +16,7 @@ interface IWishlistItemProps {
 const WishlistItem = ({ wishlistItem, onDeleteItem }: IWishlistItemProps) => {
   const [apartmentInWishlist, setApartmentInWishList] =
     useState<Apartment | null>(null);
+  const [category, setCategory] = useState<string>("");
 
   useEffect(() => {
     const fetchDataOfWishlistItem = async () => {
@@ -33,6 +34,23 @@ const WishlistItem = ({ wishlistItem, onDeleteItem }: IWishlistItemProps) => {
     };
     fetchDataOfWishlistItem();
   }, [wishlistItem?.apartmentId]);
+
+  useEffect(() => {
+    const fetchCategoryName = async () => {
+      try {
+        const categoryDocRef = doc(
+          db,
+          `categories/${apartmentInWishlist?.categoryId}`
+        );
+        const categorySnapshot = await getDoc(categoryDocRef);
+
+        setCategory(categorySnapshot.data()?.name);
+      } catch (err: any) {
+        console.error(err.message);
+      }
+    };
+    fetchCategoryName();
+  }, [apartmentInWishlist]);
 
   const handleDeleteWishlistItem = async () => {
     try {
@@ -74,7 +92,7 @@ const WishlistItem = ({ wishlistItem, onDeleteItem }: IWishlistItemProps) => {
           <span>{apartmentInWishlist?.area} sqm</span>
         </p>
         <p className="type">
-          <em>Apartment</em>
+          <em>{category}</em>
         </p>
       </div>
       <div className="wishlist-item__actions">

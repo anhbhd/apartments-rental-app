@@ -11,15 +11,21 @@ const options: Option[] = [
   { value: "CANCELED", label: "Canceled" },
 ];
 
-const Filter = () => {
-  const handleSelect = (selectedOption: Option) => {
-    console.log("Selected option:", selectedOption);
+interface IFilterProps {
+  setFilter: React.Dispatch<React.SetStateAction<Option>>;
+  selectedOption: Option;
+}
+
+const Filter: React.FC<IFilterProps> = ({ setFilter, selectedOption }) => {
+  const handleSelect = (seleted: Option) => {
+    setFilter(seleted);
   };
+
   return (
     <div className="filter">
       <CustomSelect
         options={options}
-        selected={options[0]}
+        selected={selectedOption}
         onSelect={handleSelect}
       />
     </div>

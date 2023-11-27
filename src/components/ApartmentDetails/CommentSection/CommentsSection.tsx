@@ -107,12 +107,13 @@ const CommentsSection: React.FC<ICommentsSectionProps> = ({
         <span className="num-reviews">{totalReviews} Reviews</span>
         <div className="sorting">
           <span>Filter by</span>
-          <select name="sortByStar" id="">
-            <option value="1">1 Star</option>
-            <option value="1">2 Stars</option>
-            <option value="1">3 Stars</option>
-            <option value="1">4 Stars</option>
-            <option value="1">5 Stars</option>
+          <select defaultValue={0} name="sortByStar" id="">
+            <option value={0}>All</option>
+            <option value={1}>1 Star</option>
+            <option value={2}>2 Stars</option>
+            <option value={3}>3 Stars</option>
+            <option value={4}>4 Stars</option>
+            <option value={5}>5 Stars</option>
           </select>
         </div>
       </div>

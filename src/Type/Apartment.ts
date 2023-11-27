@@ -29,4 +29,5 @@ export type Apartment = {
   depositMoney: number;
   contractDuration: number;
   avgRate: number;
+  additionalFees: string;
 };

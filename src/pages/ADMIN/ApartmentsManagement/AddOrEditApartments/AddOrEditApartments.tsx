@@ -1,7 +1,6 @@
 import {
   inputBoxBaseCss,
   labelCSSBase,
-  submitButtonCSSBase,
 } from "../../../../components/ADMIN/ApartmentManagement/Input/AddOrEditApartments.css";
 import { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
@@ -15,12 +14,15 @@ import CustomInput, {
 import { Category } from "../../../../type/Category";
 import { Option } from "../../../../type/Option";
 import { getDataCollection } from "../../../../services/getDataCollection";
-import { Timestamp } from "firebase/firestore";
+import { Timestamp, doc, getDoc } from "firebase/firestore";
 import Modal from "./ValidationFormModal";
 import { Button } from "@material-tailwind/react";
 import { Apartment } from "../../../../type/Apartment";
 import { uploadImage } from "../../../../utils/uploadImage";
 import { addDocument } from "../../../../services/addDocs";
+import { useLocation } from "react-router-dom";
+import { db } from "../../../../config/firebase_config";
+import { updateDocument } from "../../../../services/updateDocument";
 
 const initialFormValue = {
   name: "",
@@ -55,6 +57,13 @@ const AddApartments = () => {
   const [images, setImages] = useState([]);
   const [avatars, setAvatars] = useState([]);
   const maxNumber = 5;
+  const [apartment, setApartment] = useState<Apartment>();
+
+  const { pathname } = useLocation();
+  const apartmentId: string | undefined =
+    pathname.split("/").pop() === "add_or_edit"
+      ? undefined
+      : pathname.split("/").pop();
 
   const onChangeImagesList = (imageList: ImageListType) => {
     setImages(imageList as any);
@@ -62,46 +71,79 @@ const AddApartments = () => {
   const onChangeAvatar = (imageList: ImageListType) => {
     setAvatars(imageList as any);
   };
-
   const onSubmit = (values: any) => {
-    if (
-      !description ||
-      !additionalFees ||
-      !rentalTerms ||
-      images.length < 5 ||
-      avatars.length < 1
-    ) {
-      setIsOpenModal(true);
-      setSubmitting(false);
-      return;
+    if (!apartmentId) {
+      if (
+        !description ||
+        !additionalFees ||
+        !rentalTerms ||
+        images.length < 5 ||
+        avatars.length < 1
+      ) {
+        setIsOpenModal(true);
+        setSubmitting(false);
+        return;
+      }
+
+      const createNewApartment = async (data: any) => {
+        try {
+          const res = await uploadImagesAndAvartar(images, avatars);
+          console.log(res);
+          const newApartment: Apartment = {
+            ...data,
+            rented: false,
+            createdDate: Timestamp.now(),
+            avgRate: 0,
+            detailedDescription: description,
+            terms: rentalTerms,
+            images: res?.imageUrls,
+            avatar: res?.avatarUrl,
+            additionalFees: additionalFees,
+          };
+          console.log(newApartment);
+          await addDocument("apartments", newApartment);
+          setSubmitting(false);
+          resetForm({ values: initialFormValue });
+          setDescription("");
+          setRentalTerms("");
+          setAdditionalFees("");
+        } catch (err: any) {
+          console.error(err);
+        }
+      };
+
+      createNewApartment(values);
+    } else {
+      const updateApartment = async () => {
+        try {
+          let imageUrls;
+          let avatarUrl;
+          if (images.length === 5) {
+            imageUrls = await uploadImages(images);
+          }
+          if (avatars.length === 1) {
+            avatarUrl = await uploadAvatar(avatars);
+          }
+
+          const updatedApartmentData: Apartment = {
+            ...values,
+            detailedDescription: description,
+            terms: rentalTerms,
+            additionalFees: additionalFees,
+            images: imageUrls || apartment?.images,
+            avatar: avatarUrl || apartment?.avatar,
+          };
+          console.log(updatedApartmentData);
+          await updateDocument("apartments", apartmentId, updatedApartmentData);
+          setSubmitting(false);
+          console.log("update successfully!");
+        } catch (err: any) {
+          console.error(err);
+        }
+      };
+      updateApartment();
     }
 
-    const createNewApartment = async (data: any) => {
-      try {
-        const res = await uploadImagesAndAvartar(images, avatars);
-        console.log(res);
-        const newApartment: Apartment = {
-          ...data,
-          rented: false,
-          createdDate: Timestamp.now(),
-          avgRate: 0,
-          detailedDescription: description,
-          terms: rentalTerms,
-          images: res?.imageUrls,
-          avatar: res?.avatarUrl,
-        };
-        console.log(newApartment);
-        addDocument("apartments", newApartment);
-      } catch (err: any) {
-        console.error(err);
-      }
-    };
-
-    createNewApartment(values);
-    resetForm({ values: initialFormValue });
-    setDescription("");
-    setRentalTerms("");
-    setAdditionalFees("");
     setAvatars([]);
     setImages([]);
   };
@@ -112,6 +154,7 @@ const AddApartments = () => {
     resetForm,
     errors,
     touched,
+    setValues,
     setSubmitting,
     isSubmitting,
     handleSubmit,
@@ -121,6 +164,32 @@ const AddApartments = () => {
     onSubmit,
     validationSchema: validationSchema,
   });
+  // fetch apartment if update mode
+
+  useEffect(() => {
+    if (apartmentId) {
+      try {
+        const fetchApartmentData = async () => {
+          const apartmentRef = doc(db, `apartments/${apartmentId}`);
+          const apartmentSnapshot = await getDoc(apartmentRef);
+
+          const apartmentData = {
+            ...(apartmentSnapshot.data() as Apartment),
+            id: apartmentSnapshot.id,
+          };
+
+          setApartment(apartmentData as Apartment);
+          setDescription(apartmentData.detailedDescription);
+          setRentalTerms(apartmentData.terms);
+          setAdditionalFees(apartmentData.additionalFees);
+          setValues({ ...(apartmentData as any) });
+        };
+        fetchApartmentData();
+      } catch (err: any) {
+        console.error(err.message);
+      }
+    }
+  }, [apartmentId, isSubmitting]);
 
   useEffect(() => {
     const getProvinces = async () => {
@@ -562,10 +631,23 @@ const AddApartments = () => {
                 </div>
               )}
             </ImageUploading>
-            {avatars.length < 1 && (
-              <p className="mt-2 absolute text-sm text-red-600 dark:text-red-500">
-                You need to upload avatar
-              </p>
+            {apartmentId ? (
+              <>
+                <p className="text-teal-900 mb-2 mt-8">Current avatar</p>
+                <img
+                  className="h-auto w-52 rounded-lg"
+                  src={apartment?.avatar}
+                  alt=" description"
+                />
+              </>
+            ) : (
+              <>
+                {avatars.length < 1 && (
+                  <p className="mt-2 absolute text-sm text-red-600 dark:text-red-500">
+                    You need to upload avatar
+                  </p>
+                )}
+              </>
             )}
           </div>
           <div className="col-span-3">
@@ -639,10 +721,29 @@ const AddApartments = () => {
                 </div>
               )}
             </ImageUploading>
-            {images.length < 5 && (
-              <p className="mt-6 absolute text-sm text-red-600 dark:text-red-500">
-                You need to upload 5 images
-              </p>
+
+            {apartmentId ? (
+              <>
+                <p className="text-teal-900 mt-12"> Current images</p>
+                <div className="flex flex-wrap gap-3 mt-2">
+                  {apartment?.images.map((url, index) => (
+                    <img
+                      key={index}
+                      className="h-auto w-52 rounded-lg"
+                      src={url}
+                      alt=" description"
+                    />
+                  ))}
+                </div>
+              </>
+            ) : (
+              <>
+                {images.length < 5 && (
+                  <p className="mt-6 absolute text-sm text-red-600 dark:text-red-500">
+                    You need to upload 5 images
+                  </p>
+                )}
+              </>
             )}
           </div>
         </div>
@@ -653,7 +754,7 @@ const AddApartments = () => {
           variant="outlined"
           color="blue"
         >
-          Create new Apartment
+          {apartmentId ? "Update" : "Create new Apartment"}
         </Button>
       </form>
     </div>
@@ -670,6 +771,26 @@ async function uploadImagesAndAvartar(images: any, avatars: any) {
     );
 
     return { avatarUrl, imageUrls };
+  } catch (err: any) {
+    console.error(err.message);
+  }
+}
+async function uploadImages(images: any) {
+  try {
+    const imageUrls = await Promise.all(
+      images.map((image: any) => uploadImage(image.dataURL))
+    );
+
+    return imageUrls;
+  } catch (err: any) {
+    console.error(err.message);
+  }
+}
+async function uploadAvatar(avatars: any) {
+  try {
+    const avatarUrl = await uploadImage(avatars[0].dataURL);
+
+    return avatarUrl;
   } catch (err: any) {
     console.error(err.message);
   }

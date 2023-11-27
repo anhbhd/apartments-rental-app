@@ -26,7 +26,7 @@ import { db } from "../../config/firebase_config";
 import { Apartment } from "../../type/Apartment";
 import { formatter } from "./../../utils/FormatMoney";
 import { secondsToDateTime } from "../../utils/SecondToDate";
-import { Amenity } from "../../type/Amenity";
+
 import { Review } from "../../type/Review";
 import { useAuth } from "../../context/AuthContext";
 import ModalBackToPersonalInfo from "../../components/ApartmentDetails/ModalBackToPersonalInfo/ModalBackToPersonalInfo";
@@ -39,7 +39,6 @@ import FullLoadingScreen from "../../utils/FullLoadingScreen/FullLoadingScreen";
 const ApartmentDetails = () => {
   const { pathname } = useLocation();
   const [apartment, setApartment] = useState<Apartment>();
-  const [amenities, setAmenities] = useState<Amenity[] | null>(null);
   const [relatedList, setRelatedList] = useState<Apartment[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
   const reviewsNumPerFetch = 6;
@@ -117,33 +116,6 @@ const ApartmentDetails = () => {
       setLoadedPromises((prevNumState) => prevNumState + 1);
     };
     fetchThisApartment();
-  }, [apartmentId]);
-
-  useEffect(() => {
-    const fetchAmenities = async (apartmentId: string) => {
-      const amenitiesCollectionRef = collection(db, "amenities");
-      const amenities: Amenity[] = [];
-      try {
-        const baseQuery = query(
-          amenitiesCollectionRef,
-          where("apartmentId", "==", apartmentId)
-        );
-        const amenitiesCollectionSnapshot = await getDocs(baseQuery);
-
-        amenitiesCollectionSnapshot.docs.forEach((doc) => {
-          const item = doc.data() as Amenity;
-          amenities.push({
-            ...item,
-            id: doc.id as string,
-          });
-        });
-      } catch (err: any) {
-        console.log(err);
-      }
-      setAmenities(amenities);
-      setLoadedPromises((prevNumState) => prevNumState + 1);
-    };
-    fetchAmenities(apartmentId);
   }, [apartmentId]);
 
   // fetch reviews data for this apartment
@@ -427,10 +399,7 @@ const ApartmentDetails = () => {
           <ImagesShow images={apartment?.images as string[]} />
 
           {/* property description */}
-          <PropertyDescription
-            amenities={amenities as Amenity[]}
-            apartment={apartment as Apartment}
-          />
+          <PropertyDescription apartment={apartment as Apartment} />
           {/* comments section */}
           <CommentsSection
             setToggleRefetchReviews={setToggleRefetchReviews}

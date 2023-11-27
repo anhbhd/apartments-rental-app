@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Option } from "../../../type/Option";
 
 import SearchIcon from "../../../icons/SearchIcon";
@@ -53,6 +53,7 @@ const Filterbar = ({
   const [textSearch, setTextSearch] = useState<string>("");
 
   const [checkboxIdsChecked, setCheckboxIdsChecked] = useState<string[]>([]);
+  const [canBeRented, setCanBeRented] = useState<string>();
 
   useEffect(() => {
     const fetchApartmentTypeForSelect = async () => {
@@ -232,11 +233,23 @@ const Filterbar = ({
     setSelectedStars(starsSelections[0]); // Reset selectedStars state
     setSelectedProvince({ label: "All", value: 0 }); // Reset selectedProvince state
     setSelectedDistrict({ label: "All", value: 0 }); // Reset selectedDistrict state
+    setCanBeRented("");
     setMinPrice("");
     setMaxPrice("");
     setTextSearch("");
     setCheckboxIdsChecked([]);
   };
+
+  function handleChangeCanbeRented(event: ChangeEvent<HTMLInputElement>): void {
+    setCanBeRented((prev) =>
+      prev === event.target.value ? "" : event.target.value
+    );
+    onChangeFilter((prev) => ({
+      ...prev,
+      canBeRented:
+        prev.canBeRented === event.target.value ? "" : event.target.value,
+    }));
+  }
 
   return (
     <div className={`filterbar ${className}`}>
@@ -272,6 +285,23 @@ const Filterbar = ({
               <label htmlFor={category.id}>{category.name}</label>
             </p>
           ))}
+        </div>
+      </div>
+
+      <div className="filterbar__section">
+        <p className="field-label">Filter by status</p>
+        <div className="checkboxes-list">
+          <p className="checkbox-label-container">
+            <input
+              onChange={handleChangeCanbeRented}
+              type="checkbox"
+              value="canberented"
+              name="canberented"
+              id="canberented"
+              checked={Boolean(canBeRented)}
+            />
+            <label htmlFor="canberented">Available for renting</label>
+          </p>
         </div>
       </div>
 
