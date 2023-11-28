@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import "./MyRentalApplication.scss";
 import Filter from "../../components/MyRentalApplication/Filter/Filter";
 import ApplicationsList from "../../components/MyRentalApplication/ApplicationsList/ApplicationsList";
-import Pagination from "../../components/ApartmentsList/Pagination/Pagination";
 import { RentalApplication } from "../../type/RentalApplication";
 import { useAuth } from "../../context/AuthContext";
 import { mapCollectionToArrayObject } from "./../../utils/Mapper";
@@ -57,16 +56,6 @@ const MyRentalApplications = () => {
       {!loading && (
         <>
           <ApplicationsList filter={filter} rentalApps={rentalApps} />
-
-          {/* {rentalApps.length > 6 && (
-            <Pagination
-              totalItems={0}
-              itemsPerPage={0}
-              onPageChange={function (page: number): void {
-                throw new Error("Function not implemented.");
-              }}
-            />
-          )} */}
         </>
       )}
     </main>

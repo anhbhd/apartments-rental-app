@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import Filterbar from "../../../components/ADMIN/RentalsManagement/Filterbar";
 import { RentAppStatus } from "../../../common/constants/RentalAppStatus";
 import RentalAppsList from "../../../components/ADMIN/RentalsManagement/RentalAppsList";
+import CheckExpiredApplications from "./CheckExpiredApplications";
 
 const RentalApplicationsManagement = () => {
   const [category, setCategory] = useState<string>(RentAppStatus.PENDING);
@@ -24,8 +25,7 @@ const RentalApplicationsManagement = () => {
       </div>
 
       <RentalAppsList category={category} />
-
-      {/* <Pagination /> */}
+      <CheckExpiredApplications />
     </>
   );
 };

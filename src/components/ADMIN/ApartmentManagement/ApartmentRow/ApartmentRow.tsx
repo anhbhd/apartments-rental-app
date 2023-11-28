@@ -1,14 +1,19 @@
-import { Button } from "@material-tailwind/react";
 import React from "react";
 import { Apartment } from "../../../../type/Apartment";
+import { Button } from "antd";
 import { Link } from "react-router-dom";
 
 interface IApartmentRowProps {
   apartment: Apartment;
   setDeleteId: React.Dispatch<React.SetStateAction<string>>;
+  onOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ApartmentRow = ({ apartment, setDeleteId }: IApartmentRowProps) => {
+const ApartmentRow = ({
+  apartment,
+  setDeleteId,
+  onOpenModal,
+}: IApartmentRowProps) => {
   return (
     <tr className="bg-white border-b  dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
       <td className="p-4">
@@ -28,18 +33,17 @@ const ApartmentRow = ({ apartment, setDeleteId }: IApartmentRowProps) => {
       <td className="px-6 py-4  ">
         <p className="min-h-full flex gap-4 justify-start items-center">
           <Button
-            onClick={() => setDeleteId(apartment.id as string)}
-            variant="filled"
-            color="deep-orange"
+            danger
+            onClick={() => {
+              setDeleteId(apartment.id as string);
+              onOpenModal(true);
+            }}
           >
             Remove
           </Button>
-          <Link
-            to={`http://localhost:3000/admin/apartments/add_or_edit/${apartment.id}`}
-          >
-            <Button variant="outlined" color="blue">
-              Details
-            </Button>
+
+          <Link to={`/admin/apartments/add_or_edit/${apartment.id}`}>
+            <Button type="primary">Details</Button>
           </Link>
         </p>
       </td>

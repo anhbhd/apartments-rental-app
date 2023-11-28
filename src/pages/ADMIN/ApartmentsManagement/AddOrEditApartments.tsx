@@ -1,28 +1,28 @@
 import {
   inputBoxBaseCss,
   labelCSSBase,
-} from "../../../../components/ADMIN/ApartmentManagement/Input/AddOrEditApartments.css";
+} from "../../../components/ADMIN/ApartmentManagement/Input/AddOrEditApartments.css";
 import { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import ImageUploading, { ImageListType } from "react-images-uploading";
 import { useFormik } from "formik";
-import validationSchema from "../../../../validation_schemas";
+import validationSchema from "../../../validation_schemas";
 import CustomInput, {
   classErr,
-} from "../../../../components/ADMIN/ApartmentManagement/Input/CustomInput";
-import { Category } from "../../../../type/Category";
-import { Option } from "../../../../type/Option";
-import { getDataCollection } from "../../../../services/getDataCollection";
+} from "../../../components/ADMIN/ApartmentManagement/Input/CustomInput";
+import { Category } from "../../../type/Category";
+import { Option } from "../../../type/Option";
+import { getDataCollection } from "../../../services/getDataCollection";
 import { Timestamp, doc, getDoc } from "firebase/firestore";
-import Modal from "./ValidationFormModal";
-import { Button } from "@material-tailwind/react";
-import { Apartment } from "../../../../type/Apartment";
-import { uploadImage } from "../../../../utils/uploadImage";
-import { addDocument } from "../../../../services/addDocs";
+import { Apartment } from "../../../type/Apartment";
+import { uploadImage } from "../../../utils/uploadImage";
+import { addDocument } from "../../../services/addDocs";
 import { useLocation } from "react-router-dom";
-import { db } from "../../../../config/firebase_config";
-import { updateDocument } from "../../../../services/updateDocument";
+import { db } from "../../../config/firebase_config";
+import { updateDocument } from "../../../services/updateDocument";
+import { Button, Modal } from "antd";
+import { getDocument } from "../../../services/getDocument";
 
 const initialFormValue = {
   name: "",
@@ -87,7 +87,7 @@ const AddApartments = () => {
 
       const createNewApartment = async (data: any) => {
         try {
-          const res = await uploadImagesAndAvartar(images, avatars);
+          const res = await uploadImagesAndAvatar(images, avatars);
           console.log(res);
           const newApartment: Apartment = {
             ...data,
@@ -170,15 +170,12 @@ const AddApartments = () => {
     if (apartmentId) {
       try {
         const fetchApartmentData = async () => {
-          const apartmentRef = doc(db, `apartments/${apartmentId}`);
-          const apartmentSnapshot = await getDoc(apartmentRef);
+          const apartmentData = (await getDocument(
+            "apartments",
+            apartmentId
+          )) as Apartment;
 
-          const apartmentData = {
-            ...(apartmentSnapshot.data() as Apartment),
-            id: apartmentSnapshot.id,
-          };
-
-          setApartment(apartmentData as Apartment);
+          setApartment(apartmentData);
           setDescription(apartmentData.detailedDescription);
           setRentalTerms(apartmentData.terms);
           setAdditionalFees(apartmentData.additionalFees);
@@ -189,7 +186,7 @@ const AddApartments = () => {
         console.error(err.message);
       }
     }
-  }, [apartmentId, isSubmitting]);
+  }, [apartmentId, isSubmitting, pathname]);
 
   useEffect(() => {
     const getProvinces = async () => {
@@ -207,7 +204,7 @@ const AddApartments = () => {
 
         setProvinces([{ label: "Select city", value: -1 }, ...provinces]);
       } catch (err: any) {
-        console.error(err.messsage);
+        console.error(err.message);
       }
     };
     getProvinces();
@@ -266,7 +263,15 @@ const AddApartments = () => {
 
   return (
     <div className="p-6 sm:ml-6 mt-24">
-      <Modal isOpenModal={isOpenModal} setIsOpenModal={setIsOpenModal} />
+      <Modal
+        title="Alert"
+        open={isOpenModal}
+        onOk={() => setIsOpenModal(false)}
+        onCancel={() => setIsOpenModal(false)}
+      >
+        <p>Please fulfill the form !!!</p>
+      </Modal>
+
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-3 gap-4 mb-4">
           <CustomInput
@@ -609,7 +614,6 @@ const AddApartments = () => {
                           />
                           <div className="flex justify-between">
                             <Button
-                              type="button"
                               onClick={() => onImageUpdate(index)}
                               color="blue"
                             >
@@ -617,7 +621,8 @@ const AddApartments = () => {
                             </Button>
 
                             <Button
-                              type="button"
+                              type="primary"
+                              danger
                               onClick={() => onImageRemove(index)}
                               color="red"
                             >
@@ -643,7 +648,7 @@ const AddApartments = () => {
             ) : (
               <>
                 {avatars.length < 1 && (
-                  <p className="mt-2 absolute text-sm text-red-600 dark:text-red-500">
+                  <p className="mt-2 mb-5 absolute text-sm text-red-600 dark:text-red-500">
                     You need to upload avatar
                   </p>
                 )}
@@ -677,12 +682,7 @@ const AddApartments = () => {
                     Click or Drop here
                   </button>
                   {images.length > 0 && (
-                    <Button
-                      type="button"
-                      onClick={onImageRemoveAll}
-                      className="ml-10"
-                      size="md"
-                    >
+                    <Button onClick={onImageRemoveAll} danger className="ml-10">
                       Remove all images
                     </Button>
                   )}
@@ -698,18 +698,14 @@ const AddApartments = () => {
                             width="200"
                           />
                           <div className="flex justify-between">
-                            <Button
-                              type="button"
-                              onClick={() => onImageUpdate(index)}
-                              color="blue"
-                            >
+                            <Button onClick={() => onImageUpdate(index)}>
                               Update
                             </Button>
 
                             <Button
-                              type="button"
+                              type="primary"
+                              danger
                               onClick={() => onImageRemove(index)}
-                              color="red"
                             >
                               Remove
                             </Button>
@@ -724,7 +720,7 @@ const AddApartments = () => {
 
             {apartmentId ? (
               <>
-                <p className="text-teal-900 mt-12"> Current images</p>
+                <p className="text-teal-900 mt-12">Current images</p>
                 <div className="flex flex-wrap gap-3 mt-2">
                   {apartment?.images.map((url, index) => (
                     <img
@@ -739,7 +735,7 @@ const AddApartments = () => {
             ) : (
               <>
                 {images.length < 5 && (
-                  <p className="mt-6 absolute text-sm text-red-600 dark:text-red-500">
+                  <p className="mt-6 mb-10 text-sm text-red-600 dark:text-red-500">
                     You need to upload 5 images
                   </p>
                 )}
@@ -747,12 +743,12 @@ const AddApartments = () => {
             )}
           </div>
         </div>
+
         <Button
+          size="large"
+          htmlType="submit"
           disabled={isSubmitting}
-          className="mt-10"
-          type="submit"
-          variant="outlined"
-          color="blue"
+          loading={isSubmitting}
         >
           {apartmentId ? "Update" : "Create new Apartment"}
         </Button>
@@ -763,7 +759,7 @@ const AddApartments = () => {
 
 export default AddApartments;
 
-async function uploadImagesAndAvartar(images: any, avatars: any) {
+async function uploadImagesAndAvatar(images: any, avatars: any) {
   try {
     const avatarUrl = await uploadImage(avatars[0].dataURL);
     const imageUrls = await Promise.all(

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import logoImg from "./../../../assets/header-logo-admin.svg";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [toggleAvatar, setToggleAvatar] = useState<boolean>(false);
@@ -52,9 +53,9 @@ const Navbar = () => {
                 ></path>
               </svg>
             </button>
-            <a href="http://localhost:3000/" className="flex ms-2 md:me-24">
+            <Link to="http://localhost:3000/" className="flex ms-2 md:me-24">
               <img src={logoImg} className="h-10 me-3" alt="Homez Logo" />
-            </a>
+            </Link>
           </div>
           <div className="flex items-center">
             <div className="flex items-center ms-3">
@@ -80,7 +81,7 @@ const Navbar = () => {
                 className={`z-50 fixed right-6 top-12 ${
                   !toggleAvatar ? `hidden` : ``
                 } my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600  "
-                `}
+              `}
               >
                 <div className="px-4 py-3" role="none">
                   <p
@@ -98,13 +99,13 @@ const Navbar = () => {
                 </div>
                 <ul className="py-1" role="none">
                   <li>
-                    <a
-                      href="#"
+                    <Link
+                      to={"/admin/dashboard"}
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                       role="menuitem"
                     >
                       Dashboard
-                    </a>
+                    </Link>
                   </li>
 
                   <li>

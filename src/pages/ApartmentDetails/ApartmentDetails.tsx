@@ -7,7 +7,7 @@ import ImagesShow from "../../components/ApartmentDetails/ImagesShow/ImagesShow"
 import PropertyDescription from "../../components/ApartmentDetails/PropertyDescription/PropertyDescription";
 import CommentsSection from "../../components/ApartmentDetails/CommentSection/CommentsSection";
 import Related from "../../components/ApartmentDetails/Related/Related";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Timestamp,
   addDoc,
@@ -37,6 +37,7 @@ import SuccessRentModal from "../../components/ApartmentDetails/SuccessRentModal
 import FullLoadingScreen from "../../utils/FullLoadingScreen/FullLoadingScreen";
 
 const ApartmentDetails = () => {
+  const navigate = useNavigate();
   const { pathname } = useLocation();
   const [apartment, setApartment] = useState<Apartment>();
   const [relatedList, setRelatedList] = useState<Apartment[]>([]);
@@ -87,10 +88,18 @@ const ApartmentDetails = () => {
   }, [apartmentId, currentUser, like]);
 
   const handleDislikeThisApartment = async () => {
+    if (!currentUser) {
+      navigate("/login");
+      return;
+    }
     setLike(false);
     await deleteDoc(doc(db, "wishlist", wishlistItemId as string));
   };
   const handleLikeThisApartment = async () => {
+    if (!currentUser) {
+      navigate("/login");
+      return;
+    }
     if (currentUser) {
       setLike(true);
       await addDoc(collection(db, "wishlist"), {
@@ -273,6 +282,10 @@ const ApartmentDetails = () => {
   // console.log(thisApartmentStatus);
 
   const handleClickRentBtn = () => {
+    if (!currentUser) {
+      navigate("/login");
+      return;
+    }
     const fetchDetailCurrentUserData = async () => {
       if (currentUser) {
         const userDocRef = doc(db, `users/${currentUser.uid}`);
@@ -329,7 +342,7 @@ const ApartmentDetails = () => {
 
   return (
     <main className="apartment-details-page">
-      {loadedPromises < 2 && <FullLoadingScreen />}
+      {loadedPromises < 1 && <FullLoadingScreen />}
       {!isModalClose && (
         <ModalBackToPersonalInfo
           onClose={handleCloseModalRemindUpdateProfile}
@@ -338,7 +351,7 @@ const ApartmentDetails = () => {
       {successfulRent && (
         <SuccessRentModal onClose={() => setSuccessfulRent(false)} />
       )}
-      {loadedPromises >= 2 && (
+      {loadedPromises >= 1 && (
         <div className="apartment-details">
           <div className="apartment-details__info">
             <div className="text-info">

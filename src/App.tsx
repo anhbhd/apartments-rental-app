@@ -1,5 +1,5 @@
 import Home from "./pages/Home/Home";
-import "./App.scss";
+
 import ApartmentsList from "./pages/ApartmentsList/ApartmentsList";
 import { Route, Routes } from "react-router-dom";
 import Login from "./pages/Login/Login";
@@ -13,11 +13,11 @@ import MainLayout from "./layouts/MainLayout/MainLayout";
 import DetailedRentalApplication from "./pages/DetailedRentalApplication/DetailedRentalApplication";
 import NotFound from "./pages/NotFound";
 import GeneralProtectedRoute from "./routes/GeneralProtectedRoute";
-import ForbiddenLoggedinRoute from "./routes/ForbiddenLoggedinRoute";
+import ForbiddenLoggedRoute from "./routes/ForbiddenLoggedinRoute";
 import { Dashboard } from "./pages/ADMIN/Dashboard/Dashboard";
 import AdminLayout from "./layouts/AdminLayout/AdminLayout";
-import AddOrEditApartments from "./pages/ADMIN/ApartmentsManagement/AddOrEditApartments/AddOrEditApartments";
-import ApartmentListAdmin from "./pages/ADMIN/ApartmentsManagement/ApartmentsList/ApartmentsList";
+import AddOrEditApartments from "./pages/ADMIN/ApartmentsManagement/AddOrEditApartments";
+import ApartmentListAdmin from "./pages/ADMIN/ApartmentsManagement/ApartmentsList";
 import UsersManagement from "./pages/ADMIN/UsersManagement/UsersManagement";
 import RentalApplicationsManagement from "./pages/ADMIN/RentalsManagement/RentalsManagement";
 function App() {
@@ -30,7 +30,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="search" element={<ApartmentsList />} />
 
-          <Route path="/" element={<ForbiddenLoggedinRoute />}>
+          <Route path="/" element={<ForbiddenLoggedRoute />}>
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<Register />} />
           </Route>
