@@ -4,9 +4,10 @@ import "./WishlistItem.scss";
 
 import { Link } from "react-router-dom";
 import { WishListItem } from "../../../type/WishListItem";
-import { deleteDoc, doc, getDoc } from "firebase/firestore";
-import { db } from "../../../config/firebase_config";
 import { Apartment } from "../../../type/Apartment";
+import { getDocument } from "../../../services/getDocument";
+import { deleteDocument } from "../../../services/deleteDocument";
+import { Category } from "../../../type/Category";
 
 interface IWishlistItemProps {
   wishlistItem: WishListItem;
@@ -20,17 +21,12 @@ const WishlistItem = ({ wishlistItem, onDeleteItem }: IWishlistItemProps) => {
 
   useEffect(() => {
     const fetchDataOfWishlistItem = async () => {
-      const apartmentDocRef = doc(db, "apartments", wishlistItem.apartmentId);
+      const apartmentData: Apartment = await getDocument(
+        "apartments",
+        wishlistItem.apartmentId
+      );
 
-      const apartmentDocSnapshot = await getDoc(apartmentDocRef);
-      // console.log(apartmentDocSnapshot.data(), apartmentDocSnapshot.id);
-
-      const apartmentData = apartmentDocSnapshot.data();
-
-      setApartmentInWishList({
-        ...(apartmentData as Apartment),
-        id: wishlistItem.apartmentId,
-      });
+      setApartmentInWishList(apartmentData);
     };
     fetchDataOfWishlistItem();
   }, [wishlistItem?.apartmentId]);
@@ -38,13 +34,11 @@ const WishlistItem = ({ wishlistItem, onDeleteItem }: IWishlistItemProps) => {
   useEffect(() => {
     const fetchCategoryName = async () => {
       try {
-        const categoryDocRef = doc(
-          db,
-          `categories/${apartmentInWishlist?.categoryId}`
+        const categoryData: Category = await getDocument(
+          "categories",
+          apartmentInWishlist?.categoryId as string
         );
-        const categorySnapshot = await getDoc(categoryDocRef);
-
-        setCategory(categorySnapshot.data()?.name);
+        setCategory(categoryData?.name);
       } catch (err: any) {
         console.error(err.message);
       }
@@ -55,8 +49,7 @@ const WishlistItem = ({ wishlistItem, onDeleteItem }: IWishlistItemProps) => {
   const handleDeleteWishlistItem = async () => {
     try {
       onDeleteItem(wishlistItem.id);
-      const docRef = doc(db, "wishlist", wishlistItem.id);
-      await deleteDoc(docRef);
+      await deleteDocument("wishlist", wishlistItem.id);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -78,13 +71,13 @@ const WishlistItem = ({ wishlistItem, onDeleteItem }: IWishlistItemProps) => {
         <p className="price">${apartmentInWishlist?.pricePerMonth}</p>
         <p className="amenities">
           <span>
-            {apartmentInWishlist?.beds}{" "}
+            {apartmentInWishlist?.beds}
             {apartmentInWishlist && apartmentInWishlist.beds > 1
               ? "beds"
               : "bed"}
           </span>
           <span>
-            {apartmentInWishlist?.baths}{" "}
+            {apartmentInWishlist?.baths}
             {apartmentInWishlist && apartmentInWishlist.baths > 1
               ? "baths"
               : "bath"}

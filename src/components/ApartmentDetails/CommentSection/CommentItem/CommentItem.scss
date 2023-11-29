@@ -8,7 +8,6 @@
   margin-bottom: 2rem;
   &__info-rating {
     display: flex;
-    flex-wrap: wrap;
     font-size: $normal-font-size;
     gap: 3rem;
     margin-bottom: 3rem;
@@ -40,5 +39,12 @@
 
   &__text-comment {
     font-size: $normal-font-size;
+  }
+}
+
+@media (max-width: $mobile-width) {
+  .comment-item {
+    margin-bottom: 4rem;
+    padding: 1rem;
   }
 }

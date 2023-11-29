@@ -20,7 +20,6 @@ const CategoriesManagement = () => {
   const searchInput = useRef<InputRef>(null);
 
   const [categories, setCategories] = useState<Category[]>([]);
-  const [error, setError] = useState<string>("");
 
   const fetchCategories = async () => {
     const [categories] = await getDataCollection("categories");
@@ -174,7 +173,6 @@ const CategoriesManagement = () => {
         <AddNewCategory
           onSetCategories={setCategories}
           categories={categories}
-          onSetError={setError}
         />
       </h2>
 

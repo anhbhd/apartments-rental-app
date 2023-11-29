@@ -1,66 +1,94 @@
 import { useEffect, useState } from "react";
 import "./PersonalInfo.scss";
 import { useAuth } from "../../context/AuthContext";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../config/firebase_config";
 import { User } from "../../type/User";
-import anonymouseAva from "./../../assets/anonymous-avatarjpg.jpg";
+import anonymousAva from "./../../assets/anonymous-avatarjpg.jpg";
 import FullLoadingScreen from "../../utils/FullLoadingScreen/FullLoadingScreen";
 import SuccessModal from "./Modal/Modal";
+import { getDocument } from "../../services/getDocument";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
+const validationSchema = Yup.object().shape({
+  fullName: Yup.string().required("Full name is required"),
+  phoneNumber: Yup.string()
+    .matches(/(84|0[3|5|7|8|9])+([0-9]{8})\b/, "Invalid phone number")
+    .required("Phone number is required"),
+  yearOfBirth: Yup.string()
+    .matches(/^(19[6-9]\d|20[0-2]\d)$/, "Invalid year of birth")
+    .required("Year of Birth is required"),
+});
+interface UserFormData {
+  fullName: string;
+  phoneNumber: string;
+  yearOfBirth: string;
+}
+
+const initialFormValue: UserFormData = {
+  fullName: "",
+  phoneNumber: "",
+  yearOfBirth: "",
+};
 const PersonalInfo = () => {
-  const [userData, setUserData] = useState<User | null>(null);
   const { currentUser } = useAuth();
+  const [userData, setUserData] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [editMode, setEditMode] = useState<boolean>(false);
-  const [editedData, setEditedData] = useState<User | null>(null);
   const [updateSuccess, setUpdateSuccess] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const uid = currentUser.uid;
+
+  const {
+    isSubmitting,
+    setSubmitting,
+    values,
+    errors,
+    setValues,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    touched,
+  } = useFormik({
+    initialValues: initialFormValue,
+    validationSchema,
+    onSubmit: async (values) => {
+      setEditMode(false);
+
+      try {
+        const userDocRef = doc(db, `users/${currentUser.uid}`);
+        await updateDoc(userDocRef, { ...values });
+        setUserData({ ...userData, ...values } as unknown as User);
+        setUpdateSuccess(true);
+        setSubmitting(false);
+      } catch (err: any) {
+        setError(err.message);
+      }
+    },
+  });
 
   const handleCloseSuccessBox = () => {
     setUpdateSuccess(false);
   };
 
+  const fetchUser = async () => {
+    const userData: User = await getDocument("users", uid);
+    setUserData(userData);
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const userDocRef = doc(db, `users/${uid}`);
-    const fetchUser = async () => {
-      const response = await getDoc(userDocRef);
-      const userData = response.data();
-      setUserData(userData as User);
-      setLoading(false);
-    };
     fetchUser();
   }, [uid]);
 
   const handleEditClick = () => {
     setEditMode(true);
-    setEditedData({ ...(userData as User) });
-  };
-
-  const handleSaveClick = async () => {
-    setEditMode(false);
-    setUserData({ ...(editedData as User) });
-
-    try {
-      const userDocRef = doc(db, `users/${currentUser.uid}`);
-
-      await updateDoc(userDocRef, { ...editedData });
-      setUpdateSuccess(true);
-    } catch (err: any) {
-      setError(err.message);
-    }
+    setValues({ ...(userData as unknown as UserFormData) });
   };
 
   const handleCancelClick = () => {
     setEditMode(false);
-  };
-
-  const handleChange = (fieldName: keyof User, value: string) => {
-    setEditedData((prevData) => ({
-      ...(prevData as User),
-      [fieldName]: value,
-    }));
   };
 
   return (
@@ -78,7 +106,7 @@ const PersonalInfo = () => {
           <div className="grid-container">
             <div className="current-info">
               <div className="img-container">
-                <img src={currentUser.photoURL || anonymouseAva} alt="" />
+                <img src={currentUser.photoURL || anonymousAva} alt="" />
               </div>
               <div className="current-info__field">
                 <span>Your email</span>
@@ -86,46 +114,64 @@ const PersonalInfo = () => {
               </div>
               {editMode ? (
                 <>
-                  <div className="current-info__field">
-                    <span>Full name</span>
-                    <input
-                      autoFocus
-                      type="text"
-                      value={editedData?.fullName || ""}
-                      onChange={(e) => handleChange("fullName", e.target.value)}
-                    />
-                  </div>
-                  <div className="current-info__field">
-                    <span>Phone number</span>
-                    <input
-                      type="text"
-                      value={editedData?.phoneNumber || ""}
-                      onChange={(e) =>
-                        handleChange("phoneNumber", e.target.value)
-                      }
-                    />
-                  </div>
-                  <div className="current-info__field">
-                    <span>Year of Birth</span>
-                    <input
-                      type="text"
-                      value={editedData?.yearOfBirth || ""}
-                      onChange={(e) =>
-                        handleChange("yearOfBirth", e.target.value)
-                      }
-                    />
-                  </div>
-                  <div className="btn-container">
-                    <button className="save-btn btn" onClick={handleSaveClick}>
-                      Save
-                    </button>
-                    <button
-                      className="cancel-btn btn"
-                      onClick={handleCancelClick}
-                    >
-                      Cancel
-                    </button>
-                  </div>
+                  <form onSubmit={handleSubmit}>
+                    <div className="current-info__field">
+                      <span>Full name</span>
+                      <input
+                        type="text"
+                        name="fullName"
+                        value={values.fullName}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                      {touched.fullName && errors.fullName && (
+                        <div className="error">{errors.fullName}</div>
+                      )}
+                    </div>
+                    <div className="current-info__field">
+                      <span>Phone number</span>
+                      <input
+                        type="text"
+                        name="phoneNumber"
+                        value={values.phoneNumber}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                      {touched.phoneNumber && errors.phoneNumber && (
+                        <div className="error">{errors.phoneNumber}</div>
+                      )}
+                    </div>
+                    <div className="current-info__field">
+                      <span>Year of Birth</span>
+                      <input
+                        type="text"
+                        name="yearOfBirth"
+                        value={values.yearOfBirth}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                      {touched.yearOfBirth && errors.yearOfBirth && (
+                        <div className="error">{errors.yearOfBirth}</div>
+                      )}
+                    </div>
+
+                    <div className="btn-container">
+                      <button
+                        className="save-btn btn"
+                        disabled={isSubmitting}
+                        type="submit"
+                      >
+                        Save
+                      </button>
+                      <button
+                        className="cancel-btn btn"
+                        type="button"
+                        onClick={handleCancelClick}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
                 </>
               ) : (
                 <>

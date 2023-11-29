@@ -9,6 +9,9 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../../config/firebase_config";
 import { Apartment } from "../../../type/Apartment";
 import { RentAppStatus } from "../../../common/constants/RentalAppStatus";
+import { mapCollectionToArrayObject } from "../../../utils/Mapper";
+import { calculateAverageStars } from "../../../utils/calculateAverageStars";
+import { updateDocument } from "../../../services/updateDocument";
 
 interface ICommentsSectionProps {
   reviews: Review[];
@@ -16,38 +19,26 @@ interface ICommentsSectionProps {
   onShowMore: () => void;
   apartment: Apartment | undefined;
   setToggleRefetchReviews: React.Dispatch<React.SetStateAction<boolean>>;
+  filterStarsComments: number;
+  onChangeFilterStarsComment: React.Dispatch<React.SetStateAction<number>>;
+  showedReviews: Review[];
+  onHideAllReviews: () => void;
 }
 
 const CommentsSection: React.FC<ICommentsSectionProps> = ({
-  reviews,
   totalReviews,
   onShowMore,
   apartment,
   setToggleRefetchReviews,
+  onChangeFilterStarsComment,
+  showedReviews,
+  onHideAllReviews,
 }) => {
-  const [showedReviews, setShowedReviews] = useState<Review[]>([]);
   const [userAlreadyCommentOrDidNotRent, setUserAlreadyCommentOrDidNotRent] =
     useState<boolean>(true);
   const { currentUser } = useAuth();
 
   const [message, setMessage] = useState<string>("");
-
-  useEffect(() => {
-    if (showedReviews.length < 3) {
-      setShowedReviews(reviews.slice(0, 3));
-    }
-  }, [reviews]);
-
-  function handleShowMoreReviews(): void {
-    setShowedReviews((prev) => [
-      ...prev,
-      ...reviews.slice(prev.length, prev.length + 3),
-    ]);
-    onShowMore();
-  }
-  function handleHideAllReviews(): void {
-    setShowedReviews((prev) => [...prev.slice(0, 3)]);
-  }
 
   useEffect(() => {
     const checkUserAlreadyCommentOrDidNotRent = async () => {
@@ -78,12 +69,11 @@ const CommentsSection: React.FC<ICommentsSectionProps> = ({
           );
 
           const rentalsCollectionSnapshot = await getDocs(q);
-          // console.log(rentalsCollectionSnapshot.docs.at(0)?.data());
           if (rentalsCollectionSnapshot.docs.length > 0) {
             setUserAlreadyCommentOrDidNotRent(false);
           } else {
             setMessage(
-              "You cannot rate because you haven't rented this appartment"
+              "You cannot rate because you haven't rented this apartment"
             );
           }
         }
@@ -92,10 +82,12 @@ const CommentsSection: React.FC<ICommentsSectionProps> = ({
       }
     };
 
-    if (currentUser?.uid) {
+    if (currentUser) {
       checkUserAlreadyCommentOrDidNotRent();
+    } else {
+      return;
     }
-  }, [apartment?.id, currentUser?.uid]);
+  }, [apartment?.id, currentUser]);
 
   const handleUserMakeANewComment = () => {
     setUserAlreadyCommentOrDidNotRent(true);
@@ -107,7 +99,14 @@ const CommentsSection: React.FC<ICommentsSectionProps> = ({
         <span className="num-reviews">{totalReviews} Reviews</span>
         <div className="sorting">
           <span>Filter by</span>
-          <select defaultValue={0} name="sortByStar" id="">
+          <select
+            defaultValue={0}
+            onChange={(e) => {
+              onChangeFilterStarsComment(Number(e.target.value));
+            }}
+            name="sortByStar"
+            id=""
+          >
             <option value={0}>All</option>
             <option value={1}>1 Star</option>
             <option value={2}>2 Stars</option>
@@ -125,12 +124,12 @@ const CommentsSection: React.FC<ICommentsSectionProps> = ({
 
       {showedReviews.length < totalReviews && (
         <p className="show-more">
-          <span onClick={handleShowMoreReviews}>Show more</span>
+          <span onClick={() => onShowMore()}>Show more</span>
         </p>
       )}
       {showedReviews.length > 3 && (
         <p className="hide-all">
-          <span onClick={handleHideAllReviews}>Hide all</span>
+          <span onClick={() => onHideAllReviews()}>Hide all</span>
         </p>
       )}
       {userAlreadyCommentOrDidNotRent ? (
@@ -139,7 +138,7 @@ const CommentsSection: React.FC<ICommentsSectionProps> = ({
         <CommentForm
           onMakeANewComment={handleUserMakeANewComment}
           setToggleRefetchReviews={setToggleRefetchReviews}
-          aparmentId={apartment?.id as string}
+          apartmentId={apartment?.id as string}
         />
       )}
     </div>

@@ -8,6 +8,7 @@ import { getDataCollection } from "../../../services/getDataCollection";
 import Search, { SearchProps } from "antd/es/input/Search";
 import { updateDocument } from "../../../services/updateDocument";
 import PopupConfirm from "./PopupConfirm";
+import { toast } from "react-toastify";
 
 export interface UserRow {
   id: string;
@@ -59,9 +60,17 @@ const UsersList = () => {
       const updatedUserRows = displayedRows.map((u) =>
         u.id === user.id ? { ...u, active: !u.active } : u
       );
+      toast.success("Success", {
+        position: "top-right",
+        autoClose: 2000,
+      });
+
       setDisplayedRows(updatedUserRows);
     } catch (err: any) {
-      console.error(err.message);
+      toast.error(err.message, {
+        position: "top-right",
+        autoClose: 2000,
+      });
     }
   };
 

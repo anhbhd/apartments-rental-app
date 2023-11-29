@@ -2,17 +2,28 @@ import React, { FormEvent, useState } from "react";
 import "./CommentForm.scss";
 import StarsRating from "./StarsRating/StarsRating";
 import { useAuth } from "../../../../context/AuthContext";
-import { Timestamp, addDoc, collection } from "firebase/firestore";
+import {
+  Timestamp,
+  collection,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
+import { addDocument } from "../../../../services/addDocs";
+import { Review } from "../../../../type/Review";
 import { db } from "../../../../config/firebase_config";
+import { mapCollectionToArrayObject } from "../../../../utils/Mapper";
+import { calculateAverageStars } from "../../../../utils/calculateAverageStars";
+import { updateDocument } from "../../../../services/updateDocument";
 
 interface ICommentFormProps {
-  aparmentId: string;
+  apartmentId: string;
   setToggleRefetchReviews: React.Dispatch<React.SetStateAction<boolean>>;
   onMakeANewComment: () => void;
 }
 
 const CommentForm: React.FC<ICommentFormProps> = ({
-  aparmentId,
+  apartmentId,
   setToggleRefetchReviews,
   onMakeANewComment,
 }) => {
@@ -31,19 +42,36 @@ const CommentForm: React.FC<ICommentFormProps> = ({
     async function addNewReview() {
       setIsLoading(true);
       try {
-        await addDoc(collection(db, "reviews"), {
-          apartmentId: aparmentId,
+        await addDocument("reviews", {
+          apartmentId: apartmentId,
           comment: comment,
           numberOfStars: rating,
           userId: currentUser.uid,
           createdDate: Timestamp.now(),
         });
 
-        setIsLoading(false);
+        // calculate average rating star again for the apartment
+
+        const reviewsDataRef = collection(db, "reviews");
+        let q = query(reviewsDataRef, where("apartmentId", "==", apartmentId));
+        const reviewsDataCollectionSnapshot = await getDocs(q);
+        const reviewsData: Review[] = mapCollectionToArrayObject(
+          reviewsDataCollectionSnapshot
+        );
+
+        let newAverageRating = calculateAverageStars(reviewsData);
+        console.log(newAverageRating);
+        await updateDocument("apartments", apartmentId, {
+          avgRate: newAverageRating,
+        });
+
+        // to force the comment section fetch new reviews
         setToggleRefetchReviews((prev: boolean) => !prev);
         onMakeANewComment();
       } catch (err: any) {
         console.error(err);
+      } finally {
+        setIsLoading(false);
       }
     }
     addNewReview();
@@ -71,7 +99,7 @@ const CommentForm: React.FC<ICommentFormProps> = ({
           rows={5}
         ></textarea>
 
-        <button type="submit" className="post-btn">
+        <button type="submit" disabled={isLoading} className="post-btn">
           Submit
         </button>
       </form>

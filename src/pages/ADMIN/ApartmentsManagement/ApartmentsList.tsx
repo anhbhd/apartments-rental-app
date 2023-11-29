@@ -11,6 +11,9 @@ import { paginate } from "../../../utils/paginate";
 import { SortBy } from "../../../components/ApartmentsList/ResultAndSortBy/SortBy";
 import { Pagination, Spin } from "antd";
 import Modal from "antd/es/modal/Modal";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../../../config/firebase_config";
+import { toast } from "react-toastify";
 
 const initialFilter = {
   orderBy: SortBy.NEWEST,
@@ -85,11 +88,34 @@ const ApartmentsList = () => {
     setDisplayedItems(paginate(apartments, currentPage, itemPerPage));
   }, [currentPage, apartments]);
 
-  const deleteApartment = () => {
-    setApartments(apartments.filter((ap) => ap.id !== deleteId));
-    deleteDocument("apartments", deleteId);
-    setDeleteId("");
-    setModalDeleteIsOpen(false);
+  // logic delete an apartment
+
+  const deleteApartment = async () => {
+    try {
+      // check if any rental application contain this id
+      const rentalAppsRef = collection(db, "rentalApplications");
+      let q = query(rentalAppsRef, where("apartmentId", "==", deleteId));
+      const rentalAppsSnapshot = await getDocs(q);
+      if (rentalAppsSnapshot.docs.length > 0) {
+        throw new Error(
+          "Some rental applications contain this apartment info, you cannot delete it!"
+        );
+      }
+      deleteDocument("apartments", deleteId);
+      setApartments(apartments.filter((ap) => ap.id !== deleteId));
+      toast.success("Delete apartment successfully!", {
+        position: "bottom-right",
+        autoClose: 1500,
+      });
+    } catch (err: any) {
+      toast.error(err.message, {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+    } finally {
+      setDeleteId("");
+      setModalDeleteIsOpen(false);
+    }
   };
 
   function handleChangePage(page: number): void {

@@ -4,10 +4,13 @@ import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, db, provider } from "./../../config/firebase_config";
 import "./Register.scss";
 import GoogleIcon from "../../icons/GoogleIcon";
-import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
+import { doc, setDoc, Timestamp } from "firebase/firestore";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { emailRegex } from "../../utils/regex";
+import { getDocument } from "../../services/getDocument";
+import { User } from "../../type/User";
+import { toast } from "react-toastify";
 
 interface FormInputs {
   email: string;
@@ -15,21 +18,20 @@ interface FormInputs {
   confirmPassword: string;
 }
 
+const initialFormState: FormInputs = {
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
+
 const Register: React.FC = () => {
-  const [formInputs, setFormInputs] = useState<FormInputs>({
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+  const [formInputs, setFormInputs] = useState<FormInputs>(initialFormState);
 
   const [emailError, setEmailError] = useState<string>("");
   const [passwordError, setPasswordError] = useState<string>("");
   const [confirmPasswordError, setConfirmPasswordError] = useState<string>("");
-  const [promisedError, setPromisedError] = useState<string>();
   const navigate = useNavigate();
-
-  const { setCredentialUserForApp } = useAuth();
-
+  const { logout } = useAuth();
   const validateEmail = () => {
     setEmailError(
       !emailRegex.test(formInputs.email) ? "Invalid email address" : ""
@@ -55,7 +57,6 @@ const Register: React.FC = () => {
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormInputs({ ...formInputs, [name]: value });
-    setPromisedError("");
   };
 
   const handleRegisterFormSubmit = async (e: FormEvent) => {
@@ -64,7 +65,7 @@ const Register: React.FC = () => {
     validateEmail();
     validatePassword();
     validateConfirmPassword();
-
+    if (JSON.stringify(initialFormState) === JSON.stringify(formInputs)) return;
     if (!emailError && !passwordError && !confirmPasswordError) {
       try {
         const response = await createUserWithEmailAndPassword(
@@ -73,18 +74,16 @@ const Register: React.FC = () => {
           formInputs.password
         );
         const userDocRef = doc(db, `users/${response.user.uid}`);
-        try {
-          await setDoc(userDocRef, {
-            email: response.user.email,
-            isAdmin: false,
-            createdDate: Timestamp.now(),
-          });
-          navigate("/");
-        } catch (err: any) {
-          setPromisedError(err.code);
-        }
+
+        await setDoc(userDocRef, {
+          email: response.user.email,
+          isAdmin: false,
+          createdDate: Timestamp.now(),
+          active: true,
+        });
+        navigate("/");
       } catch (err: any) {
-        setPromisedError(err.code);
+        console.error(err.message);
       }
     }
   };
@@ -94,32 +93,35 @@ const Register: React.FC = () => {
       const response = await signInWithPopup(auth, provider);
 
       const userDocRef = doc(db, `users/${response.user.uid}`);
+      const userData: User = await getDocument("users", response.user.uid);
 
-      setCredentialUserForApp({
-        uid: response.user.uid,
-        email: response.user.email,
-        displayName: response.user.displayName,
-        photoURL: response.user.photoURL,
-      });
-
-      try {
-        const userDocSnap = await getDoc(userDocRef);
-        if (!userDocSnap.exists()) {
-          await setDoc(userDocRef, {
-            email: response.user.email,
-            isAdmin: false,
-            createdDate: Timestamp.now(),
-            active: true,
-          });
+      if (!userData) {
+        await setDoc(userDocRef, {
+          email: response.user.email,
+          isAdmin: false,
+          createdDate: Timestamp.now(),
+          active: true,
+        });
+      } else {
+        if (!userData.active) {
+          throw new Error("Your account has been deactivate by administrator");
         }
-      } catch (err: any) {
-        setPromisedError(err.code);
       }
-
-      navigate("/");
     } catch (err: any) {
-      setPromisedError(err.code);
+      toast.error(err.message, {
+        position: "bottom-right",
+        style: {
+          fontSize: "1.4rem",
+        },
+      });
     }
+    toast.success("Login successfully!", {
+      position: "bottom-right",
+      style: {
+        fontSize: "1.4rem",
+      },
+    });
+    navigate("/");
   };
 
   return (
@@ -186,7 +188,6 @@ const Register: React.FC = () => {
           <GoogleIcon className="google-icon" height="20" width="20" />
           Continue with Google
         </button>
-        {promisedError && <p className="error-server">{promisedError}</p>}
       </div>
     </div>
   );

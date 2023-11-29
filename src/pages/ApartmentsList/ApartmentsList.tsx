@@ -19,7 +19,7 @@ import { getDataCollection } from "../../services/getDataCollection";
 import { mapCollectionToArrayObject } from "../../utils/Mapper";
 import { paginate } from "../../utils/paginate";
 
-const initalFilterValue: FilterbarType = {
+const initialFilterValue: FilterbarType = {
   sortby: SortBy.ALL,
   keyword: "",
   categories: [],
@@ -39,7 +39,7 @@ const ApartmentsList: React.FC = () => {
   const [toggleFilterBar, setToggleFilterBar] = useState<boolean>(false);
 
   const [apartmentListFilter, setApartmentListFilter] =
-    useState<FilterbarType>(initalFilterValue);
+    useState<FilterbarType>(initialFilterValue);
   const [clearFilterClicked, setClearFilterClicked] = useState<boolean>(false);
   const [toggleSearchBtn, setToggleSearchBtn] = useState<boolean>(false);
 
@@ -160,7 +160,7 @@ const ApartmentsList: React.FC = () => {
   };
 
   const handleClearFilter = () => {
-    setApartmentListFilter(initalFilterValue);
+    setApartmentListFilter(initialFilterValue);
     setClearFilterClicked(true);
   };
 

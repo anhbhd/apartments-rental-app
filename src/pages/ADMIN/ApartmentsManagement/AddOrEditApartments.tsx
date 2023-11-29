@@ -14,15 +14,15 @@ import CustomInput, {
 import { Category } from "../../../type/Category";
 import { Option } from "../../../type/Option";
 import { getDataCollection } from "../../../services/getDataCollection";
-import { Timestamp, doc, getDoc } from "firebase/firestore";
+import { Timestamp } from "firebase/firestore";
 import { Apartment } from "../../../type/Apartment";
 import { uploadImage } from "../../../utils/uploadImage";
 import { addDocument } from "../../../services/addDocs";
 import { useLocation } from "react-router-dom";
-import { db } from "../../../config/firebase_config";
 import { updateDocument } from "../../../services/updateDocument";
 import { Button, Modal } from "antd";
 import { getDocument } from "../../../services/getDocument";
+import { toast } from "react-toastify";
 
 const initialFormValue = {
   name: "",
@@ -100,9 +100,13 @@ const AddApartments = () => {
             avatar: res?.avatarUrl,
             additionalFees: additionalFees,
           };
-          console.log(newApartment);
+          // console.log(newApartment);
           await addDocument("apartments", newApartment);
           setSubmitting(false);
+          toast.success("Add new apartment successfully", {
+            position: "bottom-right",
+            autoClose: 1500,
+          });
           resetForm({ values: initialFormValue });
           setDescription("");
           setRentalTerms("");
@@ -135,8 +139,11 @@ const AddApartments = () => {
           };
           console.log(updatedApartmentData);
           await updateDocument("apartments", apartmentId, updatedApartmentData);
+          toast.success("Update apartment successfully", {
+            position: "bottom-right",
+            autoClose: 1500,
+          });
           setSubmitting(false);
-          console.log("update successfully!");
         } catch (err: any) {
           console.error(err);
         }

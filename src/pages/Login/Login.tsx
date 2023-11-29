@@ -7,15 +7,25 @@ import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, db, provider } from "../../config/firebase_config";
 import { useAuth } from "../../context/AuthContext";
 import { emailRegex } from "../../utils/regex";
-import { Timestamp, doc, getDoc, setDoc } from "firebase/firestore";
+import {
+  Timestamp,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
 import FullLoadingScreen from "../../utils/FullLoadingScreen/FullLoadingScreen";
+import { toast } from "react-toastify";
+import { User } from "../../type/User";
 
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isValidEmail, setIsValidEmail] = useState(true);
-  const [promisedError, setPromisedError] = useState<string>();
   const { setCredentialUserForApp } = useAuth();
   const [isLogging, setIsLogging] = useState<boolean>(false);
   const validateEmail = (email: string): boolean => {
@@ -27,19 +37,54 @@ const Login = () => {
 
     if (isValidEmail && email && password) {
       setIsLogging(true);
-      await signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          // Signed in
-          const user = userCredential.user;
-          setIsLogging(false);
-          navigate("/");
-          console.log("login successfully");
-          console.log(user);
-        })
-        .catch((error: any) => {
-          setPromisedError(error.code);
-          setIsLogging(false);
+      try {
+        const usersRef = collection(db, "users");
+        let q = query(usersRef, where("email", "==", email));
+        const firstDocSnapshot = (await getDocs(q)).docs.at(0);
+        if (firstDocSnapshot) {
+          const user = {
+            ...firstDocSnapshot.data(),
+            id: firstDocSnapshot.id,
+          } as User;
+
+          if (!user.active)
+            throw new Error(
+              "Your account has been deactivate by administrator"
+            );
+        }
+        await signInWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            setIsLogging(false);
+            navigate("/");
+            toast.success("Login successfully!", {
+              position: "bottom-right",
+              autoClose: 1500,
+              style: { fontSize: "1.5rem" },
+            });
+            console.log(user);
+          })
+          .catch((error: any) => {
+            toast.error("Email or Password is not correct", {
+              position: "bottom-right",
+              style: {
+                fontSize: "1.4rem",
+              },
+            });
+
+            setIsLogging(false);
+          });
+      } catch (err: any) {
+        toast.error(err.message, {
+          position: "bottom-right",
+          style: {
+            fontSize: "1.4rem",
+          },
         });
+      } finally {
+        setIsLogging(false);
+      }
     } else {
       setIsValidEmail(false);
       return;
@@ -70,12 +115,26 @@ const Login = () => {
           });
         }
       } catch (err: any) {
-        setPromisedError(err.code);
+        toast.error(err.message, {
+          position: "bottom-right",
+          style: {
+            fontSize: "1.4rem",
+          },
+        });
       }
-
+      toast.success("Login successfully!", {
+        position: "bottom-right",
+        autoClose: 1500,
+        style: { fontSize: "1.5rem" },
+      });
       navigate("/");
     } catch (err: any) {
-      setPromisedError(err.code);
+      toast.error(err.message, {
+        position: "bottom-right",
+        style: {
+          fontSize: "1.4rem",
+        },
+      });
     }
   };
 
@@ -92,7 +151,6 @@ const Login = () => {
         setPassword(event.target.value);
         break;
     }
-    setPromisedError("");
   };
 
   return (
@@ -148,7 +206,6 @@ const Login = () => {
           <GoogleIcon className="google-icon" height="20" width="20" />
           Continue with Google
         </button>
-        {promisedError && <p className="error-server">{promisedError}</p>}
       </div>
     </div>
   );

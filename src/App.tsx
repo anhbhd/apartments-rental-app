@@ -21,6 +21,9 @@ import ApartmentListAdmin from "./pages/ADMIN/ApartmentsManagement/ApartmentsLis
 import UsersManagement from "./pages/ADMIN/UsersManagement/UsersManagement";
 import RentalApplicationsManagement from "./pages/ADMIN/RentalsManagement/RentalsManagement";
 import CategoriesManagement from "./pages/ADMIN/CategoriesManagement/CategoriesManagement";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import PrivateForAdminRoutes from "./routes/PrivateForAdminRoutes";
 function App() {
   return (
     <div className="App">
@@ -51,26 +54,29 @@ function App() {
           />
         </Route>
         <Route path="/admin" element={<AdminLayout />}>
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route
-            path="apartments/add_or_edit"
-            element={<AddOrEditApartments />}
-          />
-          <Route
-            path="apartments/add_or_edit/:apartmentId"
-            element={<AddOrEditApartments />}
-          />
-          <Route path="users" element={<UsersManagement />} />
-          <Route
-            path="rental_applications"
-            element={<RentalApplicationsManagement />}
-          />
-          <Route path="categories" element={<CategoriesManagement />} />
-          <Route path="apartments" element={<ApartmentListAdmin />} />
+          <Route path="/admin" element={<PrivateForAdminRoutes />}>
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route
+              path="apartments/add_or_edit"
+              element={<AddOrEditApartments />}
+            />
+            <Route
+              path="apartments/add_or_edit/:apartmentId"
+              element={<AddOrEditApartments />}
+            />
+            <Route path="users" element={<UsersManagement />} />
+            <Route
+              path="rental_applications"
+              element={<RentalApplicationsManagement />}
+            />
+            <Route path="categories" element={<CategoriesManagement />} />
+            <Route path="apartments" element={<ApartmentListAdmin />} />
+          </Route>
         </Route>
 
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <ToastContainer />
     </div>
   );
 }

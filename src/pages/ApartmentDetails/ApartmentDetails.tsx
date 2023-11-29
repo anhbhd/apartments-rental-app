@@ -35,6 +35,8 @@ import { RentalApplication } from "../../type/RentalApplication";
 import { RentAppStatus } from "../../common/constants/RentalAppStatus";
 import SuccessRentModal from "../../components/ApartmentDetails/SuccessRentModal/SuccessRentModal";
 import FullLoadingScreen from "../../utils/FullLoadingScreen/FullLoadingScreen";
+import { mapCollectionToArrayObject } from "../../utils/Mapper";
+import { toast } from "react-toastify";
 
 const ApartmentDetails = () => {
   const navigate = useNavigate();
@@ -42,6 +44,7 @@ const ApartmentDetails = () => {
   const [apartment, setApartment] = useState<Apartment>();
   const [relatedList, setRelatedList] = useState<Apartment[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [showedReviews, setShowedReviews] = useState<Review[]>([]);
   const reviewsNumPerFetch = 6;
   const [totalReviews, setTotalReviews] = useState<number>(0);
 
@@ -56,16 +59,18 @@ const ApartmentDetails = () => {
   const [lastDoc, setLastDoc] = useState<any>();
   const [toggleRefetchReviews, setToggleRefetchReviews] =
     useState<boolean>(false);
+  const [filterStarsComments, setFilterStarsComments] = useState<number>(0);
+
   const apartmentId = pathname.split("/").pop() as string;
-  // console.log(toggleRefetchReviews);
+
   useEffect(() => {
     // try to fetch a record in wishlist if the record contain this item id and the user id exist
     const fetchLikeStateOfUserToThisItem = async () => {
       if (currentUser) {
         try {
-          const wishlistcollectionRef = collection(db, "wishlist");
+          const wishlistCollectionRef = collection(db, "wishlist");
           const q = query(
-            wishlistcollectionRef,
+            wishlistCollectionRef,
             where("apartmentId", "==", apartmentId),
             where("userId", "==", currentUser.uid)
           );
@@ -127,7 +132,7 @@ const ApartmentDetails = () => {
     fetchThisApartment();
   }, [apartmentId]);
 
-  // fetch reviews data for this apartment
+  // fetch reviews data for this apartment for the first time mounted
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -138,12 +143,18 @@ const ApartmentDetails = () => {
         where("apartmentId", "==", apartmentId),
         orderBy("createdDate", "desc")
       );
+      if (filterStarsComments !== 0) {
+        baseQuery = query(
+          baseQuery,
+          where("numberOfStars", "==", filterStarsComments)
+        );
+      }
 
       const totalReviews = (await getDocs(baseQuery)).size;
       setTotalReviews(totalReviews);
 
       baseQuery = query(baseQuery, limit(reviewsNumPerFetch));
-      const reviewsData: Review[] = [];
+      let reviewsData: Review[] = [];
       const fetchedReviewsCollectionSnapshot = await getDocs(query(baseQuery));
 
       setLastDoc(
@@ -151,21 +162,19 @@ const ApartmentDetails = () => {
           fetchedReviewsCollectionSnapshot.docs.length - 1
         ]
       );
-      fetchedReviewsCollectionSnapshot.docs.forEach((doc) => {
-        reviewsData.push({
-          ...(doc.data() as Review),
-          id: doc.id,
-        });
-      });
+      reviewsData = mapCollectionToArrayObject(
+        fetchedReviewsCollectionSnapshot
+      );
 
       setReviews(reviewsData);
+      setShowedReviews(reviewsData.slice(0, 3));
     };
     fetchReviews();
-  }, [apartmentId, toggleRefetchReviews]);
+  }, [apartmentId, toggleRefetchReviews, filterStarsComments]);
 
   // todo handle show more than three first review
 
-  const handleShowmore = () => {
+  const handleShowMore = () => {
     if (reviews.length < totalReviews) {
       try {
         const fetchNextThreeReviews = async () => {
@@ -174,16 +183,18 @@ const ApartmentDetails = () => {
           let baseQuery = query(
             reviewsCollectionRef,
             where("apartmentId", "==", apartmentId),
-
             orderBy("createdDate", "desc")
           );
-
-          const totalReviews = (await getDocs(baseQuery)).size;
-          setTotalReviews(totalReviews);
+          if (filterStarsComments !== 0) {
+            baseQuery = query(
+              baseQuery,
+              where("numberOfStars", "==", filterStarsComments)
+            );
+          }
 
           baseQuery = query(baseQuery, limit(reviewsNumPerFetch));
           baseQuery = query(baseQuery, startAfter(lastDoc));
-          const reviewsData: Review[] = [];
+          let reviewsData: Review[] = [];
           const fetchedReviewsCollectionSnapshot = await getDocs(
             query(baseQuery)
           );
@@ -193,20 +204,22 @@ const ApartmentDetails = () => {
               fetchedReviewsCollectionSnapshot.docs.length - 1
             ]
           );
-          fetchedReviewsCollectionSnapshot.docs.forEach((doc) => {
-            reviewsData.push({
-              ...(doc.data() as Review),
-              id: doc.id,
-            });
-          });
+          reviewsData = mapCollectionToArrayObject(
+            fetchedReviewsCollectionSnapshot
+          );
 
           setReviews([...reviews, ...reviewsData]);
         };
+
         fetchNextThreeReviews();
       } catch (err: any) {
         console.log(err.message);
       }
     }
+    setShowedReviews((prev) => [
+      ...prev,
+      ...reviews.slice(prev.length, prev.length + 3),
+    ]);
   };
 
   //todo fetch related apartment (have the same category :)) )
@@ -283,6 +296,12 @@ const ApartmentDetails = () => {
 
   const handleClickRentBtn = () => {
     if (!currentUser) {
+      toast.info("You need to login first", {
+        position: "bottom-right",
+        style: {
+          fontSize: "1.4rem",
+        },
+      });
       navigate("/login");
       return;
     }
@@ -301,7 +320,7 @@ const ApartmentDetails = () => {
           setIsModalClose(false);
         } else {
           const oneYear = 365 * 24 * 60 * 60 * 1000;
-          const rentalAplicationDocRef = collection(db, "rentalApplications");
+          const rentalApplicationDocRef = collection(db, "rentalApplications");
           const rentalApplicationData: RentalApplication = {
             apartmentId: apartmentId,
             createdDate: Timestamp.now(),
@@ -319,7 +338,7 @@ const ApartmentDetails = () => {
           try {
             if (!apartment?.rented && !thisApartmentStatus) {
               const addedData = await addDoc(
-                rentalAplicationDocRef,
+                rentalApplicationDocRef,
                 rentalApplicationData
               );
               if (addedData.id) {
@@ -339,7 +358,9 @@ const ApartmentDetails = () => {
   const handleCloseModalRemindUpdateProfile = (): void => {
     setIsModalClose(true);
   };
-
+  function handleHideAllReviews(): void {
+    setShowedReviews((prev) => [...prev.slice(0, 3)]);
+  }
   return (
     <main className="apartment-details-page">
       {loadedPromises < 1 && <FullLoadingScreen />}
@@ -415,9 +436,13 @@ const ApartmentDetails = () => {
           <PropertyDescription apartment={apartment as Apartment} />
           {/* comments section */}
           <CommentsSection
+            onHideAllReviews={handleHideAllReviews}
+            showedReviews={showedReviews}
+            filterStarsComments={filterStarsComments}
+            onChangeFilterStarsComment={setFilterStarsComments}
             setToggleRefetchReviews={setToggleRefetchReviews}
             apartment={apartment}
-            onShowMore={handleShowmore}
+            onShowMore={handleShowMore}
             totalReviews={totalReviews}
             reviews={reviews}
           />

@@ -38,9 +38,17 @@
         }
         &__field {
           display: grid;
-          grid-template-columns: 1fr 1fr;
-          margin-bottom: 2rem;
+          grid-template-columns: 12rem 1fr;
+          margin-bottom: 3rem;
+          position: relative;
           gap: 1rem;
+          .error {
+            position: absolute;
+            right: 0;
+            font-size: 1rem;
+            top: -2rem;
+            color: $secondary-color;
+          }
           span {
             display: inline-block;
             line-height: 3rem;
@@ -102,6 +110,16 @@
     }
   }
 }
+@media (min-width: 480px) {
+  .personal-info {
+    padding-left: 3rem;
+    padding-right: 3rem;
+    &__container {
+      min-width: 45rem;
+    }
+  }
+}
+
 @media (max-width: $mobile-width) {
   .personal-info {
     &__container {
@@ -114,6 +132,9 @@
               grid-template-columns: 1fr;
               & span:last-child {
                 margin-left: 0;
+              }
+              .error {
+                top: 2rem;
               }
             }
           }

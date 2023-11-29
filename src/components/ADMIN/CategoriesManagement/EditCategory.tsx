@@ -3,6 +3,7 @@ import { Button, Input, Modal } from "antd";
 import { Category } from "../../../type/Category";
 import { getDocument } from "../../../services/getDocument";
 import { updateDocument } from "../../../services/updateDocument";
+import { toast } from "react-toastify";
 
 interface IAddCategoryProps {
   category: Category;
@@ -31,8 +32,12 @@ const EditCategory: React.FC<IAddCategoryProps> = ({
       ) ||
       !categoryName
     ) {
-      console.error(
-        "This category name already exists. Please choose a different name."
+      toast.error(
+        "This category name already exists. Please choose a different name",
+        {
+          position: "bottom-right",
+          autoClose: 2000,
+        }
       );
       return;
     }
@@ -48,12 +53,19 @@ const EditCategory: React.FC<IAddCategoryProps> = ({
           c.id === category.id ? { ...c, name: categoryName } : c
         )
       );
+      toast.success("Edit category successfully!", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
     } catch (err: any) {
-      console.error(err);
+      toast.error(err.message, {
+        position: "bottom-right",
+        autoClose: 3000,
+      });
     } finally {
       setOpen(false);
       setConfirmLoading(false);
-      setCategoryName("");
+      setCategoryName(categoryName);
     }
   };
 

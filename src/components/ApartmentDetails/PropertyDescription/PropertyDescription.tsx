@@ -43,10 +43,10 @@ const PropertyDescription = ({
     <section className={`property-description ${className || ""}`}>
       <div className="property-description-container">
         <h3 className="property-description__title">Property Description</h3>
-        <p
+        <div
           className="property-description__des-text"
           dangerouslySetInnerHTML={{ __html: apartment?.detailedDescription }}
-        ></p>
+        ></div>
       </div>
 
       <div className="property-description-container">

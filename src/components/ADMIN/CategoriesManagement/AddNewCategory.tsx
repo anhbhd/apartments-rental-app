@@ -4,17 +4,16 @@ import { addDocument } from "../../../services/addDocs";
 import { Category } from "../../../type/Category";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../../config/firebase_config";
+import { toast } from "react-toastify";
 
 interface IAddCategoryProps {
   categories: Category[];
   onSetCategories: React.Dispatch<React.SetStateAction<Category[]>>;
-  onSetError: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const AddNewCategory: React.FC<IAddCategoryProps> = ({
   categories,
   onSetCategories,
-  onSetError,
 }) => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -32,9 +31,14 @@ const AddNewCategory: React.FC<IAddCategoryProps> = ({
       ) ||
       !categoryName
     ) {
-      console.error(
-        "This category name already exists. Please choose a different name."
+      toast.error(
+        "This category name already exists. Please choose a different name",
+        {
+          position: "bottom-right",
+          autoClose: 2000,
+        }
       );
+
       return;
     }
 
@@ -52,25 +56,22 @@ const AddNewCategory: React.FC<IAddCategoryProps> = ({
         ...prevCategories,
         { id: newCategory?.id, name: newCategory?.data().name } as Category,
       ]);
+
+      toast.success("Add category successfully!", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
     } catch (err: any) {
-      console.error(err);
+      toast.error(err.message, {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
     } finally {
       setOpen(false);
       setConfirmLoading(false);
       setCategoryName("");
     }
   };
-
-  // edit part
-  //   const fetchCategory = async (categoryId: string) => {
-  //     const categoryData: Category = await getDocument("categories", categoryId);
-  //     setCategoryName(categoryData.name);
-  //   };
-  //   useEffect(() => {
-  //     if (categoryIdForEdit) {
-  //       fetchCategory(categoryIdForEdit);
-  //     }
-  //   }, [categoryIdForEdit]);
 
   const handleCancel = () => {
     setOpen(false);

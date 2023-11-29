@@ -136,3 +136,15 @@
   width: 100vw;
   height: 100vh;
 }
+
+@media screen and (max-width: $mobile-width) {
+  .navbar {
+    ul {
+      & .perinfo {
+        img {
+          max-height: 7rem;
+        }
+      }
+    }
+  }
+}

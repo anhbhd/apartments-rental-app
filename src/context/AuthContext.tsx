@@ -1,7 +1,6 @@
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import React, {
   createContext,
-  useCallback,
   useContext,
   useLayoutEffect,
   useState,
@@ -9,6 +8,8 @@ import React, {
 import { auth } from "../config/firebase_config";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useNavigate } from "react-router-dom";
+import { getDocument } from "../services/getDocument";
+import { User } from "../type/User";
 
 const AuthContext = createContext<any>(null);
 export const useAuth = () => {
@@ -18,11 +19,12 @@ interface IUserAuthContextProviderProps {
   children: React.ReactNode;
 }
 
-interface CredentialUserApp {
+export interface CredentialUserApp {
   uid: string;
   email: string;
   displayName?: string;
   photoURL?: string;
+  isAdmin: boolean;
 }
 
 const UserAuthContextProvider = ({
@@ -36,23 +38,20 @@ const UserAuthContextProvider = ({
   const { removeItem, setItem } = useLocalStorage();
 
   const logout = async () => {
-    // console.log("logging out");
     removeItem("uid");
     await signOut(auth);
+    setCurrentUser(null);
     navigate("/login");
   };
 
-  const setCredentialUserForApp = useCallback(
-    (user: CredentialUserApp | null): void => {
-      setCurrentUser(user);
-      setItem("uid", user?.uid || "");
-      setLoading(false);
-    },
-    []
-  );
-
+  const setCredentialUserForApp = (user: CredentialUserApp | null): void => {
+    setCurrentUser(user);
+    setItem("uid", user?.uid || "");
+    setLoading(false);
+  };
   useLayoutEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      const userData: User = await getDocument("users", user?.uid as string);
       setCredentialUserForApp(
         user
           ? {
@@ -60,13 +59,14 @@ const UserAuthContextProvider = ({
               email: user.email as string,
               displayName: user.displayName as string,
               photoURL: user.photoURL as string,
+              isAdmin: userData.isAdmin as boolean,
             }
           : null
       );
     });
 
     return () => unsubscribe();
-  }, [setCredentialUserForApp]);
+  }, []);
 
   const value = {
     currentUser,

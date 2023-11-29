@@ -5,6 +5,7 @@ import { deleteDocument } from "../../../services/deleteDocument";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../../config/firebase_config";
 import EditCategory from "./EditCategory";
+import { toast } from "react-toastify";
 
 interface IActionsProps {
   category: Category;
@@ -34,9 +35,16 @@ const Actions: React.FC<IActionsProps> = ({
       } else {
         await deleteDocument("categories", category.id);
         onDeleteCategory(category.id);
+        toast.success("Delete category successfully!", {
+          position: "bottom-right",
+          autoClose: 2000,
+        });
       }
     } catch (err: any) {
-      console.error(err.message);
+      toast.error(err.message, {
+        position: "bottom-right",
+        autoClose: 3000,
+      });
     }
   };
 
