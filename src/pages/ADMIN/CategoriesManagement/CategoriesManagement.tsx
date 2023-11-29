@@ -21,6 +21,7 @@ const CategoriesManagement = () => {
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [error, setError] = useState<string>("");
+
   const fetchCategories = async () => {
     const [categories] = await getDataCollection("categories");
     setCategories(categories as Category[]);

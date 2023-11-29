@@ -109,6 +109,7 @@ const Register: React.FC = () => {
             email: response.user.email,
             isAdmin: false,
             createdDate: Timestamp.now(),
+            active: true,
           });
         }
       } catch (err: any) {

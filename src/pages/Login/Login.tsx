@@ -24,8 +24,9 @@ const Login = () => {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    setIsLogging(true);
+
     if (isValidEmail && email && password) {
+      setIsLogging(true);
       await signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           // Signed in
@@ -65,6 +66,7 @@ const Login = () => {
             email: response.user.email,
             isAdmin: false,
             createdDate: Timestamp.now(),
+            active: true,
           });
         }
       } catch (err: any) {
@@ -130,7 +132,11 @@ const Login = () => {
           <Link className="create-account" to="/signup">
             Create an account
           </Link>
-          <button className="login__signin-button" type="submit">
+          <button
+            disabled={!isValidEmail}
+            className="login__signin-button"
+            type="submit"
+          >
             Sign in
           </button>
           <p className="login__text-or">OR</p>

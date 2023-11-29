@@ -12,8 +12,8 @@ import ScrollToTop from "./utils/ScrollToTop";
 import MainLayout from "./layouts/MainLayout/MainLayout";
 import DetailedRentalApplication from "./pages/DetailedRentalApplication/DetailedRentalApplication";
 import NotFound from "./pages/NotFound";
-import GeneralProtectedRoute from "./routes/GeneralProtectedRoute";
-import ForbiddenLoggedRoute from "./routes/ForbiddenLoggedinRoute";
+import GeneralProtectedRoutes from "./routes/GeneralProtectedRoutes";
+import ForbiddenLoggedRoutes from "./routes/ForbiddenLoggedRoutes";
 import { Dashboard } from "./pages/ADMIN/Dashboard/Dashboard";
 import AdminLayout from "./layouts/AdminLayout/AdminLayout";
 import AddOrEditApartments from "./pages/ADMIN/ApartmentsManagement/AddOrEditApartments";
@@ -31,12 +31,12 @@ function App() {
           <Route index element={<Home />} />
           <Route path="search" element={<ApartmentsList />} />
 
-          <Route path="/" element={<ForbiddenLoggedRoute />}>
+          <Route path="/" element={<ForbiddenLoggedRoutes />}>
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<Register />} />
           </Route>
 
-          <Route path="/" element={<GeneralProtectedRoute />}>
+          <Route path="/" element={<GeneralProtectedRoutes />}>
             <Route path="my_rental_apps" element={<MyRentalApplications />} />
             <Route path="personal_info" element={<PersonalInfo />} />
             <Route

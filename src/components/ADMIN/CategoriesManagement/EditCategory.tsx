@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Button, Input, Modal } from "antd";
-import { addDocument } from "../../../services/addDocs";
 import { Category } from "../../../type/Category";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "../../../config/firebase_config";
 import { getDocument } from "../../../services/getDocument";
+import { updateDocument } from "../../../services/updateDocument";
 
 interface IAddCategoryProps {
   category: Category;
@@ -42,17 +40,14 @@ const EditCategory: React.FC<IAddCategoryProps> = ({
     setConfirmLoading(true);
 
     try {
-      await addDocument("categories", { name: categoryName });
-      const categoryRef = collection(db, "categories");
-      let q = query(categoryRef, where("name", "==", categoryName));
+      await updateDocument("categories", category.id, { name: categoryName });
 
-      const categoriesData = await getDocs(q);
-      const newCategory = categoriesData.docs.at(0);
       // Assuming you want to update the categories state after a successful addition
-      onSetCategories((prevCategories) => [
-        ...prevCategories,
-        { id: newCategory?.id, name: newCategory?.data().name } as Category,
-      ]);
+      onSetCategories((prevCategories) =>
+        prevCategories.map((c) =>
+          c.id === category.id ? { ...c, name: categoryName } : c
+        )
+      );
     } catch (err: any) {
       console.error(err);
     } finally {

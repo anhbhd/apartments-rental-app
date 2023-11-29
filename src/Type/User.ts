@@ -11,4 +11,5 @@ export type User = {
   email: string;
   yearOfBirth: number;
   createdDate: FirebaseDate;
+  active: boolean;
 };
