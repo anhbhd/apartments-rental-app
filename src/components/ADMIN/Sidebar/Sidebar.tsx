@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./../../../App.scss";
 const Sidebar = () => {
-  const [hiddenAparmentsManagement, setHiddenAparmentsManagement] =
+  const [hiddenApartmentsManagement, setHiddenApartmentsManagement] =
     useState<boolean>(true);
 
   const [hiddenUsersManagement, setHiddenUsersManagement] =
@@ -73,7 +73,7 @@ const Sidebar = () => {
               className="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
               aria-controls="dropdown-example"
               onClick={() =>
-                setHiddenAparmentsManagement(!hiddenAparmentsManagement)
+                setHiddenApartmentsManagement(!hiddenApartmentsManagement)
               }
               data-collapse-toggle="dropdown-example"
             >
@@ -114,7 +114,7 @@ const Sidebar = () => {
             <ul
               id="dropdown-example"
               className={`${
-                hiddenAparmentsManagement ? "hidden" : ""
+                hiddenApartmentsManagement ? "hidden" : ""
               } py-2 space-y-2`}
             >
               <li>

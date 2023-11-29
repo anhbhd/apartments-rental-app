@@ -19,12 +19,14 @@ interface IDetailedRentalApplicationProps {
     status: RentAppStatus
   ) => void;
   onExtendRentalPeriod: (id: string, apartmentId: string) => Promise<void>;
+  onCancelPendingOrProcessing: (id: string) => Promise<void>;
 }
 
 const DetailedRentalApplication: React.FC<IDetailedRentalApplicationProps> = ({
   rentalApp,
   onChangeStatusRentalApp,
   onExtendRentalPeriod,
+  onCancelPendingOrProcessing,
 }) => {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<User>();
@@ -125,6 +127,16 @@ const DetailedRentalApplication: React.FC<IDetailedRentalApplicationProps> = ({
                 Extend rental period
               </Button>
             )}
+            {(rentalApp.status === RentAppStatus.PENDING ||
+              rentalApp.status === RentAppStatus.PROCESSING) && (
+              <Button
+                danger
+                onClick={() => onCancelPendingOrProcessing(rentalApp.id)}
+              >
+                Move to cancel list
+              </Button>
+            )}
+
             <CancelBtn />
             <OkBtn />
           </>

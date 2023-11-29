@@ -1,5 +1,5 @@
 import React from "react";
-import { Apartment } from "../../../../type/Apartment";
+import { Apartment } from "../../../type/Apartment";
 import { Button } from "antd";
 import { Link } from "react-router-dom";
 

@@ -208,6 +208,13 @@ const RentalAppsList: React.FC<IRentalAppsListProps> = ({ category }) => {
     });
   };
 
+  const handleCancelPendingOrProcessing = async (rentalAppId: string) => {
+    await updateDocument("rentalApplications", rentalAppId, {
+      status: RentAppStatus.CANCELED,
+      note: "issues related to consensus between the two parties",
+    });
+  };
+
   // search in columns
   const getColumnSearchProps = (
     dataIndex: DataIndex
@@ -346,6 +353,7 @@ const RentalAppsList: React.FC<IRentalAppsListProps> = ({ category }) => {
             onExtendRentalPeriod={handleExtendRentalPeriod}
             onChangeStatusRentalApp={handleStatusRentalApp}
             rentalApp={record}
+            onCancelPendingOrProcessing={handleCancelPendingOrProcessing}
           />
         );
       },
@@ -353,7 +361,7 @@ const RentalAppsList: React.FC<IRentalAppsListProps> = ({ category }) => {
   ];
 
   return (
-    <div className=" px-4 mb-20">
+    <div className="px-4 mb-20">
       <Table
         bordered
         columns={columns}

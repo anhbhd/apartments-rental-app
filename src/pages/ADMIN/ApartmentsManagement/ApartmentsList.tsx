@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import ApartmentRow from "../../../components/ADMIN/ApartmentManagement/ApartmentRow/ApartmentRow";
+import ApartmentRow from "../../../components/ADMIN/ApartmentManagement/ApartmentRow";
 import { Apartment } from "../../../type/Apartment";
 import { getDataCollection } from "../../../services/getDataCollection";
 import { deleteDocument } from "../../../services/deleteDocument";
 
-import Filterbar from "../../../components/ADMIN/ApartmentManagement/Filterbar/Filterbar";
+import Filterbar from "../../../components/ADMIN/ApartmentManagement/Filterbar";
 
 import { paginate } from "../../../utils/paginate";
 

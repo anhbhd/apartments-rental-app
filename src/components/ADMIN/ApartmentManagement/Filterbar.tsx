@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SortBy } from "../../../ApartmentsList/ResultAndSortBy/SortBy";
+import { SortBy } from "../../ApartmentsList/ResultAndSortBy/SortBy";
 
 interface IFilterbarProps {
   setFilter: React.Dispatch<

@@ -20,6 +20,7 @@ import AddOrEditApartments from "./pages/ADMIN/ApartmentsManagement/AddOrEditApa
 import ApartmentListAdmin from "./pages/ADMIN/ApartmentsManagement/ApartmentsList";
 import UsersManagement from "./pages/ADMIN/UsersManagement/UsersManagement";
 import RentalApplicationsManagement from "./pages/ADMIN/RentalsManagement/RentalsManagement";
+import CategoriesManagement from "./pages/ADMIN/CategoriesManagement/CategoriesManagement";
 function App() {
   return (
     <div className="App">
@@ -64,6 +65,7 @@ function App() {
             path="rental_applications"
             element={<RentalApplicationsManagement />}
           />
+          <Route path="categories" element={<CategoriesManagement />} />
           <Route path="apartments" element={<ApartmentListAdmin />} />
         </Route>
 
