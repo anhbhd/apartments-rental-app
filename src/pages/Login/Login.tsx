@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useState } from "react";
+import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
 import "./Login.scss";
 import GoogleIcon from "../../icons/GoogleIcon";
@@ -26,7 +26,6 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isValidEmail, setIsValidEmail] = useState(true);
-  const { setCredentialUserForApp } = useAuth();
   const [isLogging, setIsLogging] = useState<boolean>(false);
   const validateEmail = (email: string): boolean => {
     return emailRegex.test(email);
@@ -55,7 +54,7 @@ const Login = () => {
         await signInWithEmailAndPassword(auth, email, password)
           .then((userCredential) => {
             // Signed in
-            const user = userCredential.user;
+
             setIsLogging(false);
             navigate("/");
             toast.success("Login successfully!", {
@@ -63,7 +62,6 @@ const Login = () => {
               autoClose: 1500,
               style: { fontSize: "1.5rem" },
             });
-            console.log(user);
           })
           .catch((error: any) => {
             toast.error("Email or Password is not correct", {
@@ -97,37 +95,22 @@ const Login = () => {
 
       const userDocRef = doc(db, `users/${response.user.uid}`);
 
-      setCredentialUserForApp({
-        uid: response.user.uid,
-        email: response.user.email,
-        displayName: response.user.displayName,
-        photoURL: response.user.photoURL,
-      });
-
-      try {
-        const userDocSnap = await getDoc(userDocRef);
-        if (!userDocSnap.exists()) {
-          await setDoc(userDocRef, {
-            email: response.user.email,
-            isAdmin: false,
-            createdDate: Timestamp.now(),
-            active: true,
-          });
-        }
-      } catch (err: any) {
-        toast.error(err.message, {
-          position: "bottom-right",
-          style: {
-            fontSize: "1.4rem",
-          },
+      const userDocSnap = await getDoc(userDocRef);
+      if (!userDocSnap.exists()) {
+        await setDoc(userDocRef, {
+          email: response.user.email,
+          isAdmin: false,
+          createdDate: Timestamp.now(),
+          active: true,
         });
       }
-      toast.success("Login successfully!", {
-        position: "bottom-right",
-        autoClose: 1500,
-        style: { fontSize: "1.5rem" },
-      });
-      navigate("/");
+      if ((userDocSnap.data() as User).active) {
+        toast.success("Login successfully!", {
+          position: "bottom-right",
+          autoClose: 1500,
+          style: { fontSize: "15px" },
+        });
+      }
     } catch (err: any) {
       toast.error(err.message, {
         position: "bottom-right",

@@ -4,7 +4,7 @@ import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, db, provider } from "./../../config/firebase_config";
 import "./Register.scss";
 import GoogleIcon from "../../icons/GoogleIcon";
-import { doc, setDoc, Timestamp } from "firebase/firestore";
+import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { emailRegex } from "../../utils/regex";
@@ -31,7 +31,6 @@ const Register: React.FC = () => {
   const [passwordError, setPasswordError] = useState<string>("");
   const [confirmPasswordError, setConfirmPasswordError] = useState<string>("");
   const navigate = useNavigate();
-  const { logout } = useAuth();
   const validateEmail = () => {
     setEmailError(
       !emailRegex.test(formInputs.email) ? "Invalid email address" : ""
@@ -93,19 +92,24 @@ const Register: React.FC = () => {
       const response = await signInWithPopup(auth, provider);
 
       const userDocRef = doc(db, `users/${response.user.uid}`);
-      const userData: User = await getDocument("users", response.user.uid);
 
-      if (!userData) {
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (!userDocSnap.exists()) {
         await setDoc(userDocRef, {
           email: response.user.email,
           isAdmin: false,
           createdDate: Timestamp.now(),
           active: true,
         });
-      } else {
-        if (!userData.active) {
-          throw new Error("Your account has been deactivate by administrator");
-        }
+      }
+
+      if ((userDocSnap.data() as User).active) {
+        toast.success("Login successfully!", {
+          position: "bottom-right",
+          autoClose: 1500,
+          style: { fontSize: "15px" },
+        });
       }
     } catch (err: any) {
       toast.error(err.message, {
@@ -115,13 +119,6 @@ const Register: React.FC = () => {
         },
       });
     }
-    toast.success("Login successfully!", {
-      position: "bottom-right",
-      style: {
-        fontSize: "1.4rem",
-      },
-    });
-    navigate("/");
   };
 
   return (

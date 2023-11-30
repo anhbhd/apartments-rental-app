@@ -10,6 +10,7 @@ import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useNavigate } from "react-router-dom";
 import { getDocument } from "../services/getDocument";
 import { User } from "../type/User";
+import { toast } from "react-toastify";
 
 const AuthContext = createContext<any>(null);
 export const useAuth = () => {
@@ -37,13 +38,12 @@ const UserAuthContextProvider = ({
   const navigate = useNavigate();
   const { removeItem, setItem } = useLocalStorage();
 
-  const logout = async () => {
+  const logout: () => Promise<void> = async () => {
     removeItem("uid");
     await signOut(auth);
     setCurrentUser(null);
     navigate("/login");
   };
-
   const setCredentialUserForApp = (user: CredentialUserApp | null): void => {
     setCurrentUser(user);
     setItem("uid", user?.uid || "");
@@ -52,8 +52,9 @@ const UserAuthContextProvider = ({
   useLayoutEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       const userData: User = await getDocument("users", user?.uid as string);
+
       setCredentialUserForApp(
-        user
+        user && userData.active
           ? {
               uid: user.uid as string,
               email: user.email as string,
@@ -63,6 +64,15 @@ const UserAuthContextProvider = ({
             }
           : null
       );
+
+      if (user && !userData?.active) {
+        toast.error("Your account has been deactivate by administrator :(", {
+          position: "bottom-right",
+          autoClose: 1500,
+          style: { fontSize: "15px" },
+        });
+        logout();
+      }
     });
 
     return () => unsubscribe();

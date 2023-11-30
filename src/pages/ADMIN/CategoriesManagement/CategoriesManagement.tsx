@@ -20,10 +20,11 @@ const CategoriesManagement = () => {
   const searchInput = useRef<InputRef>(null);
 
   const [categories, setCategories] = useState<Category[]>([]);
-
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const fetchCategories = async () => {
     const [categories] = await getDataCollection("categories");
     setCategories(categories as Category[]);
+    setIsLoading(false);
   };
 
   const handleDeleteCategory = (categoryId: string) => {
@@ -182,6 +183,7 @@ const CategoriesManagement = () => {
         dataSource={categories}
         pagination={false}
         rowKey="id"
+        loading={isLoading}
       />
     </div>
   );

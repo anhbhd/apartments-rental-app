@@ -7,6 +7,7 @@ import { useAuth } from "../../context/AuthContext";
 import MenuIcon from "../../icons/MenuIcon";
 import { IoCloseSharp } from "react-icons/io5";
 import anonyImg from "./../../assets/anonymous-avatarjpg.jpg";
+
 interface BackdropProps {
   onClose: () => void;
 }
@@ -27,7 +28,7 @@ const Navbar = () => {
   useEffect(() => {
     closeMenu(); // Close the menu when the route changes
   }, [pathname]);
-  console.log();
+
   return (
     <nav className="navbar">
       <Link to="/">
@@ -54,8 +55,17 @@ const Navbar = () => {
             <Link className="perinfo" to="/personal_info">
               <img src={`${currentUser.photoURL || anonyImg}`} alt="" />
             </Link>
+
+            {currentUser.isAdmin && (
+              <li className="dashboard-btn-container">
+                <Link className="dashboard-btn" to="/admin/dashboard">
+                  Admin Dashboard
+                </Link>
+              </li>
+            )}
+
             <li className="logout-btn">
-              <button onClick={logout}>Logout</button>
+              <button onClick={() => logout()}>Logout</button>
             </li>
           </>
         )}
