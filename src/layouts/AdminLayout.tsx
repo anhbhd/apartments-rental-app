@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import Navbar from "../../components/ADMIN/Navbar/Navbar";
+import Navbar from "../components/ADMIN/Navbar/Navbar";
 import { Outlet, useLocation } from "react-router-dom";
-import Sidebar from "../../components/ADMIN/Sidebar/Sidebar";
+import Sidebar from "../components/ADMIN/Sidebar/Sidebar";
 
 const AdminLayout = () => {
   let location = useLocation();

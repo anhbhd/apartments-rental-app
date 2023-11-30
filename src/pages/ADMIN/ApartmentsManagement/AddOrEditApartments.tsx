@@ -17,7 +17,7 @@ import { getDataCollection } from "../../../services/getDataCollection";
 import { Timestamp } from "firebase/firestore";
 import { Apartment } from "../../../type/Apartment";
 import { uploadImage } from "../../../utils/uploadImage";
-import { addDocument } from "../../../services/addDocs";
+import { addDocument } from "../../../services/addDocument";
 import { useLocation } from "react-router-dom";
 import { updateDocument } from "../../../services/updateDocument";
 import { Button, Modal } from "antd";

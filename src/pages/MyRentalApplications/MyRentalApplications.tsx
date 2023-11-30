@@ -10,13 +10,14 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../config/firebase_config";
 import FullLoadingScreen from "../../utils/FullLoadingScreen/FullLoadingScreen";
 import { Option } from "../../type/Option";
+import { RentAppStatus } from "../../common/constants/RentalAppStatus";
 
 const MyRentalApplications = () => {
   const [rentalApps, setRentalApps] = useState<RentalApplication[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const { currentUser } = useAuth();
   const [filter, setFilter] = useState<Option>({
-    value: "PENDING",
+    value: RentAppStatus.PENDING,
     label: "Pending",
   });
   useEffect(() => {

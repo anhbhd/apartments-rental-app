@@ -6,11 +6,10 @@ import "./Register.scss";
 import GoogleIcon from "../../icons/GoogleIcon";
 import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
 import { emailRegex } from "../../utils/regex";
-import { getDocument } from "../../services/getDocument";
 import { User } from "../../type/User";
 import { toast } from "react-toastify";
+import FullLoadingScreen from "../../utils/FullLoadingScreen/FullLoadingScreen";
 
 interface FormInputs {
   email: string;
@@ -30,6 +29,7 @@ const Register: React.FC = () => {
   const [emailError, setEmailError] = useState<string>("");
   const [passwordError, setPasswordError] = useState<string>("");
   const [confirmPasswordError, setConfirmPasswordError] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const validateEmail = () => {
     setEmailError(
@@ -65,6 +65,7 @@ const Register: React.FC = () => {
     validatePassword();
     validateConfirmPassword();
     if (JSON.stringify(initialFormState) === JSON.stringify(formInputs)) return;
+    setIsLoading(true);
     if (!emailError && !passwordError && !confirmPasswordError) {
       try {
         const response = await createUserWithEmailAndPassword(
@@ -80,9 +81,22 @@ const Register: React.FC = () => {
           createdDate: Timestamp.now(),
           active: true,
         });
+
+        toast.success("Register successfully!", {
+          position: "bottom-right",
+          autoClose: 1500,
+          style: { fontSize: "15px" },
+        });
+
         navigate("/");
       } catch (err: any) {
-        console.error(err.message);
+        toast.error("Email is already used!", {
+          position: "bottom-right",
+          autoClose: 1500,
+          style: { fontSize: "15px" },
+        });
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -123,6 +137,7 @@ const Register: React.FC = () => {
 
   return (
     <div className="registerpage">
+      {isLoading && <FullLoadingScreen />}
       <div className="register">
         <div className="register__text-header">
           <h3 className="register__text-header--text-lg">Create account</h3>

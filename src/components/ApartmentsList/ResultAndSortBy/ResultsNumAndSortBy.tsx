@@ -1,4 +1,4 @@
-import "./ResulNumstAndSortBy.scss";
+import "./ResultsNumAndSortBy.scss";
 import CustomSelect from "../../../utils/CustomDropdown/CustomSelect";
 import { Option } from "../../../type/Option";
 
@@ -6,7 +6,7 @@ import { IoFilter } from "react-icons/io5";
 import { sortBySelection } from "./SortBy";
 import { useEffect, useState } from "react";
 
-interface IResulNumstAndSortByProps {
+interface IResultsNumAndSortByProps {
   className: string;
   onClick: () => void;
   onSelectSortBy: (sortby: Option) => void;
@@ -14,14 +14,14 @@ interface IResulNumstAndSortByProps {
   setClearFilterClicked: React.Dispatch<React.SetStateAction<boolean>>;
   totalItems: number;
 }
-const ResulNumstAndSortBy = ({
+const ResultsNumAndSortBy = ({
   totalItems,
   className,
   onClick,
   onSelectSortBy,
   clearFilterClicked,
   setClearFilterClicked,
-}: IResulNumstAndSortByProps) => {
+}: IResultsNumAndSortByProps) => {
   const [selected, setSelected] = useState<Option>(sortBySelection[0]);
 
   useEffect(() => {
@@ -48,4 +48,4 @@ const ResulNumstAndSortBy = ({
   );
 };
 
-export default ResulNumstAndSortBy;
+export default ResultsNumAndSortBy;

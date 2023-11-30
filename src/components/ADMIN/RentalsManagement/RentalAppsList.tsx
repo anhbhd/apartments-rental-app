@@ -28,6 +28,7 @@ import { Button, Input, InputRef, Space } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { getDocument } from "../../../services/getDocument";
+import { toast } from "react-toastify";
 
 interface IRentalAppsListProps {
   category: string;
@@ -136,7 +137,7 @@ const RentalAppsList: React.FC<IRentalAppsListProps> = ({ category }) => {
       };
     });
     setRentalApplicationRows(rentalRowsData as RentalAppRow[]);
-  }, [rentalApplications]);
+  }, [apartmentsInfo, rentalApplications, usersInfo]);
 
   const handleStatusRentalApp = async (
     id: string,
@@ -144,14 +145,14 @@ const RentalAppsList: React.FC<IRentalAppsListProps> = ({ category }) => {
     status: RentAppStatus
   ) => {
     if (status) {
-      let newRentalRowsData = rentalApplicationRows.filter(
-        (rentalApp) => rentalApp.id !== id
-      );
-      setRentalApplicationRows(newRentalRowsData);
-      await updateDocument("rentalApplications", id, {
-        status,
-      });
+      // check if admin want to confirm that user renting the apartment
+      // then move all the applications in the pending / processing list be
+
       if (status === RentAppStatus.RENTING) {
+        await updateDocument("rentalApplications", id, {
+          status,
+        });
+
         await updateDocument("apartments", apartmentId, {
           rented: true,
         });
@@ -178,14 +179,53 @@ const RentalAppsList: React.FC<IRentalAppsListProps> = ({ category }) => {
         });
 
         await Promise.all(updatePromises);
-      } else if (status === RentAppStatus.CANCELED) {
-        await updateDocument("apartments", apartmentId, {
-          rented: false,
+        toast.success("Change to RENTING successfully!", {
+          position: "bottom-right",
+          style: {
+            fontSize: "15px",
+          },
         });
+      } else if (status === RentAppStatus.PROCESSING) {
+        //check if there's any rental application for this apartment is already place in the processing section
+        const rentalApplicationsColRef = collection(db, "rentalApplications");
+        const q = query(
+          rentalApplicationsColRef,
+          where("status", "in", [RentAppStatus.PROCESSING]),
+          where("apartmentId", "==", apartmentId)
+        );
+        const querySnapshot = await getDocs(q);
+        if (querySnapshot.docs.at(0)) {
+          toast.error(
+            'There is currently a request to rent this apartment in the "PROCESSING" section. You can only process 1 rental application for 1 apartment at a time',
+            {
+              position: "bottom-right",
+              style: {
+                fontSize: "15px",
+              },
+            }
+          );
+          return;
+        } else {
+          await updateDocument("rentalApplications", id, {
+            status: RentAppStatus.PROCESSING,
+          });
+          toast.success("Change to PROCESSING successfully!", {
+            position: "bottom-right",
+            style: {
+              fontSize: "15px",
+            },
+          });
+        }
       }
+      // move this one out of current list by delete it from the current list
+      let newRentalRowsData = rentalApplicationRows.filter(
+        (rentalApp) => rentalApp.id !== id
+      );
+      setRentalApplicationRows(newRentalRowsData);
     }
   };
 
+  // function to extend rental period for the rental application was expired
   const handleExtendRentalPeriod = async (id: string, apartmentId: string) => {
     let newRentalRowsData = rentalApplicationRows.filter(
       (rentalApp) => rentalApp.id !== id
@@ -206,12 +246,47 @@ const RentalAppsList: React.FC<IRentalAppsListProps> = ({ category }) => {
       status: RentAppStatus.RENTING,
       endDate: newEndDate,
     });
+    toast.success("Extend rental period successfully!", {
+      position: "bottom-right",
+      autoClose: 1500,
+    });
   };
 
+  // function to cancel an rental application from pending list or processing list
+  // because user and admin cannot find an agreement when exchange through the call
   const handleCancelPendingOrProcessing = async (rentalAppId: string) => {
+    let newRentalRowsData = rentalApplicationRows.filter(
+      (rentalApp) => rentalApp.id !== rentalAppId
+    );
+    setRentalApplicationRows(newRentalRowsData);
     await updateDocument("rentalApplications", rentalAppId, {
       status: RentAppStatus.CANCELED,
-      note: "issues related to consensus between the two parties",
+    });
+    toast.success("Move to cancel list successfully!", {
+      position: "bottom-right",
+      autoClose: 1500,
+    });
+  };
+
+  // function to cancel the application from renting or expired list because
+  // the user stop the contract or do not want to extend the rental period
+  const handleCancelRentingOrExpired = async (
+    rentalAppId: string,
+    apartmentId: string
+  ) => {
+    let newRentalRowsData = rentalApplicationRows.filter(
+      (rentalApp) => rentalApp.id !== rentalAppId
+    );
+    setRentalApplicationRows(newRentalRowsData);
+    await updateDocument("rentalApplications", rentalAppId, {
+      status: RentAppStatus.CANCELED,
+    });
+    await updateDocument("apartments", apartmentId, {
+      rented: false,
+    });
+    toast.success("Cancel contract successfully!", {
+      position: "bottom-right",
+      autoClose: 1500,
     });
   };
 
@@ -312,9 +387,7 @@ const RentalAppsList: React.FC<IRentalAppsListProps> = ({ category }) => {
       dataIndex: "createdDate",
 
       render: (_: any, record: RentalAppRow) => (
-        <span>
-          {secondsToDateTime(record.createdDate.seconds).toUTCString()}
-        </span>
+        <span>{secondsToDateTime(record.createdDate.seconds)}</span>
       ),
       defaultSortOrder: "descend" as SortOrder,
       sorter: (a: RentalAppRow, b: RentalAppRow) =>
@@ -350,6 +423,7 @@ const RentalAppsList: React.FC<IRentalAppsListProps> = ({ category }) => {
       render: (_: any, record: RentalAppRow) => {
         return (
           <DetailedRentalApplication
+            handleCancelRentingOrExpired={handleCancelRentingOrExpired}
             onExtendRentalPeriod={handleExtendRentalPeriod}
             onChangeStatusRentalApp={handleStatusRentalApp}
             rentalApp={record}

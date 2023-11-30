@@ -34,9 +34,7 @@ const AppItem = ({ rentalApplication }: IAppItemProps) => {
       </span>
       <span className="app-item__name">{apartment?.name}</span>
       <span className="app-item__created-date">
-        {secondsToDateTime(
-          rentalApplication.createdDate.seconds
-        ).toDateString()}
+        {secondsToDateTime(rentalApplication.createdDate.seconds)}
       </span>
       <Link
         to={`/my_rental_apps/${rentalApplication?.id}`}

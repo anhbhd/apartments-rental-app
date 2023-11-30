@@ -9,6 +9,7 @@ import { Typography } from "antd";
 import { updateDocument } from "../../../services/updateDocument";
 import { getDocument } from "../../../services/getDocument";
 import { Link } from "react-router-dom";
+import ActionDialogButton from "./ActionsWithDialog/ActionDialogButton";
 
 const { Paragraph } = Typography;
 interface IDetailedRentalApplicationProps {
@@ -20,6 +21,10 @@ interface IDetailedRentalApplicationProps {
   ) => void;
   onExtendRentalPeriod: (id: string, apartmentId: string) => Promise<void>;
   onCancelPendingOrProcessing: (id: string) => Promise<void>;
+  handleCancelRentingOrExpired: (
+    rentalAppId: string,
+    apartmentId: string
+  ) => Promise<void>;
 }
 
 const DetailedRentalApplication: React.FC<IDetailedRentalApplicationProps> = ({
@@ -27,6 +32,7 @@ const DetailedRentalApplication: React.FC<IDetailedRentalApplicationProps> = ({
   onChangeStatusRentalApp,
   onExtendRentalPeriod,
   onCancelPendingOrProcessing,
+  handleCancelRentingOrExpired,
 }) => {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<User>();
@@ -59,33 +65,7 @@ const DetailedRentalApplication: React.FC<IDetailedRentalApplicationProps> = ({
     });
   };
 
-  const textForOkBtn =
-    rentalApp?.status === RentAppStatus.PENDING
-      ? "Processing"
-      : rentalApp?.status === RentAppStatus.PROCESSING
-      ? "Confirm Rented"
-      : rentalApp?.status === RentAppStatus.RENTING
-      ? "Ok"
-      : rentalApp?.status === RentAppStatus.EXPIRED
-      ? "Move to cancel"
-      : "Ok";
-
-  const handleChangeStatusForApplication = () => {
-    let targetStatus = "";
-    switch (rentalApp.status) {
-      case RentAppStatus.PENDING:
-        targetStatus = RentAppStatus.PROCESSING;
-        break;
-      case RentAppStatus.PROCESSING:
-        targetStatus = RentAppStatus.RENTING;
-        break;
-      case RentAppStatus.RENTING:
-        targetStatus = "";
-        break;
-      case RentAppStatus.EXPIRED:
-        targetStatus = RentAppStatus.CANCELED;
-        break;
-    }
+  const handleChangeStatusForApplication = (targetStatus: RentAppStatus) => {
     onChangeStatusRentalApp(
       rentalApp.id,
       rentalApp.apartmentId,
@@ -103,8 +83,7 @@ const DetailedRentalApplication: React.FC<IDetailedRentalApplicationProps> = ({
         title={`Detailed Rental Application`}
         centered
         open={open}
-        okText={textForOkBtn}
-        onOk={handleChangeStatusForApplication}
+        onOk={() => setOpen(false)}
         onCancel={() => setOpen(false)}
         okButtonProps={
           rentalApp.status === RentAppStatus.EXPIRED
@@ -116,28 +95,101 @@ const DetailedRentalApplication: React.FC<IDetailedRentalApplicationProps> = ({
               }
         }
         width={800}
-        footer={(_, { OkBtn, CancelBtn }) => (
+        footer={(_, { OkBtn }) => (
           <>
-            {rentalApp.status === RentAppStatus.EXPIRED && (
-              <Button
-                onClick={() =>
-                  onExtendRentalPeriod(rentalApp.id, rentalApp.apartmentId)
+            {/* cancel the contract if user want to cancel */}
+            {(rentalApp.status === RentAppStatus.EXPIRED ||
+              rentalApp.status === RentAppStatus.RENTING) && (
+              <ActionDialogButton
+                cancelButtonType="primary"
+                buttonName={"Cancel contract"}
+                onConfirmation={() => {
+                  handleCancelRentingOrExpired(
+                    rentalApp.id,
+                    rentalApp.apartmentId
+                  );
+                  setOpen(false);
+                }}
+                type={"dashed"}
+                title={"Cancel contract?"}
+                danger={true}
+                contentOfModal={
+                  "Confirm that you and the customer agree to cancel contract?"
                 }
-              >
-                Extend rental period
-              </Button>
+              />
             )}
-            {(rentalApp.status === RentAppStatus.PENDING ||
-              rentalApp.status === RentAppStatus.PROCESSING) && (
-              <Button
-                danger
-                onClick={() => onCancelPendingOrProcessing(rentalApp.id)}
-              >
-                Move to cancel list
-              </Button>
+            {/* extend rental period for user */}
+            {rentalApp.status === RentAppStatus.EXPIRED && (
+              <ActionDialogButton
+                cancelButtonType="primary"
+                buttonName={"Extend rental period"}
+                onConfirmation={() => {
+                  onExtendRentalPeriod(rentalApp.id, rentalApp.apartmentId);
+                  setOpen(false);
+                }}
+                type={"dashed"}
+                title={"Extend rental period?"}
+                danger={false}
+                contentOfModal={
+                  "Confirm that you and the customer agree to extend the rental period?"
+                }
+              />
             )}
 
-            <CancelBtn />
+            {/* move this one to cancel list if 2 parties did not find an agreement */}
+            {(rentalApp.status === RentAppStatus.PENDING ||
+              rentalApp.status === RentAppStatus.PROCESSING) && (
+              <ActionDialogButton
+                cancelButtonType="primary"
+                buttonName={"Move to cancel list"}
+                onConfirmation={() => {
+                  onCancelPendingOrProcessing(rentalApp.id);
+                  setOpen(false);
+                }}
+                type={"primary"}
+                title={`Are you sure to remove this application from ${rentalApp.status} list?`}
+                danger={true}
+                contentOfModal={
+                  "Confirm that you want to move this to cancel list"
+                }
+              />
+            )}
+
+            {/* button to move the application from pending to processing list */}
+            {rentalApp.status === RentAppStatus.PENDING && (
+              <ActionDialogButton
+                cancelButtonType="text"
+                buttonName={"Processing"}
+                onConfirmation={() => {
+                  handleChangeStatusForApplication(RentAppStatus.PROCESSING);
+                  setOpen(false);
+                }}
+                type={"default"}
+                title={"Move on to processing?"}
+                danger={false}
+                contentOfModal={
+                  "Confirm that you are going to process this application (making a phone call to discuss with the customer)?"
+                }
+              />
+            )}
+            {/* button to move the application from processing to renting list */}
+            {rentalApp.status === RentAppStatus.PROCESSING && (
+              <ActionDialogButton
+                cancelButtonType="text"
+                buttonName={"Confirm for Renting"}
+                onConfirmation={() => {
+                  handleChangeStatusForApplication(RentAppStatus.RENTING);
+                  setOpen(false);
+                }}
+                type={"default"}
+                title={"Confirm that user will rent this apartment?"}
+                danger={false}
+                contentOfModal={
+                  "Confirm that you and the customer have discussed through the phone and made an agreement?"
+                }
+              />
+            )}
+
             <OkBtn />
           </>
         )}
@@ -156,9 +208,7 @@ const DetailedRentalApplication: React.FC<IDetailedRentalApplicationProps> = ({
               <div className="font-bold">Created date</div>
             </Col>
             <Col span={15}>
-              <div>
-                {secondsToDateTime(rentalApp.createdDate.seconds).toUTCString()}
-              </div>
+              <div>{secondsToDateTime(rentalApp.createdDate.seconds)}</div>
             </Col>
           </Row>
           <Row>
@@ -166,9 +216,7 @@ const DetailedRentalApplication: React.FC<IDetailedRentalApplicationProps> = ({
               <div className="font-bold">Start date</div>
             </Col>
             <Col span={15}>
-              <div>
-                {secondsToDateTime(rentalApp.startDate.seconds).toUTCString()}
-              </div>
+              <div>{secondsToDateTime(rentalApp.startDate.seconds)}</div>
             </Col>
           </Row>
           <Row>
@@ -176,9 +224,7 @@ const DetailedRentalApplication: React.FC<IDetailedRentalApplicationProps> = ({
               <div className="font-bold">End date</div>
             </Col>
             <Col span={15}>
-              <div>
-                {secondsToDateTime(rentalApp.endDate.seconds).toUTCString()}
-              </div>
+              <div>{secondsToDateTime(rentalApp.endDate.seconds)}</div>
             </Col>
           </Row>
           <Row>

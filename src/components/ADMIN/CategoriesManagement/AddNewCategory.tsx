@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, Input, Modal } from "antd";
-import { addDocument } from "../../../services/addDocs";
+import { addDocument } from "../../../services/addDocument";
 import { Category } from "../../../type/Category";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../../config/firebase_config";

@@ -12,6 +12,6 @@ export const deleteDocument = async (
 
     console.log("Document deleted successfully!");
   } catch (error) {
-    console.error("Error deletings document: ", error);
+    console.error("Error deleting document: ", error);
   }
 };

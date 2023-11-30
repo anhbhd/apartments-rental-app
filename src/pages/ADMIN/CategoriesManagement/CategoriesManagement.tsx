@@ -146,7 +146,6 @@ const CategoriesManagement = () => {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      width: "30%",
       ...getColumnSearchProps("name"),
     },
     {

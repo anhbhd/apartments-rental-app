@@ -9,7 +9,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { addDocument } from "../../../../services/addDocs";
+import { addDocument } from "../../../../services/addDocument";
 import { Review } from "../../../../type/Review";
 import { db } from "../../../../config/firebase_config";
 import { mapCollectionToArrayObject } from "../../../../utils/Mapper";

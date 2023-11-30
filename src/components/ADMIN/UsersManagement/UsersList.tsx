@@ -100,9 +100,7 @@ const UsersList = () => {
       title: "Created Date",
       dataIndex: "createdDate",
       render: (_: any, record: UserRow) => (
-        <span>
-          {secondsToDateTime(record.createdDate.seconds).toUTCString()}
-        </span>
+        <span>{secondsToDateTime(record.createdDate.seconds)}</span>
       ),
       defaultSortOrder: "descend" as SortOrder,
       sorter: (a: UserRow, b: UserRow) =>

@@ -89,21 +89,15 @@ const RentalAppContent = ({
           <div className="rental-app-content__info">
             <p className="line">
               <label>Created date</label>
-              <span>
-                {secondsToDateTime(rental?.createdDate.seconds).toDateString()}
-              </span>
+              <span>{secondsToDateTime(rental?.createdDate.seconds)}</span>
             </p>
             <p className="line">
               <label>Start date</label>
-              <span>
-                {secondsToDateTime(rental?.startDate.seconds).toDateString()}
-              </span>
+              <span>{secondsToDateTime(rental?.startDate.seconds)}</span>
             </p>
             <p className="line">
               <label>End date</label>
-              <span>
-                {secondsToDateTime(rental?.endDate.seconds).toDateString()}
-              </span>
+              <span>{secondsToDateTime(rental?.endDate.seconds)}</span>
             </p>
             <p className="line">
               <label>Deposit</label>

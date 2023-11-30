@@ -23,7 +23,7 @@ const ApartmentRow = ({
           alt={apartment?.avatar}
         />
       </td>
-      <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">
+      <td className="px-6  py-4 font-semibold text-gray-900 dark:text-white">
         {apartment?.name}
       </td>
 
@@ -31,7 +31,7 @@ const ApartmentRow = ({
         {apartment?.pricePerMonth}$
       </td>
       <td className="px-6 py-4  ">
-        <p className="min-h-full flex gap-4 justify-start items-center">
+        <p className="min-h-full w-fit flex gap-4 justify-start items-center">
           <Button
             danger
             onClick={() => {

@@ -42,6 +42,13 @@ const UserAuthContextProvider = ({
     removeItem("uid");
     await signOut(auth);
     setCurrentUser(null);
+    toast.success("Logout successfully!", {
+      position: "bottom-right",
+      autoClose: 1500,
+      style: {
+        fontSize: "15px",
+      },
+    });
     navigate("/login");
   };
   const setCredentialUserForApp = (user: CredentialUserApp | null): void => {

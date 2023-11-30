@@ -1,31 +1,24 @@
 import "./DetailedRentalApplication.scss";
 import RentalAppContent from "../../components/DetailedRentalApplication/RentalAppContent/RentalAppContent";
 import { useEffect, useState } from "react";
-import { db } from "../../config/firebase_config";
 import { useLocation } from "react-router-dom";
-import { doc, getDoc } from "firebase/firestore";
 import { RentalApplication } from "../../type/RentalApplication";
+import { getDocument } from "../../services/getDocument";
 
 const DetailedRentalApplication = () => {
   const location = useLocation();
 
   const [rental, setRental] = useState<RentalApplication | null>(null);
   const rentalAppId = location.pathname.split("/").pop();
-  useEffect(() => {
-    async function fetchRental() {
-      const docSnapshot = await getDoc(
-        doc(db, `rentalApplications/${rentalAppId}`)
-      );
-      if (!docSnapshot.exists) {
-        console.log("No such document!");
-      } else {
-        setRental({
-          ...(docSnapshot.data() as RentalApplication),
-          id: docSnapshot.id as string,
-        });
-      }
-    }
 
+  async function fetchRental() {
+    const rentalApp: RentalApplication = await getDocument(
+      "rentalApplications",
+      rentalAppId as string
+    );
+    setRental(rentalApp);
+  }
+  useEffect(() => {
     fetchRental();
   }, [rentalAppId]);
 

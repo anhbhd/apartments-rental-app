@@ -382,9 +382,7 @@ const ApartmentDetails = () => {
               </p>
               <p className="created-date">
                 <strong>Posted date:</strong>{" "}
-                {secondsToDateTime(
-                  apartment?.createdDate?.seconds as number
-                ).toDateString()}
+                {secondsToDateTime(apartment?.createdDate?.seconds as number)}
               </p>
               <p className="amenities">
                 <span>

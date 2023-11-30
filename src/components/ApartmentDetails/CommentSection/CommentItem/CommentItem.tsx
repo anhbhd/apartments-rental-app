@@ -5,10 +5,9 @@ import tmpImg from "./../../../../assets/anonymous-avatarjpg.jpg";
 import "./CommentItem.scss";
 import { Review } from "../../../../type/Review";
 
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../../../../config/firebase_config";
 import { User } from "../../../../type/User";
 import { secondsToDateTime } from "../../../../utils/SecondToDate";
+import { getDocument } from "../../../../services/getDocument";
 
 interface ICommentItemProps {
   review: Review;
@@ -19,13 +18,8 @@ const CommentItem: React.FC<ICommentItemProps> = ({ review }) => {
   useEffect(() => {
     const fetchReviewerInfo = async () => {
       try {
-        const userDocRef = doc(db, `users/${review.userId}`);
-        const userDocSnapShot = await getDoc(userDocRef);
-
-        setUserInfo({
-          ...(userDocSnapShot.data() as User),
-          id: userDocSnapShot.id,
-        });
+        const userData: User = await getDocument("users", review.userId);
+        setUserInfo(userData);
       } catch (err: any) {
         console.error(err.message);
       }
@@ -48,7 +42,7 @@ const CommentItem: React.FC<ICommentItemProps> = ({ review }) => {
             ))}
           </span>
           <span className="comment-date">
-            {secondsToDateTime(review.createdDate.seconds).toUTCString()}
+            {secondsToDateTime(review.createdDate.seconds)}
           </span>
         </div>
       </div>

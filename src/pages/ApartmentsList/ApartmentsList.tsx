@@ -8,7 +8,7 @@ import ApartmentsListResult from "../../components/ApartmentsList/ApartmentsList
 import Pagination from "../../components/ApartmentsList/Pagination/Pagination";
 
 import "./ApartmentsList.scss";
-import ResulNumstAndSortBy from "../../components/ApartmentsList/ResultAndSortBy/ResulNumstAndSortBy";
+import ResulNumstAndSortBy from "../../components/ApartmentsList/ResultAndSortBy/ResultsNumAndSortBy";
 import { Backdrop } from "../../utils/Backdrop/Backdrop";
 import { SortBy } from "../../components/ApartmentsList/ResultAndSortBy/SortBy";
 import { FilterbarType } from "../../type/Filterbar";
