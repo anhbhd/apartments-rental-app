@@ -19,7 +19,7 @@ const PropertyDescription = ({
     const fetchCityName = async () => {
       try {
         const res = await fetch(
-          `https://provinces.open-api.vn/api/p/${apartment.city}`
+          `https://provinces.open-api.vn/api/p/${apartment?.city}`
         );
         const provinceData = await res.json();
         setCityName(provinceData.name);

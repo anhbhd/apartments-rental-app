@@ -1,0 +1,105 @@
+@import "../../../sass/variables.scss";
+@import "../../../sass/mixins.scss";
+
+.common-section-2 {
+  @include padding-section-mixin-desktop;
+
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.5rem;
+  gap: 20rem;
+  align-items: flex-end;
+  &__text-btn {
+    display: flex;
+    justify-content: flex-start;
+    gap: 2rem;
+    flex-direction: column;
+    h3 {
+      font-size: 3rem;
+      font-weight: 700;
+    }
+    ul {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      list-style: none;
+      li {
+        font-weight: bold;
+        position: relative;
+        padding-left: 3rem;
+        svg {
+          position: absolute;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+      }
+    }
+    .btn {
+      padding: 1rem 2rem;
+      border-radius: 0.5rem;
+      background-color: black;
+      font-weight: 500;
+      color: white;
+      text-align: center;
+      transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+
+      &:hover {
+        background-color: white;
+        color: black;
+        box-shadow: inset 0 0 0 1px black;
+      }
+    }
+  }
+  &__images-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    gap: 2rem;
+    height: fit-content;
+    .img3-container {
+      position: absolute;
+      transform: translateX(-50%);
+      bottom: -2rem;
+      left: 50%;
+    }
+    img {
+      border-radius: 8px;
+
+      &.img3 {
+        bottom: -2rem;
+        transform: translateX(50%);
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px,
+          rgba(0, 0, 0, 0.23) 0px 3px 6px;
+        animation: bounce 5s infinite linear;
+        backface-visibility: hidden;
+      }
+    }
+  }
+}
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-1rem);
+  }
+  60% {
+    transform: translateY(1rem);
+  }
+}
+
+@media (max-width: $desktop-width) {
+  .common-section-2 {
+    padding: 8rem 5rem;
+    gap: 8rem;
+  }
+}
+@media (max-width: $mobile-width) {
+  .common-section-2 {
+    padding: 8rem 3rem;
+    gap: 8rem;
+    flex-direction: column;
+  }
+}

@@ -3,7 +3,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import Footer from "../../components/Footer/Footer";
 import { useEffect } from "react";
 
-const MainLayout = () => {
+const MainLayout: React.FC = () => {
   let location = useLocation();
 
   useEffect(() => {
@@ -14,6 +14,7 @@ const MainLayout = () => {
       <Navbar />
       <Outlet />
       <Footer />
+      {/* <FacebookMessage /> */}
     </>
   );
 };

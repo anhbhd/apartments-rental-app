@@ -59,7 +59,7 @@ const CommentsSection: React.FC<ICommentsSectionProps> = ({
           const rentalsCollectionRef = collection(db, "rentalApplications");
           let q = query(
             rentalsCollectionRef,
-            where("apartmentId", "==", apartment?.id),
+            where("apartmentId", "==", apartment?.id as string),
             where("tenantId", "==", currentUser.uid),
             where("status", "not-in", [
               RentAppStatus.PENDING,
