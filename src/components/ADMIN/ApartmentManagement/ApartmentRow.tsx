@@ -28,7 +28,7 @@ const ApartmentRow = ({
       </td>
 
       <td className="px-6 py-4 font-semibold  text-gray-900 dark:text-white">
-        {apartment?.pricePerMonth}$
+        $ {apartment?.pricePerMonth}
       </td>
       <td className="px-6 py-4  ">
         <p className="min-h-full w-fit flex gap-4 justify-start items-center">

@@ -12,7 +12,7 @@ import FullLoadingScreen from "../../../utils/FullLoadingScreen/FullLoadingScree
 
 interface IRentalAppContentProps {
   rental: RentalApplication;
-  onSetRentalApp: (rentalapp: RentalApplication) => void;
+  onSetRentalApp: (rentalApp: RentalApplication) => void;
 }
 
 const RentalAppContent = ({

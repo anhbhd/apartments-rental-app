@@ -18,20 +18,17 @@ const PropertyDescription = ({
   useEffect(() => {
     const fetchCityName = async () => {
       try {
-        const res = await fetch(
+        const provinceRes = await fetch(
           `https://provinces.open-api.vn/api/p/${apartment.city}`
         );
-        const provinceData = await res.json();
+        const provinceData = await provinceRes.json();
         setCityName(provinceData.name);
-        try {
-          const res = await fetch(
-            `https://provinces.open-api.vn/api/d/${apartment.district}`
-          );
-          const districtData = await res.json();
-          setDistrictName(districtData.name);
-        } catch (err: any) {
-          console.error(err.message);
-        }
+
+        const districtRes = await fetch(
+          `https://provinces.open-api.vn/api/d/${apartment.district}`
+        );
+        const districtData = await districtRes.json();
+        setDistrictName(districtData.name);
       } catch (err: any) {
         console.error(err.message);
       }

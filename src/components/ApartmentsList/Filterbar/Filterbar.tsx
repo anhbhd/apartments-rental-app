@@ -48,8 +48,14 @@ const Filterbar = ({
     { label: "All", value: 0 },
   ]);
 
-  const [minPrice, setMinPrice] = useState<string>("");
-  const [maxPrice, setMaxPrice] = useState<string>("");
+  const [minPrice, setMinPrice] = useState<{
+    value: string;
+    displayValue: string;
+  }>({ value: "", displayValue: "" });
+  const [maxPrice, setMaxPrice] = useState<{
+    value: string;
+    displayValue: string;
+  }>({ value: "", displayValue: "" });
   const [textSearch, setTextSearch] = useState<string>("");
 
   const [checkboxIdsChecked, setCheckboxIdsChecked] = useState<string[]>([]);
@@ -147,28 +153,100 @@ const Filterbar = ({
   };
 
   const handleChangeMinValue = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setMinPrice(event.target.value);
-    onChangeFilter((prevFilter) => {
-      return {
-        ...prevFilter,
-        price: {
-          ...prevFilter.price,
-          from: event.target.value,
-        },
-      };
-    });
+    const inputValue = event.target.value;
+    // Remove non-numeric characters
+    const numericValue = parseFloat(inputValue.replace(/[^0-9.]/g, ""));
+
+    // Check if numericValue is not NaN
+    if (!isNaN(numericValue)) {
+      // Format as a number for display
+      const formattedAmount = numericValue.toLocaleString("en-US");
+
+      setMinPrice({
+        value: numericValue.toString(),
+        displayValue: formattedAmount,
+      });
+
+      onChangeFilter((prevFilter) => {
+        return {
+          ...prevFilter,
+          price: {
+            ...prevFilter.price,
+            from: {
+              value: numericValue.toString(),
+              displayValue: formattedAmount,
+            },
+          },
+        };
+      });
+    } else {
+      setMinPrice({
+        value: "",
+        displayValue: "",
+      });
+
+      onChangeFilter((prevFilter) => {
+        return {
+          ...prevFilter,
+          price: {
+            ...prevFilter.price,
+            from: {
+              value: "",
+              displayValue: "",
+            },
+          },
+        };
+      });
+    }
   };
+
   const handleChangeMaxValue = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setMaxPrice(event.target.value);
-    onChangeFilter((prevFilter) => {
-      return {
-        ...prevFilter,
-        price: {
-          ...prevFilter.price,
-          to: event.target.value,
-        },
-      };
-    });
+    const inputValue = event.target.value;
+    // console.log(event.target.value);
+    // Remove non-numeric characters
+    const numericValue = parseFloat(inputValue.replace(/[^0-9.]/g, ""));
+
+    // Check if numericValue is not NaN
+    if (!isNaN(numericValue)) {
+      // Format as a number for display
+      const formattedAmount = numericValue.toLocaleString("en-US");
+
+      setMaxPrice({
+        value: numericValue.toString(),
+        displayValue: formattedAmount,
+      });
+
+      onChangeFilter((prevFilter) => {
+        return {
+          ...prevFilter,
+          price: {
+            ...prevFilter.price,
+            to: {
+              value: numericValue.toString(),
+              displayValue: formattedAmount,
+            },
+          },
+        };
+      });
+    } else {
+      setMaxPrice({
+        value: "",
+        displayValue: "",
+      });
+
+      onChangeFilter((prevFilter) => {
+        return {
+          ...prevFilter,
+          price: {
+            ...prevFilter.price,
+            to: {
+              value: "",
+              displayValue: "",
+            },
+          },
+        };
+      });
+    }
   };
 
   const handleProvinceSelection = (option: Option) => {
@@ -234,8 +312,8 @@ const Filterbar = ({
     setSelectedProvince({ label: "All", value: 0 }); // Reset selectedProvince state
     setSelectedDistrict({ label: "All", value: 0 }); // Reset selectedDistrict state
     setCanBeRented("");
-    setMinPrice("");
-    setMaxPrice("");
+    setMinPrice({ value: "", displayValue: "" });
+    setMaxPrice({ value: "", displayValue: "" });
     setTextSearch("");
     setCheckboxIdsChecked([]);
   };
@@ -306,19 +384,18 @@ const Filterbar = ({
       </div>
 
       <div className="filterbar__section">
-        <p className="field-label">Find by Price</p>
+        <p className="field-label">Find by Price (In dollars)</p>
         <div className="price-range-container">
           <div className="price-range-item">
             <p className="from-label">Min price</p>
             <input
               type="text"
               onChange={handleChangeMinValue}
-              value={minPrice}
+              value={`$ ${minPrice.displayValue}`}
               name="currency-field"
               id="currency-field"
-              pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"
-              data-type="currency"
               placeholder="$100"
+              autoComplete="off"
             />
           </div>
           <div className="price-range-item">
@@ -326,11 +403,10 @@ const Filterbar = ({
             <input
               type="text"
               onChange={handleChangeMaxValue}
-              value={maxPrice}
+              value={`$ ${maxPrice.displayValue}`}
               name="currency-field"
               id="currency-field"
-              pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"
-              data-type="currency"
+              autoComplete="off"
               placeholder="$1,000"
             />
           </div>

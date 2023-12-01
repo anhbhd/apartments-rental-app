@@ -62,8 +62,12 @@
     }
   }
 }
-@media (max-width: 320px) {
+@media (max-width: $mobile-width) {
   .rental-app-content {
     padding: 2rem;
+    &__info .line,
+    &__tenant-info .line {
+      grid-template-columns: 8rem 1fr;
+    }
   }
 }

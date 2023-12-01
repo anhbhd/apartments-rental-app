@@ -69,7 +69,7 @@ const Filterbar: React.FC<IFilterbarProps> = ({ setFilter }) => {
             onChange={handleChangeKeyword}
             id="default-search"
             className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 dark:focus:ring-blue-500 "
-            placeholder="Search Mockups, Logos..."
+            placeholder="Search by name"
           />
         </div>
       </div>

@@ -18,14 +18,18 @@ import FullLoadingScreen from "../../utils/FullLoadingScreen/FullLoadingScreen";
 import { getDataCollection } from "../../services/getDataCollection";
 import { mapCollectionToArrayObject } from "../../utils/Mapper";
 import { paginate } from "../../utils/paginate";
+import { useMediaQuery } from "@react-hook/media-query";
 
 const initialFilterValue: FilterbarType = {
   sortby: SortBy.ALL,
   keyword: "",
   categories: [],
   price: {
-    from: "",
-    to: "",
+    from: { value: "", displayValue: "" },
+    to: {
+      value: "",
+      displayValue: "",
+    },
   },
   canBeRented: "",
   stars: 0,
@@ -50,9 +54,25 @@ const ApartmentsList: React.FC = () => {
     []
   );
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const itemsPerPage = 4;
+  const [itemsPerPage, setItemsPerPage] = useState(6); // Default items per page
 
-  console.log(apartmentListFilter);
+  const isSmallScreen = useMediaQuery("(max-width: 767px)");
+  const isMediumScreen = useMediaQuery(
+    "(min-width: 768px) and (max-width: 1023px)"
+  );
+  const isLargeScreen = useMediaQuery("(min-width: 1024px)");
+
+  useEffect(() => {
+    // Adjust items per page based on the breakpoint
+    if (isSmallScreen) {
+      setItemsPerPage(3);
+    } else if (isMediumScreen) {
+      setItemsPerPage(4);
+    } else if (isLargeScreen) {
+      setItemsPerPage(6);
+    }
+    // You can customize the breakpoints and items per page values as needed
+  }, [isSmallScreen, isMediumScreen, isLargeScreen]);
 
   useEffect(() => {
     async function fetchApartmentsData(): Promise<[Apartment[], number]> {
@@ -63,18 +83,18 @@ const ApartmentsList: React.FC = () => {
 
       setApartments(apartmentsData);
       setTotalItems(totalItem);
-      // !!Paginate
+      // todo Paginate
       setItemDisplayOnPage(paginate(apartmentsData, currentPage, itemsPerPage));
       setIsLoading(false);
     };
 
     getAllApartments();
-  }, []);
+  }, [itemsPerPage]);
 
   useEffect(() => {
-    // !!Paginate
+    // todo Paginate
     setItemDisplayOnPage(paginate(apartments, currentPage, itemsPerPage));
-  }, [currentPage]);
+  }, [currentPage, itemsPerPage]);
 
   const handleSearch = async () => {
     try {
@@ -121,17 +141,19 @@ const ApartmentsList: React.FC = () => {
         );
       }
       //todo Filter by price range
-      if (apartmentListFilter.price.from) {
+      if (apartmentListFilter.price.from.value) {
         apartmentsData = apartmentsData.filter(
           (apartment) =>
-            apartment.pricePerMonth >= Number(apartmentListFilter.price.from)
+            apartment.pricePerMonth >=
+            Number(apartmentListFilter.price.from.value)
         );
       }
 
-      if (apartmentListFilter.price.to) {
+      if (apartmentListFilter.price.to.value) {
         apartmentsData = apartmentsData.filter(
           (apartment) =>
-            apartment.pricePerMonth <= Number(apartmentListFilter.price.to)
+            apartment.pricePerMonth <=
+            Number(apartmentListFilter.price.to.value)
         );
       }
       if (apartmentListFilter.canBeRented) {
@@ -179,7 +201,7 @@ const ApartmentsList: React.FC = () => {
 
     scrollToTop();
   }, [apartments, currentPage]);
-  console.log(apartmentListFilter);
+
   return (
     <main className="aparments-list">
       <div className="aparments-list__textheader">

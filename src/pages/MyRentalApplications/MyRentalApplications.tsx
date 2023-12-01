@@ -10,18 +10,27 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../config/firebase_config";
 import FullLoadingScreen from "../../utils/FullLoadingScreen/FullLoadingScreen";
 import { Option } from "../../type/Option";
-import { RentAppStatus } from "../../common/constants/RentalAppStatus";
+import Pagination from "../../components/ApartmentsList/Pagination/Pagination";
+import { paginate } from "../../utils/paginate";
 
 const MyRentalApplications = () => {
   const [rentalApps, setRentalApps] = useState<RentalApplication[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>();
   const { currentUser } = useAuth();
   const [filter, setFilter] = useState<Option>({
-    value: RentAppStatus.PENDING,
-    label: "Pending",
+    value: "",
+    label: "All",
   });
+  const [totalItems, setTotalItems] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [rentalAppDisplayed, setRentalAppsDisplayed] = useState<
+    RentalApplication[]
+  >([]);
+  const itemsPerPage = 5;
+
   useEffect(() => {
     const fetchRentalApps = async () => {
+      setLoading(true);
       const rentalAppsCollectionRef = collection(db, "rentalApplications");
 
       try {
@@ -31,12 +40,15 @@ const MyRentalApplications = () => {
         );
 
         const rentalApplicationCollectionSnapshot = await getDocs(q);
+        setTotalItems(rentalApplicationCollectionSnapshot.size);
         let applicationsData: RentalApplication[] = mapCollectionToArrayObject(
           rentalApplicationCollectionSnapshot
         );
-        applicationsData = applicationsData.filter(
-          (app) => app.status === filter.value
-        );
+        if (filter.value) {
+          applicationsData = applicationsData.filter(
+            (app) => app.status === filter.value
+          );
+        }
         setRentalApps(applicationsData);
         setLoading(false);
       } catch (err: any) {
@@ -44,7 +56,15 @@ const MyRentalApplications = () => {
       }
     };
     fetchRentalApps();
-  }, [currentUser.uid, filter]);
+  }, [currentUser, filter.value]);
+
+  function handlePageChange(page: number): void {
+    setCurrentPage(page);
+  }
+
+  useEffect(() => {
+    setRentalAppsDisplayed(paginate(rentalApps, currentPage, itemsPerPage));
+  }, [currentPage, rentalApps]);
 
   return (
     <main className="my-rental-app">
@@ -56,7 +76,16 @@ const MyRentalApplications = () => {
 
       {!loading && (
         <>
-          <ApplicationsList filter={filter} rentalApps={rentalApps} />
+          <ApplicationsList filter={filter} rentalApps={rentalAppDisplayed} />
+
+          {rentalAppDisplayed.length > itemsPerPage && (
+            <Pagination
+              totalItems={totalItems}
+              itemsPerPage={itemsPerPage}
+              initialPage={1}
+              onPageChange={handlePageChange}
+            />
+          )}
         </>
       )}
     </main>

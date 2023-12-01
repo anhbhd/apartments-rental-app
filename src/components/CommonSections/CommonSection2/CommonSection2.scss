@@ -96,6 +96,11 @@
     gap: 8rem;
   }
 }
+@media (max-width: $tablet-width) {
+  .common-section-2 {
+    flex-direction: column;
+  }
+}
 @media (max-width: $mobile-width) {
   .common-section-2 {
     padding: 8rem 3rem;
