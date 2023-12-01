@@ -1,11 +1,10 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, FormEvent, useState } from "react";
 
 import "./Login.scss";
 import GoogleIcon from "../../icons/GoogleIcon";
 import { Link, useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, db, provider } from "../../config/firebase_config";
-import { useAuth } from "../../context/AuthContext";
 import { emailRegex } from "../../utils/regex";
 import {
   Timestamp,
@@ -20,74 +19,81 @@ import {
 import FullLoadingScreen from "../../utils/FullLoadingScreen/FullLoadingScreen";
 import { toast } from "react-toastify";
 import { User } from "../../type/User";
+import * as Yup from "yup";
+import { useFormik } from "formik";
+
+const validationSchema = Yup.object({
+  email: Yup.string()
+    .matches(emailRegex)
+    .email("Invalid email address")
+    .required("Email is required"),
+  password: Yup.string()
+    .min(8, "Password must be at least 8 characters")
+    .required("Password is required"),
+});
 
 const Login = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isValidEmail, setIsValidEmail] = useState(true);
   const [isLogging, setIsLogging] = useState<boolean>(false);
-  const validateEmail = (email: string): boolean => {
-    return emailRegex.test(email);
-  };
 
-  const handleSubmit = async (event: FormEvent) => {
-    event.preventDefault();
+  const { values, errors, touched, handleChange, handleBlur, handleSubmit } =
+    useFormik({
+      initialValues: {
+        email: "",
+        password: "",
+      },
+      validationSchema,
+      onSubmit: async (values) => {
+        setIsLogging(true);
+        try {
+          const usersRef = collection(db, "users");
+          let q = query(usersRef, where("email", "==", values.email));
+          const firstDocSnapshot = (await getDocs(q)).docs.at(0);
+          if (firstDocSnapshot) {
+            const user = {
+              ...firstDocSnapshot.data(),
+              id: firstDocSnapshot.id,
+            } as User;
 
-    if (isValidEmail && email && password) {
-      setIsLogging(true);
-      try {
-        const usersRef = collection(db, "users");
-        let q = query(usersRef, where("email", "==", email));
-        const firstDocSnapshot = (await getDocs(q)).docs.at(0);
-        if (firstDocSnapshot) {
-          const user = {
-            ...firstDocSnapshot.data(),
-            id: firstDocSnapshot.id,
-          } as User;
+            if (!user.active)
+              throw new Error(
+                "Your account has been deactivate by administrator"
+              );
+          }
+          await signInWithEmailAndPassword(auth, values.email, values.password)
+            .then((userCredential) => {
+              // Signed in
 
-          if (!user.active)
-            throw new Error(
-              "Your account has been deactivate by administrator"
-            );
-        }
-        await signInWithEmailAndPassword(auth, email, password)
-          .then((userCredential) => {
-            // Signed in
+              setIsLogging(false);
+              navigate("/");
+              toast.success("Login successfully!", {
+                position: "bottom-right",
+                autoClose: 1500,
+                style: { fontSize: "1.5rem" },
+              });
+            })
+            .catch((error: any) => {
+              toast.error("Email or Password is not correct", {
+                position: "bottom-right",
+                style: {
+                  fontSize: "1.4rem",
+                },
+              });
 
-            setIsLogging(false);
-            navigate("/");
-            toast.success("Login successfully!", {
-              position: "bottom-right",
-              autoClose: 1500,
-              style: { fontSize: "1.5rem" },
+              setIsLogging(false);
             });
-          })
-          .catch((error: any) => {
-            toast.error("Email or Password is not correct", {
-              position: "bottom-right",
-              style: {
-                fontSize: "1.4rem",
-              },
-            });
-
-            setIsLogging(false);
+        } catch (err: any) {
+          toast.error(err.message, {
+            position: "bottom-right",
+            style: {
+              fontSize: "1.4rem",
+            },
           });
-      } catch (err: any) {
-        toast.error(err.message, {
-          position: "bottom-right",
-          style: {
-            fontSize: "1.4rem",
-          },
-        });
-      } finally {
-        setIsLogging(false);
-      }
-    } else {
-      setIsValidEmail(false);
-      return;
-    }
-  };
+        } finally {
+          setIsLogging(false);
+        }
+      },
+    });
 
   const handleSignInWithGoogle = async () => {
     try {
@@ -112,27 +118,7 @@ const Login = () => {
         });
       }
     } catch (err: any) {
-      toast.error(err.message, {
-        position: "bottom-right",
-        style: {
-          fontSize: "1.4rem",
-        },
-      });
-    }
-  };
-
-  const handleChangeField = (event: ChangeEvent<HTMLInputElement>): void => {
-    const name = event.target.name;
-
-    switch (name) {
-      case "email":
-        const enteredEmail = event.target.value;
-        setEmail(enteredEmail);
-        setIsValidEmail(validateEmail(enteredEmail));
-        break;
-      case "password":
-        setPassword(event.target.value);
-        break;
+      console.error(err.message);
     }
   };
 
@@ -146,38 +132,43 @@ const Login = () => {
             Sign in with your account and discover our features.
           </p>
         </div>
+        {/* className={`${!isValidEmail && "invalid"}`} */}
         <form onSubmit={handleSubmit}>
           <div className="login__field">
             <label>Email</label>
             <input
-              className={`${!isValidEmail && "invalid"}`}
+              className={`${errors.email && "invalid"}`}
               type="text"
-              onChange={handleChangeField}
               placeholder="Enter Email"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.email}
               name="email"
-              value={email}
             />
-            <p className="error-msg-form">{!isValidEmail && "Invalid email"}</p>
+            {touched.email && errors.email ? (
+              <p className="error-msg-form">Please input a valid email</p>
+            ) : null}
           </div>
 
           <div className="login__field">
             <label>Password</label>
             <input
+              className={`${errors.password && "invalid"}`}
               type="password"
               placeholder="Enter Password"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.password}
               name="password"
-              onChange={handleChangeField}
-              value={password}
             />
+            {touched.password && errors.password ? (
+              <p className="error-msg-form">{errors.password}</p>
+            ) : null}
           </div>
           <Link className="create-account" to="/signup">
             Create an account
           </Link>
-          <button
-            disabled={!isValidEmail}
-            className="login__signin-button"
-            type="submit"
-          >
+          <button className="login__signin-button" type="submit">
             Sign in
           </button>
           <p className="login__text-or">OR</p>

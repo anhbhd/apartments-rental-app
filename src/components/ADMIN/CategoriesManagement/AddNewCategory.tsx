@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, Input, Modal } from "antd";
 import { addDocument } from "../../../services/addDocument";
 import { Category } from "../../../type/Category";

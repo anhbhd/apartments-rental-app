@@ -226,7 +226,7 @@ const ApartmentDetails = () => {
 
   useEffect(() => {
     const fetchRelatedList = async () => {
-      const data: Apartment[] = [];
+      let apartmentsData: Apartment[] = [];
       try {
         if (apartment) {
           const apartmentsCollectionRef = collection(db, "apartments");
@@ -240,17 +240,12 @@ const ApartmentDetails = () => {
 
           const apartmentsCollectionSnapshot = await getDocs(q);
 
-          apartmentsCollectionSnapshot.docs.forEach((doc) => {
-            if (doc.id !== apartmentId) {
-              data.push({
-                ...(doc.data() as Apartment),
-                id: doc.id as string,
-              });
-            }
-          });
+          apartmentsData = mapCollectionToArrayObject(
+            apartmentsCollectionSnapshot
+          );
         }
 
-        setRelatedList(data);
+        setRelatedList(apartmentsData);
       } catch (err: any) {
         console.error(err);
       }
@@ -291,8 +286,6 @@ const ApartmentDetails = () => {
     };
     fetchCurrentApartmentStatus();
   }, [apartmentId, currentUser, successfulRent]);
-
-  // console.log(thisApartmentStatus);
 
   const handleClickRentBtn = () => {
     if (!currentUser) {

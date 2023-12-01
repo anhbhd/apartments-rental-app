@@ -5,8 +5,8 @@ export type FilterbarType = {
   keyword: string;
   categories: string[];
   price: {
-    from: number;
-    to: number;
+    from: string;
+    to: string;
   };
   canBeRented: string;
   stars: number;

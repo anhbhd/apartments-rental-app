@@ -1,77 +1,50 @@
-import React, { useState, ChangeEvent, FormEvent } from "react";
-
 import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, db, provider } from "./../../config/firebase_config";
 import "./Register.scss";
 import GoogleIcon from "../../icons/GoogleIcon";
 import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
 import { Link, useNavigate } from "react-router-dom";
-import { emailRegex } from "../../utils/regex";
 import { User } from "../../type/User";
 import { toast } from "react-toastify";
 import FullLoadingScreen from "../../utils/FullLoadingScreen/FullLoadingScreen";
-
-interface FormInputs {
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
-
-const initialFormState: FormInputs = {
-  email: "",
-  password: "",
-  confirmPassword: "",
-};
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 const Register: React.FC = () => {
-  const [formInputs, setFormInputs] = useState<FormInputs>(initialFormState);
-
-  const [emailError, setEmailError] = useState<string>("");
-  const [passwordError, setPasswordError] = useState<string>("");
-  const [confirmPasswordError, setConfirmPasswordError] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required"),
+    password: Yup.string()
+      .min(8, "Password must be at least 8 characters")
+      .required("Password is required"),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref("password")], "Passwords must match")
+      .required("Confirm Password is required"),
+  });
   const navigate = useNavigate();
-  const validateEmail = () => {
-    setEmailError(
-      !emailRegex.test(formInputs.email) ? "Invalid email address" : ""
-    );
-  };
 
-  const validatePassword = () => {
-    setPasswordError(
-      formInputs.password.length < 8
-        ? "Password must be at least 8 characters"
-        : ""
-    );
-  };
-
-  const validateConfirmPassword = () => {
-    setConfirmPasswordError(
-      formInputs.password !== formInputs.confirmPassword
-        ? "Passwords do not match"
-        : ""
-    );
-  };
-
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormInputs({ ...formInputs, [name]: value });
-  };
-
-  const handleRegisterFormSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-
-    validateEmail();
-    validatePassword();
-    validateConfirmPassword();
-    if (JSON.stringify(initialFormState) === JSON.stringify(formInputs)) return;
-    setIsLoading(true);
-    if (!emailError && !passwordError && !confirmPasswordError) {
+  const {
+    values,
+    errors,
+    touched,
+    handleBlur,
+    handleChange,
+    handleSubmit,
+    isSubmitting,
+  } = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+    validationSchema,
+    onSubmit: async (values) => {
       try {
         const response = await createUserWithEmailAndPassword(
           auth,
-          formInputs.email,
-          formInputs.password
+          values.email,
+          values.password
         );
         const userDocRef = doc(db, `users/${response.user.uid}`);
 
@@ -89,17 +62,15 @@ const Register: React.FC = () => {
         });
 
         navigate("/");
-      } catch (err: any) {
+      } catch (err) {
         toast.error("Email is already used!", {
           position: "bottom-right",
           autoClose: 1500,
           style: { fontSize: "15px" },
         });
-      } finally {
-        setIsLoading(false);
       }
-    }
-  };
+    },
+  });
 
   const handleSignInWithGoogle = async () => {
     try {
@@ -126,18 +97,13 @@ const Register: React.FC = () => {
         });
       }
     } catch (err: any) {
-      toast.error(err.message, {
-        position: "bottom-right",
-        style: {
-          fontSize: "1.4rem",
-        },
-      });
+      console.error(err.message);
     }
   };
 
   return (
     <div className="registerpage">
-      {isLoading && <FullLoadingScreen />}
+      {isSubmitting && <FullLoadingScreen />}
       <div className="register">
         <div className="register__text-header">
           <h3 className="register__text-header--text-lg">Create account</h3>
@@ -145,50 +111,62 @@ const Register: React.FC = () => {
             Create an account to find out some more of our interesting features.
           </p>
         </div>
-        <form onSubmit={handleRegisterFormSubmit}>
+        <form onSubmit={handleSubmit}>
           <div className="register__field">
             <label>Email</label>
             <input
-              className={`${emailError && "invalid"}`}
               type="text"
               placeholder="Enter Email"
               name="email"
-              value={formInputs.email}
-              onChange={handleInputChange}
-              onBlur={validateEmail}
+              value={values.email}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              className={touched.email && errors.email ? "invalid" : ""}
             />
-            <p className="error-msg-form">{emailError}</p>
+            <p className="error-msg-form">{touched.email && errors.email}</p>
           </div>
           <div className="register__field">
             <label>Password</label>
             <input
-              className={`${passwordError && "invalid"}`}
               type="password"
               placeholder="Enter Password"
               name="password"
-              value={formInputs.password}
-              onChange={handleInputChange}
-              onBlur={validatePassword}
+              value={values.password}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              className={touched.password && errors.password ? "invalid" : ""}
             />
-            <p className="error-msg-form ">{passwordError}</p>
+            <p className="error-msg-form">
+              {touched.password && errors.password}
+            </p>
           </div>
           <div className="register__field">
             <label>Confirm Password</label>
             <input
-              className={`${confirmPasswordError && "invalid"}`}
               type="password"
               placeholder="Re-enter Password"
               name="confirmPassword"
-              value={formInputs.confirmPassword}
-              onChange={handleInputChange}
-              onBlur={validateConfirmPassword}
+              value={values.confirmPassword}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              className={
+                touched.confirmPassword && errors.confirmPassword
+                  ? "invalid"
+                  : ""
+              }
             />
-            <p className="error-msg-form">{confirmPasswordError}</p>
+            <p className="error-msg-form">
+              {touched.confirmPassword && errors.confirmPassword}
+            </p>
           </div>
           <Link className="login-link" to="/login">
             Already have an account?
           </Link>
-          <button className="register__register-button" type="submit">
+          <button
+            className="register__register-button"
+            type="submit"
+            disabled={isSubmitting}
+          >
             Sign up
           </button>
           <p className="register__text-or">OR</p>

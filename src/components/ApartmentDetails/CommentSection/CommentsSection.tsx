@@ -9,9 +9,6 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../../config/firebase_config";
 import { Apartment } from "../../../type/Apartment";
 import { RentAppStatus } from "../../../common/constants/RentalAppStatus";
-import { mapCollectionToArrayObject } from "../../../utils/Mapper";
-import { calculateAverageStars } from "../../../utils/calculateAverageStars";
-import { updateDocument } from "../../../services/updateDocument";
 
 interface ICommentsSectionProps {
   reviews: Review[];

@@ -60,25 +60,39 @@ const UserAuthContextProvider = ({
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       const userData: User = await getDocument("users", user?.uid as string);
 
-      setCredentialUserForApp(
-        user && userData.active
-          ? {
-              uid: user.uid as string,
-              email: user.email as string,
-              displayName: user.displayName as string,
-              photoURL: user.photoURL as string,
-              isAdmin: userData.isAdmin as boolean,
-            }
-          : null
-      );
+      if (userData) {
+        setCredentialUserForApp(
+          user && userData.active
+            ? {
+                uid: user.uid as string,
+                email: user.email as string,
+                displayName: user.displayName as string,
+                photoURL: user.photoURL as string,
+                isAdmin: userData.isAdmin as boolean,
+              }
+            : null
+        );
 
-      if (user && !userData?.active) {
-        toast.error("Your account has been deactivate by administrator :(", {
-          position: "bottom-right",
-          autoClose: 1500,
-          style: { fontSize: "15px" },
-        });
-        logout();
+        if (user && !userData?.active) {
+          toast.error("Your account has been deactivate by administrator :(", {
+            position: "bottom-right",
+            autoClose: 1500,
+            style: { fontSize: "15px" },
+          });
+          logout();
+        }
+      } else {
+        setCredentialUserForApp(
+          user
+            ? {
+                uid: user.uid as string,
+                email: user.email as string,
+                displayName: user.displayName as string,
+                photoURL: user.photoURL as string,
+                isAdmin: false,
+              }
+            : null
+        );
       }
     });
 

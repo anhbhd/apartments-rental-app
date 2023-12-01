@@ -24,8 +24,8 @@ const initialFilterValue: FilterbarType = {
   keyword: "",
   categories: [],
   price: {
-    from: 0,
-    to: 0,
+    from: "",
+    to: "",
   },
   canBeRented: "",
   stars: 0,
@@ -124,13 +124,14 @@ const ApartmentsList: React.FC = () => {
       if (apartmentListFilter.price.from) {
         apartmentsData = apartmentsData.filter(
           (apartment) =>
-            apartment.pricePerMonth >= apartmentListFilter.price.from
+            apartment.pricePerMonth >= Number(apartmentListFilter.price.from)
         );
       }
 
       if (apartmentListFilter.price.to) {
         apartmentsData = apartmentsData.filter(
-          (apartment) => apartment.pricePerMonth <= apartmentListFilter.price.to
+          (apartment) =>
+            apartment.pricePerMonth <= Number(apartmentListFilter.price.to)
         );
       }
       if (apartmentListFilter.canBeRented) {
@@ -178,6 +179,7 @@ const ApartmentsList: React.FC = () => {
 
     scrollToTop();
   }, [apartments, currentPage]);
+  console.log(apartmentListFilter);
   return (
     <main className="aparments-list">
       <div className="aparments-list__textheader">

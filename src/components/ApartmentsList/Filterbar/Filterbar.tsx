@@ -48,8 +48,8 @@ const Filterbar = ({
     { label: "All", value: 0 },
   ]);
 
-  const [minPrice, setMinPrice] = useState<number | string>("");
-  const [maxPrice, setMaxPrice] = useState<number | string>("");
+  const [minPrice, setMinPrice] = useState<string>("");
+  const [maxPrice, setMaxPrice] = useState<string>("");
   const [textSearch, setTextSearch] = useState<string>("");
 
   const [checkboxIdsChecked, setCheckboxIdsChecked] = useState<string[]>([]);
@@ -147,25 +147,25 @@ const Filterbar = ({
   };
 
   const handleChangeMinValue = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setMinPrice(Number(event.target.value));
+    setMinPrice(event.target.value);
     onChangeFilter((prevFilter) => {
       return {
         ...prevFilter,
         price: {
           ...prevFilter.price,
-          from: Number(event.target.value),
+          from: event.target.value,
         },
       };
     });
   };
   const handleChangeMaxValue = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setMaxPrice(Number(event.target.value));
+    setMaxPrice(event.target.value);
     onChangeFilter((prevFilter) => {
       return {
         ...prevFilter,
         price: {
           ...prevFilter.price,
-          to: Number(event.target.value),
+          to: event.target.value,
         },
       };
     });
@@ -309,21 +309,29 @@ const Filterbar = ({
         <p className="field-label">Find by Price</p>
         <div className="price-range-container">
           <div className="price-range-item">
-            <p className="from-label">From</p>
+            <p className="from-label">Min price</p>
             <input
+              type="text"
               onChange={handleChangeMinValue}
-              type="number"
-              placeholder="Min"
               value={minPrice}
+              name="currency-field"
+              id="currency-field"
+              pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"
+              data-type="currency"
+              placeholder="$100"
             />
           </div>
           <div className="price-range-item">
-            <p className="to-label">To</p>
+            <p className="to-label">Max price</p>
             <input
+              type="text"
               onChange={handleChangeMaxValue}
-              type="number"
-              placeholder="Max"
               value={maxPrice}
+              name="currency-field"
+              id="currency-field"
+              pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"
+              data-type="currency"
+              placeholder="$1,000"
             />
           </div>
         </div>
