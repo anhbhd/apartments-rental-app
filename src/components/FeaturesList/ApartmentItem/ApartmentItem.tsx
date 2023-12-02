@@ -4,7 +4,7 @@ import { BiBed, BiBath, BiHomeAlt } from "react-icons/bi";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { Apartment } from "../../../type/Apartment";
 import "./ApartmentItem.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import {
   Timestamp,
@@ -18,6 +18,8 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../../../config/firebase_config";
+import { StarFilled } from "@ant-design/icons";
+import { toast } from "react-toastify";
 interface IApartmentProps {
   className?: string;
   apartment: Apartment;
@@ -28,7 +30,7 @@ const ApartmentItem = ({ className, apartment }: IApartmentProps) => {
   const [like, setLike] = useState<boolean>(false);
   const { currentUser } = useAuth();
   const [category, setCategory] = useState<string>("");
-
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchCategoryName = async () => {
       try {
@@ -75,7 +77,16 @@ const ApartmentItem = ({ className, apartment }: IApartmentProps) => {
     if (currentUser) {
       setLike(false);
       await deleteDoc(doc(db, "wishlist", wishlistItemId as string));
-    } else return;
+    } else {
+      toast.info("You need to login first", {
+        position: "bottom-right",
+        style: {
+          fontSize: "1.4rem",
+        },
+        autoClose: 1500,
+      });
+      navigate("/login");
+    }
   };
   const handleLikeItem = async () => {
     if (currentUser) {
@@ -85,7 +96,16 @@ const ApartmentItem = ({ className, apartment }: IApartmentProps) => {
         createdDate: Timestamp.now(),
         apartmentId: apartment.id,
       });
-    } else return;
+    } else {
+      toast.info("You need to login first", {
+        position: "bottom-right",
+        style: {
+          fontSize: "1.4rem",
+        },
+        autoClose: 1500,
+      });
+      navigate("/login");
+    }
     // console.log(newDoc);
   };
 
@@ -96,6 +116,12 @@ const ApartmentItem = ({ className, apartment }: IApartmentProps) => {
         <span className="price-per-month">
           <strong>${apartment.pricePerMonth}/</strong>mo
         </span>
+        {apartment.avgRate && (
+          <span className="stars-rated">
+            <strong>{apartment.avgRate}</strong>
+            <StarFilled style={{ color: "gold" }} />
+          </span>
+        )}
       </div>
       {/* delemiter */}
       <div className="feature-item__info">

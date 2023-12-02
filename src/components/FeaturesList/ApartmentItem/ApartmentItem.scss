@@ -26,7 +26,8 @@
       object-fit: cover;
       transition: transform 1s ease;
     }
-    .price-per-month {
+    .price-per-month,
+    .stars-rated {
       position: absolute;
       background-color: $background-white;
       padding: 1rem 2rem;
@@ -34,6 +35,14 @@
       bottom: 1.5rem;
       left: 1.5rem;
       border-radius: 1rem;
+    }
+    .stars-rated {
+      padding: 1rem;
+      right: 1.5rem;
+      left: unset;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
   }
 

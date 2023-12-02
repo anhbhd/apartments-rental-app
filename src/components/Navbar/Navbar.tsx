@@ -7,6 +7,7 @@ import { useAuth } from "../../context/AuthContext";
 import MenuIcon from "../../icons/MenuIcon";
 import { IoCloseSharp } from "react-icons/io5";
 import anonyImg from "./../../assets/anonymous-avatarjpg.jpg";
+import { toast } from "react-toastify";
 
 interface BackdropProps {
   onClose: () => void;
@@ -28,6 +29,15 @@ const Navbar = () => {
   useEffect(() => {
     closeMenu(); // Close the menu when the route changes
   }, [pathname]);
+
+  const handleLogout = () => {
+    logout();
+    toast.success("Logout successfully!", {
+      position: "bottom-right",
+      style: { fontSize: "15px" },
+      autoClose: 1500,
+    });
+  };
 
   return (
     <nav className="navbar">
@@ -65,7 +75,7 @@ const Navbar = () => {
             )}
 
             <li className="logout-btn">
-              <button onClick={() => logout()}>Logout</button>
+              <button onClick={handleLogout}>Logout</button>
             </li>
           </>
         )}

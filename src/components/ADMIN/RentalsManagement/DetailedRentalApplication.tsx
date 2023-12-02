@@ -196,86 +196,103 @@ const DetailedRentalApplication: React.FC<IDetailedRentalApplicationProps> = ({
       >
         <div className="max-h-96  py-10">
           <Row>
-            <Col span={5}>
+            <Col span={8}>
               <div className="font-bold">ID</div>
             </Col>
-            <Col span={15}>
+            <Col offset={2} span={12}>
               <div>{rentalApp.id}</div>
             </Col>
           </Row>
           <Row>
-            <Col span={5}>
+            <Col span={8}>
               <div className="font-bold">Created date</div>
             </Col>
-            <Col span={15}>
+            <Col offset={2} span={12}>
               <div>{secondsToDateTime(rentalApp.createdDate.seconds)}</div>
             </Col>
           </Row>
           <Row>
-            <Col span={5}>
+            <Col span={8}>
               <div className="font-bold">Start date</div>
             </Col>
-            <Col span={15}>
+            <Col offset={2} span={12}>
               <div>{secondsToDateTime(rentalApp.startDate.seconds)}</div>
             </Col>
           </Row>
           <Row>
-            <Col span={5}>
+            <Col span={8}>
               <div className="font-bold">End date</div>
             </Col>
-            <Col span={15}>
+            <Col offset={2} span={12}>
               <div>{secondsToDateTime(rentalApp.endDate.seconds)}</div>
             </Col>
           </Row>
           <Row>
-            <Col span={5}>
+            <Col span={8}>
               <div className="font-bold">Customer name</div>
             </Col>
-            <Col span={15}>
+            <Col offset={2} span={12}>
               <div>{rentalApp.customerName}</div>
             </Col>
           </Row>
           <Row>
-            <Col span={5}>
+            <Col span={8}>
               <div className="font-bold">Year of Birth</div>
             </Col>
-            <Col span={15}>
+            <Col offset={2} span={12}>
               <div>{user?.yearOfBirth}</div>
             </Col>
           </Row>
           <Row>
-            <Col span={5}>
+            <Col span={8}>
               <div className="font-bold">Phone number</div>
             </Col>
-            <Col span={15}>
+            <Col offset={2} span={12}>
               <div>{user?.phoneNumber}</div>
             </Col>
           </Row>
           <Row>
-            <Col span={5}>
+            <Col span={8}>
               <div className="font-bold">Email</div>
             </Col>
-            <Col span={15}>
+            <Col offset={2} span={12}>
               <div>{user?.email}</div>
             </Col>
           </Row>
           <Row>
-            <Col span={5}>
+            <Col span={8}>
               <div className="font-bold">Deposit</div>
             </Col>
-            <Col span={15}>
+            <Col offset={2} span={12}>
               <div>
                 <Tag bordered={false} color="processing">
-                  $ {apartment?.depositMoney}
+                  $ {rentalApp?.depositMoneyAtRentalTime}
                 </Tag>
               </div>
             </Col>
           </Row>
           <Row>
-            <Col span={5}>
+            <Col span={8}>
+              <div className="font-bold">
+                Price/month
+                <span className="font-light">
+                  (this is going to be added to revenue this month)
+                </span>
+              </div>
+            </Col>
+            <Col offset={2} span={12}>
+              <div>
+                <Tag bordered={false} color="success">
+                  $ {rentalApp?.pricePerMoAtRentalTime}
+                </Tag>
+              </div>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={8}>
               <div className="font-bold">Status</div>
             </Col>
-            <Col span={15}>
+            <Col offset={2} span={12}>
               <Tag
                 bordered={false}
                 color={
@@ -295,10 +312,10 @@ const DetailedRentalApplication: React.FC<IDetailedRentalApplicationProps> = ({
             </Col>
           </Row>
           <Row>
-            <Col span={5}>
+            <Col span={8}>
               <div className="font-bold">Note</div>
             </Col>
-            <Col span={15}>
+            <Col offset={2} span={12}>
               <div>
                 <Paragraph
                   editable={{
@@ -323,7 +340,7 @@ const DetailedRentalApplication: React.FC<IDetailedRentalApplicationProps> = ({
           </Row>
           <Row>
             <Col span={20}>
-              <div className="font-semibold text-red-200  ">
+              <div className="font-semibold text-red-400">
                 <Link to={`/admin/apartments/add_or_edit/${apartment?.id}`}>
                   Link to edit apartment info
                 </Link>

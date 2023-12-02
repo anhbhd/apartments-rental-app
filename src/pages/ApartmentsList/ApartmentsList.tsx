@@ -56,7 +56,7 @@ const ApartmentsList: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [itemsPerPage, setItemsPerPage] = useState(6); // Default items per page
 
-  const isSmallScreen = useMediaQuery("(max-width: 767px)");
+  const isSmallScreen = useMediaQuery("(max-width: 768px)");
   const isMediumScreen = useMediaQuery(
     "(min-width: 768px) and (max-width: 1023px)"
   );
@@ -85,7 +85,9 @@ const ApartmentsList: React.FC = () => {
       setTotalItems(totalItem);
       // todo Paginate
       setItemDisplayOnPage(paginate(apartmentsData, currentPage, itemsPerPage));
-      setIsLoading(false);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
     };
 
     getAllApartments();

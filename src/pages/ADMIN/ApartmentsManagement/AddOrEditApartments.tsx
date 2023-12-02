@@ -269,7 +269,7 @@ const AddApartments = () => {
   }, []);
 
   return (
-    <div className="p-6 sm:ml-6 mt-24">
+    <div className="p-6 mb-10 mt-24">
       <Modal
         title="Alert"
         open={isOpenModal}
@@ -753,6 +753,7 @@ const AddApartments = () => {
 
         <Button
           size="large"
+          type="primary"
           htmlType="submit"
           disabled={isSubmitting}
           loading={isSubmitting}

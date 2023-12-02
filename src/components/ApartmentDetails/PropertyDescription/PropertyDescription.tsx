@@ -14,25 +14,24 @@ const PropertyDescription = ({
 }: IPropertyDescriptionProps) => {
   const [cityName, setCityName] = useState<string>("");
   const [district, setDistrictName] = useState<string>("");
+  const fetchCityName = async () => {
+    try {
+      const provinceRes = await fetch(
+        `https://provinces.open-api.vn/api/p/${apartment.city}`
+      );
+      const provinceData = await provinceRes.json();
+      setCityName(provinceData.name);
 
+      const districtRes = await fetch(
+        `https://provinces.open-api.vn/api/d/${apartment.district}`
+      );
+      const districtData = await districtRes.json();
+      setDistrictName(districtData.name);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
   useEffect(() => {
-    const fetchCityName = async () => {
-      try {
-        const provinceRes = await fetch(
-          `https://provinces.open-api.vn/api/p/${apartment.city}`
-        );
-        const provinceData = await provinceRes.json();
-        setCityName(provinceData.name);
-
-        const districtRes = await fetch(
-          `https://provinces.open-api.vn/api/d/${apartment.district}`
-        );
-        const districtData = await districtRes.json();
-        setDistrictName(districtData.name);
-      } catch (err: any) {
-        console.error(err.message);
-      }
-    };
     fetchCityName();
   }, [apartment]);
 
@@ -145,9 +144,9 @@ const PropertyDescription = ({
           ></div>
         </div>
       </div>
-      <section className="features-amenities">
+      {/* <section className="features-amenities">
         <h3 className="features-amenities__title">Features & Amenities</h3>
-      </section>
+      </section> */}
     </section>
   );
 };

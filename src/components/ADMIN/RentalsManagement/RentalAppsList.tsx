@@ -40,7 +40,8 @@ export interface RentalAppRow {
   apartmentId: string;
   tenantId: string;
   customerName: string;
-  depositMoney: number;
+  depositMoneyAtRentalTime: number;
+  pricePerMoAtRentalTime: number;
   note: string;
   status: string;
   startDate: FirebaseDate;
@@ -151,6 +152,7 @@ const RentalAppsList: React.FC<IRentalAppsListProps> = ({ category }) => {
       if (status === RentAppStatus.RENTING) {
         await updateDocument("rentalApplications", id, {
           status,
+          contractSigned: true,
         });
 
         await updateDocument("apartments", apartmentId, {
@@ -261,6 +263,7 @@ const RentalAppsList: React.FC<IRentalAppsListProps> = ({ category }) => {
     setRentalApplicationRows(newRentalRowsData);
     await updateDocument("rentalApplications", rentalAppId, {
       status: RentAppStatus.CANCELED,
+      endDate: Timestamp.now(),
     });
     toast.success("Move to cancel list successfully!", {
       position: "bottom-right",
@@ -280,6 +283,7 @@ const RentalAppsList: React.FC<IRentalAppsListProps> = ({ category }) => {
     setRentalApplicationRows(newRentalRowsData);
     await updateDocument("rentalApplications", rentalAppId, {
       status: RentAppStatus.CANCELED,
+      endDate: Timestamp.now(),
     });
     await updateDocument("apartments", apartmentId, {
       rented: false,
@@ -411,11 +415,11 @@ const RentalAppsList: React.FC<IRentalAppsListProps> = ({ category }) => {
       title: "Deposit money",
       dataIndex: "depositMoney",
       render: (_: any, record: RentalAppRow) => (
-        <Tag color="cyan">${record.depositMoney}</Tag>
+        <Tag color="cyan">${record.depositMoneyAtRentalTime}</Tag>
       ),
 
       sorter: (a: RentalAppRow, b: RentalAppRow) =>
-        a.depositMoney - b.depositMoney,
+        a.depositMoneyAtRentalTime - b.depositMoneyAtRentalTime,
     },
     {
       title: "Actions",

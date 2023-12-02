@@ -50,12 +50,14 @@ const MyRentalApplications = () => {
           );
         }
         setRentalApps(applicationsData);
-        setLoading(false);
       } catch (err: any) {
         console.error(err.message);
       }
     };
     fetchRentalApps();
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
   }, [currentUser, filter.value]);
 
   function handlePageChange(page: number): void {

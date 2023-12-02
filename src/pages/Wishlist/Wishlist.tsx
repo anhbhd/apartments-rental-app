@@ -37,7 +37,9 @@ const Wishlist = () => {
       const items: WishListItem[] =
         mapCollectionToArrayObject(userWishlistSnapshot);
       setWishlist(items);
-      setIsLoading(false);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 500);
     };
 
     fetchUserWishlist();

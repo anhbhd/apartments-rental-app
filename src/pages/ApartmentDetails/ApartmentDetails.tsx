@@ -38,6 +38,7 @@ import FullLoadingScreen from "../../utils/FullLoadingScreen/FullLoadingScreen";
 import { mapCollectionToArrayObject } from "../../utils/Mapper";
 import { toast } from "react-toastify";
 import { getDocument } from "../../services/getDocument";
+import { StarFilled } from "@ant-design/icons";
 
 const ApartmentDetails = () => {
   const navigate = useNavigate();
@@ -56,7 +57,7 @@ const ApartmentDetails = () => {
   const [successfulRent, setSuccessfulRent] = useState<boolean>(false);
   const [thisApartmentStatus, setThisApartmentStatus] = useState<string>("");
   const { currentUser } = useAuth();
-  const [loadedPromises, setLoadedPromises] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [lastDoc, setLastDoc] = useState<any>();
   const [toggleRefetchReviews, setToggleRefetchReviews] =
     useState<boolean>(false);
@@ -84,7 +85,6 @@ const ApartmentDetails = () => {
             setLike(true);
             setWishlistItemId(fetchedWishlistItemId);
           }
-          setLoadedPromises((prevNumState) => prevNumState + 1);
         } catch (err: any) {
           console.log(err);
         }
@@ -124,9 +124,7 @@ const ApartmentDetails = () => {
         "apartments",
         apartmentId
       );
-
       setApartment(apartmentData);
-      setLoadedPromises((prevNumState) => prevNumState + 1);
     };
     fetchThisApartment();
   }, [apartmentId]);
@@ -243,8 +241,11 @@ const ApartmentDetails = () => {
             apartmentsCollectionSnapshot
           );
         }
-
+        apartmentsData = apartmentsData.filter((apm) => apm.id !== apartmentId);
         setRelatedList(apartmentsData);
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 1000);
       } catch (err: any) {
         console.error(err);
       }
@@ -293,10 +294,13 @@ const ApartmentDetails = () => {
         style: {
           fontSize: "1.4rem",
         },
+        autoClose: 1000,
       });
       navigate("/login");
       return;
     }
+
+    // fetch some more tiny detail for 'this' user
     const fetchDetailCurrentUserData = async () => {
       if (currentUser) {
         const userDocRef = doc(db, `users/${currentUser.uid}`);
@@ -322,6 +326,7 @@ const ApartmentDetails = () => {
               Timestamp.now().toDate().getTime() +
                 (apartment?.contractDuration as number) * oneYear
             ),
+            contractSigned: false,
             pricePerMoAtRentalTime: apartment?.pricePerMonth as number,
             depositMoneyAtRentalTime: apartment?.depositMoney as number,
             note: "",
@@ -357,7 +362,6 @@ const ApartmentDetails = () => {
   }
   return (
     <main className="apartment-details-page">
-      {loadedPromises < 1 && <FullLoadingScreen />}
       {!isModalClose && (
         <ModalBackToPersonalInfo
           onClose={handleCloseModalRemindUpdateProfile}
@@ -366,9 +370,20 @@ const ApartmentDetails = () => {
       {successfulRent && (
         <SuccessRentModal onClose={() => setSuccessfulRent(false)} />
       )}
-      {loadedPromises >= 1 && (
+      {isLoading ? (
+        <FullLoadingScreen />
+      ) : (
         <div className="apartment-details">
           <div className="apartment-details__info">
+            <strong className="avg-rated">
+              {Boolean(apartment?.avgRate) &&
+                Array.from(
+                  { length: apartment?.avgRate as number },
+                  (_, index) => (
+                    <StarFilled key={index} style={{ color: "gold" }} />
+                  )
+                )}
+            </strong>
             <div className="text-info">
               <h3 className="name">{apartment?.name}</h3>
               <p className="address">

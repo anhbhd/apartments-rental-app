@@ -4,6 +4,7 @@ import { useAuth } from "../../../context/AuthContext";
 import type { MenuProps } from "antd";
 import { Dropdown } from "antd";
 import anonyImg from "./../../../assets/anonymous-avatarjpg.jpg";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const { currentUser, logout } = useAuth();
@@ -19,9 +20,15 @@ const Navbar = () => {
       label: "Logout",
       onClick: () => {
         logout();
+        toast.success("Logout successfully!", {
+          position: "bottom-right",
+          style: { fontSize: "15px" },
+          autoClose: 1500,
+        });
       },
     },
   ];
+
   return (
     <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200">
       <div className="px-3 py-3 ">

@@ -8,6 +8,7 @@ export type RentalApplication = {
   status: string;
   depositMoneyAtRentalTime: number;
   pricePerMoAtRentalTime: number;
+  contractSigned: boolean;
   startDate: FirebaseDate;
   endDate: FirebaseDate;
   createdDate: FirebaseDate;

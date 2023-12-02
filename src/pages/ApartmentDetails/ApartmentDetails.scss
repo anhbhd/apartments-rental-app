@@ -11,6 +11,16 @@
       border-radius: 0.5rem;
       box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
       padding: 3rem;
+      position: relative;
+      .avg-rated {
+        position: absolute;
+        right: 2rem;
+        bottom: 2rem;
+        font-size: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.2rem;
+      }
       .text-info {
         display: flex;
         flex-direction: column;
