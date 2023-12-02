@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Apartment } from "../../../type/Apartment";
 import { RentalApplication } from "../../../type/RentalApplication";
 import { secondsToDateTime } from "../../../utils/SecondToDate";
 import "./RentalAppContent.scss";
@@ -19,26 +18,8 @@ const RentalAppContent = ({
   rental,
   onSetRentalApp,
 }: IRentalAppContentProps) => {
-  const [apartment, setApartment] = useState<Apartment | null>(null);
   const [userData, setUserData] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  useEffect(() => {
-    async function fetchRental() {
-      const docSnapshot = await getDoc(
-        doc(db, `apartments/${rental?.apartmentId}`)
-      );
-      if (!docSnapshot.exists) {
-        console.log("No such document!");
-      } else {
-        setApartment({
-          ...(docSnapshot.data() as Apartment),
-          id: docSnapshot.id as string,
-        });
-      }
-    }
-
-    fetchRental();
-  }, [rental?.apartmentId]);
 
   useEffect(() => {
     async function fetchRental() {
@@ -77,10 +58,10 @@ const RentalAppContent = ({
     }
   };
   useEffect(() => {
-    if (userData && apartment) {
+    if (userData) {
       setIsLoading(false);
     }
-  }, [apartment, userData]);
+  }, [userData]);
   return (
     <>
       {isLoading && <FullLoadingScreen />}
@@ -99,9 +80,14 @@ const RentalAppContent = ({
               <label>End date</label>
               <span>{secondsToDateTime(rental?.endDate.seconds)}</span>
             </p>
+
             <p className="line">
-              <label>Deposit</label>
-              <span>{apartment?.depositMoney} $</span>
+              <label>Deposit (at rental time)</label>
+              <span>{rental?.depositMoneyAtRentalTime} $</span>
+            </p>
+            <p className="line">
+              <label>Price/month (at rental time)</label>
+              <span>{rental?.pricePerMoAtRentalTime} $</span>
             </p>
             <p className="line">
               <label>Status</label>
@@ -114,7 +100,7 @@ const RentalAppContent = ({
           </div>
           <div className="rental-app-content__tenant-info">
             <p className="line">
-              <label>Fullname</label>
+              <label>Full name</label>
               <span>{userData?.fullName || "N/A"}</span>
             </p>
 

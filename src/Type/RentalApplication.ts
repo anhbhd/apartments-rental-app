@@ -6,6 +6,8 @@ export type RentalApplication = {
   apartmentId: string;
   note: string;
   status: string;
+  depositMoneyAtRentalTime: number;
+  pricePerMoAtRentalTime: number;
   startDate: FirebaseDate;
   endDate: FirebaseDate;
   createdDate: FirebaseDate;

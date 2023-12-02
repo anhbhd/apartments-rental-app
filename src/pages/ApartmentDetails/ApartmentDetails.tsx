@@ -37,6 +37,7 @@ import SuccessRentModal from "../../components/ApartmentDetails/SuccessRentModal
 import FullLoadingScreen from "../../utils/FullLoadingScreen/FullLoadingScreen";
 import { mapCollectionToArrayObject } from "../../utils/Mapper";
 import { toast } from "react-toastify";
+import { getDocument } from "../../services/getDocument";
 
 const ApartmentDetails = () => {
   const navigate = useNavigate();
@@ -119,14 +120,12 @@ const ApartmentDetails = () => {
   // get the apartment doc
   useEffect(() => {
     const fetchThisApartment = async () => {
-      const apartmentDocRef = doc(db, `apartments/${apartmentId}`);
-      const apartmentSnapshot = await getDoc(apartmentDocRef);
-      const apartmentData = apartmentSnapshot.data();
+      const apartmentData: Apartment = await getDocument(
+        "apartments",
+        apartmentId
+      );
 
-      setApartment({
-        ...(apartmentData as Apartment),
-        id: apartmentId as string,
-      });
+      setApartment(apartmentData);
       setLoadedPromises((prevNumState) => prevNumState + 1);
     };
     fetchThisApartment();
@@ -323,6 +322,8 @@ const ApartmentDetails = () => {
               Timestamp.now().toDate().getTime() +
                 (apartment?.contractDuration as number) * oneYear
             ),
+            pricePerMoAtRentalTime: apartment?.pricePerMonth as number,
+            depositMoneyAtRentalTime: apartment?.depositMoney as number,
             note: "",
             status: RentAppStatus.PENDING,
             tenantId: currentUser.uid,

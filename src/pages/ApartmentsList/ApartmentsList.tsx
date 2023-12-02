@@ -8,7 +8,7 @@ import ApartmentsListResult from "../../components/ApartmentsList/ApartmentsList
 import Pagination from "../../components/ApartmentsList/Pagination/Pagination";
 
 import "./ApartmentsList.scss";
-import ResulNumstAndSortBy from "../../components/ApartmentsList/ResultAndSortBy/ResultsNumAndSortBy";
+import ResultsNumAndSortBy from "../../components/ApartmentsList/ResultAndSortBy/ResultsNumAndSortBy";
 import { Backdrop } from "../../utils/Backdrop/Backdrop";
 import { SortBy } from "../../components/ApartmentsList/ResultAndSortBy/SortBy";
 import { FilterbarType } from "../../type/Filterbar";
@@ -203,8 +203,8 @@ const ApartmentsList: React.FC = () => {
   }, [apartments, currentPage]);
 
   return (
-    <main className="aparments-list">
-      <div className="aparments-list__textheader">
+    <main className="apartments-list">
+      <div className="apartments-list__textheader">
         <h3 className="header--bigtext">Available apartments for rent</h3>
         <p className="header--smalltext">
           Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -212,10 +212,10 @@ const ApartmentsList: React.FC = () => {
       </div>
       {isLoading && <FullLoadingScreen />}
 
-      <div className="aparments-list__main-content">
+      <div className="apartments-list__main-content">
         {!isLoading && (
           <>
-            <ResulNumstAndSortBy
+            <ResultsNumAndSortBy
               totalItems={totalItems}
               clearFilterClicked={clearFilterClicked}
               setClearFilterClicked={setClearFilterClicked}
@@ -237,7 +237,7 @@ const ApartmentsList: React.FC = () => {
       </div>
 
       {!isLoading && (
-        <nav className="aparments-list__pagination">
+        <nav className="apartments-list__pagination">
           {totalItems > itemsPerPage && (
             <Pagination
               toggleSearchBtn={toggleSearchBtn}

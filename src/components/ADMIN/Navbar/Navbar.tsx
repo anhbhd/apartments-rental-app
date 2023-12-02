@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import type { MenuProps } from "antd";
 import { Dropdown } from "antd";
+import anonyImg from "./../../../assets/anonymous-avatarjpg.jpg";
 
 const Navbar = () => {
   const { currentUser, logout } = useAuth();
@@ -43,7 +44,7 @@ const Navbar = () => {
                   >
                     <img
                       className="w-8 h-8 rounded-full"
-                      src={currentUser.photoURL}
+                      src={currentUser.photoURL || anonyImg}
                       alt="user"
                     />
                   </button>

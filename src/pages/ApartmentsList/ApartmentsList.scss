@@ -1,7 +1,7 @@
 @import "./../../sass/variables.scss";
 @import "./../../sass/mixins.scss";
 
-.aparments-list {
+.apartments-list {
   min-height: 100vh;
   @include padding-section-mixin-desktop;
   padding-top: 15rem;
@@ -47,13 +47,13 @@
   }
 }
 @media (max-width: 1400px) {
-  .aparments-list {
+  .apartments-list {
     padding: $padding-size-x-axis-section-page-for-desktop;
     padding-top: 15rem;
   }
 }
 @media (max-width: 1100px) {
-  .aparments-list {
+  .apartments-list {
     padding: $padding-size-x-axis-section-page-for-desktop;
     padding-top: 15rem;
 
@@ -78,7 +78,7 @@
   }
 }
 @media (max-width: $tablet-width) {
-  .aparments-list {
+  .apartments-list {
     padding: $padding-size-x-axis-section-page-for-desktop;
     padding-top: 15rem;
 
@@ -111,7 +111,7 @@
   }
 }
 @media (max-width: 700px) {
-  .aparments-list {
+  .apartments-list {
     padding: $padding-size-x-axis-section-page-for-desktop;
     padding-top: 15rem;
     &__textheader {
@@ -147,7 +147,7 @@
   }
 }
 @media (max-width: 500px) {
-  .aparments-list {
+  .apartments-list {
     padding: 8rem 1rem;
     padding-top: 15rem;
     &__textheader {

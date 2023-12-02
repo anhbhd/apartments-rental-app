@@ -14,7 +14,6 @@ import DetailedRentalApplication from "./pages/DetailedRentalApplication/Detaile
 import NotFound from "./pages/NotFound";
 import GeneralProtectedRoutes from "./routes/GeneralProtectedRoutes";
 import ForbiddenLoggedRoutes from "./routes/ForbiddenLoggedRoutes";
-import { Dashboard } from "./pages/ADMIN/Dashboard/Dashboard";
 import AdminLayout from "./layouts/AdminLayout";
 import AddOrEditApartments from "./pages/ADMIN/ApartmentsManagement/AddOrEditApartments";
 import ApartmentListAdmin from "./pages/ADMIN/ApartmentsManagement/ApartmentsList";
@@ -24,6 +23,7 @@ import CategoriesManagement from "./pages/ADMIN/CategoriesManagement/CategoriesM
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PrivateForAdminRoutes from "./routes/PrivateForAdminRoutes";
+import { Dashboard } from "./pages/ADMIN/Dashboard/Dashboard";
 function App() {
   return (
     <div className="App">

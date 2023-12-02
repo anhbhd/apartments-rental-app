@@ -24,7 +24,7 @@ import {
 import DetailedRentalApplication from "./DetailedRentalApplication";
 import { updateDocument } from "../../../services/updateDocument";
 import { RentAppStatus } from "../../../common/constants/RentalAppStatus";
-import { Button, Input, InputRef, Space } from "antd";
+import { Button, Input, InputRef, Space, Tag } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { getDocument } from "../../../services/getDocument";
@@ -411,7 +411,7 @@ const RentalAppsList: React.FC<IRentalAppsListProps> = ({ category }) => {
       title: "Deposit money",
       dataIndex: "depositMoney",
       render: (_: any, record: RentalAppRow) => (
-        <span>${record.depositMoney}</span>
+        <Tag color="cyan">${record.depositMoney}</Tag>
       ),
 
       sorter: (a: RentalAppRow, b: RentalAppRow) =>
