@@ -91,12 +91,12 @@ const ApartmentsList: React.FC = () => {
     };
 
     getAllApartments();
-  }, [itemsPerPage]);
+  }, [currentPage, itemsPerPage]);
 
   useEffect(() => {
     // todo Paginate
     setItemDisplayOnPage(paginate(apartments, currentPage, itemsPerPage));
-  }, [currentPage, itemsPerPage]);
+  }, [apartments, currentPage, itemsPerPage]);
 
   const handleSearch = async () => {
     try {
