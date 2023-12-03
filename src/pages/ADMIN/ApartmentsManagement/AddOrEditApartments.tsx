@@ -44,6 +44,14 @@ const initialFormValue = {
   detailedAddress: "",
 };
 
+const directionOptions: Option[] = [
+  { label: "Select an option", value: 1 },
+  { label: "North", value: "NORTH" },
+  { label: "South", value: "SOUTH" },
+  { label: "East", value: "EAST" },
+  { label: "West", value: "WEST" },
+];
+
 const AddApartments = () => {
   const [description, setDescription] = useState("");
   const [additionalFees, setAdditionalFees] = useState("");
@@ -60,10 +68,15 @@ const AddApartments = () => {
   const [apartment, setApartment] = useState<Apartment>();
 
   const { pathname } = useLocation();
-  const apartmentId: string | undefined =
-    pathname.split("/").pop() === "add_or_edit"
-      ? undefined
-      : pathname.split("/").pop();
+  const [apartmentId, setApartmentId] = useState<string | undefined>();
+
+  useEffect(() => {
+    const currentApartmentId: string | undefined =
+      pathname.split("/").pop() === "add_or_edit"
+        ? undefined
+        : pathname.split("/").pop();
+    setApartmentId(currentApartmentId);
+  }, [pathname]);
 
   const onChangeImagesList = (imageList: ImageListType) => {
     setImages(imageList as any);
@@ -88,7 +101,7 @@ const AddApartments = () => {
       const createNewApartment = async (data: any) => {
         try {
           const res = await uploadImagesAndAvatar(images, avatars);
-          console.log(res);
+          // console.log(res);
           const newApartment: Apartment = {
             ...data,
             rented: false,
@@ -100,7 +113,6 @@ const AddApartments = () => {
             avatar: res?.avatarUrl,
             additionalFees: additionalFees,
           };
-          // console.log(newApartment);
           await addDocument("apartments", newApartment);
           setSubmitting(false);
           toast.success("Add new apartment successfully", {
@@ -111,6 +123,8 @@ const AddApartments = () => {
           setDescription("");
           setRentalTerms("");
           setAdditionalFees("");
+          setAvatars([]);
+          setImages([]);
         } catch (err: any) {
           console.error(err);
         }
@@ -118,6 +132,7 @@ const AddApartments = () => {
 
       createNewApartment(values);
     } else {
+      // case view detail and update the apartment
       const updateApartment = async () => {
         try {
           let imageUrls;
@@ -137,12 +152,13 @@ const AddApartments = () => {
             images: imageUrls || apartment?.images,
             avatar: avatarUrl || apartment?.avatar,
           };
-          console.log(updatedApartmentData);
           await updateDocument("apartments", apartmentId, updatedApartmentData);
           toast.success("Update apartment successfully", {
             position: "bottom-right",
             autoClose: 1500,
           });
+          setAvatars([]);
+          setImages([]);
           setSubmitting(false);
         } catch (err: any) {
           console.error(err);
@@ -150,9 +166,6 @@ const AddApartments = () => {
       };
       updateApartment();
     }
-
-    setAvatars([]);
-    setImages([]);
   };
   const {
     values,
@@ -193,7 +206,7 @@ const AddApartments = () => {
         console.error(err.message);
       }
     }
-  }, [apartmentId, isSubmitting, pathname]);
+  }, [apartmentId, pathname]);
 
   useEffect(() => {
     const getProvinces = async () => {
@@ -330,23 +343,40 @@ const AddApartments = () => {
             id="area"
             type="number"
             label="Area (m2)"
-            placeholder="Apartment name..."
+            placeholder="12"
             required
             error={errors.area}
             touched={touched.area}
           />
-          <CustomInput
-            label="Front direction"
-            value={values.direction}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            id="direction"
-            type="text"
-            placeholder="east,west,..."
-            required
-            error={errors.direction}
-            touched={touched.direction}
-          />
+
+          <div className="mb-5">
+            <label htmlFor="countries" className={labelCSSBase}>
+              Front direction
+            </label>
+            <select
+              value={values.direction}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              id="direction"
+              className={
+                errors.direction && touched.direction
+                  ? classErr
+                  : inputBoxBaseCss
+              }
+              defaultValue={directionOptions[0].value}
+            >
+              {directionOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            {errors.direction && touched.direction && (
+              <p className="mt-2 text-sm absolute text-red-600 dark:text-red-500">
+                {errors.direction}
+              </p>
+            )}
+          </div>
 
           <CustomInput
             label="Built year"
