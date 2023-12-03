@@ -3,6 +3,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import Footer from "../components/Footer/Footer";
 import { useEffect } from "react";
 import FacebookMessage from "../components/FacebookMessage";
+import BackToTop from "../utils/BackToTop";
 
 const MainLayout: React.FC = () => {
   let location = useLocation();
@@ -14,8 +15,9 @@ const MainLayout: React.FC = () => {
     <>
       <Navbar />
       <Outlet />
-      <Footer />
       <FacebookMessage />
+      <Footer />
+      <BackToTop />
     </>
   );
 };

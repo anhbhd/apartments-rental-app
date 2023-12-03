@@ -50,9 +50,9 @@ const ApartmentItem = ({ className, apartment }: IApartmentProps) => {
     const fetchLikeStateOfUserToThisItem = async () => {
       if (currentUser) {
         try {
-          const wishlistcollectionRef = collection(db, "wishlist");
+          const wishlistsCollectionRef = collection(db, "wishlist");
           const q = query(
-            wishlistcollectionRef,
+            wishlistsCollectionRef,
             where("apartmentId", "==", apartment.id),
             where("userId", "==", currentUser.uid)
           );
