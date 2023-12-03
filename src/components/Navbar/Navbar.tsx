@@ -62,9 +62,11 @@ const Navbar = () => {
               <Link to="/my_rental_apps">Rental applications</Link>
             </li>
 
-            <Link className="perinfo" to="/personal_info">
-              <img src={`${currentUser.photoURL || anonyImg}`} alt="" />
-            </Link>
+            <li className="perinfo">
+              <Link to="/personal_info">
+                <img src={`${currentUser.photoURL || anonyImg}`} alt="" />
+              </Link>
+            </li>
 
             {currentUser.isAdmin && (
               <li className="dashboard-btn-container">
