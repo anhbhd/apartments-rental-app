@@ -57,10 +57,8 @@ const ApartmentItem = ({ className, apartment }: IApartmentProps) => {
             where("userId", "==", currentUser.uid)
           );
           const wishlistCollectionSnapshot = await getDocs(q);
-          // console.log(wishlistCollectionSnapshot.docs.at(0)?.data());
           const fetchedWishlistItemId =
             wishlistCollectionSnapshot.docs.at(0)?.id;
-          // console.log(wishlistCollectionSnapshot.docs.at(0)?.id);
           if (fetchedWishlistItemId) {
             setLike(true);
             setWishlistItemId(fetchedWishlistItemId);
