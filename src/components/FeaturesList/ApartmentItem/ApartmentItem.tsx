@@ -106,7 +106,6 @@ const ApartmentItem = ({ className, apartment }: IApartmentProps) => {
       });
       navigate("/login");
     }
-    // console.log(newDoc);
   };
 
   return (
@@ -122,7 +121,11 @@ const ApartmentItem = ({ className, apartment }: IApartmentProps) => {
             <StarFilled style={{ color: "gold" }} />
           </span>
         )}
+        {apartment.rented ? (
+          <span className="apartment-status">Rented</span>
+        ) : null}
       </div>
+
       {/* delemiter */}
       <div className="feature-item__info">
         <Link to={`/apartments/${apartment.id}`} className="name">

@@ -238,7 +238,9 @@ const UsersList = () => {
       dataIndex: "actions",
       width: "15%",
       render: (_: any, record: UserRow) =>
-        record.active ? (
+        record.isAdmin ? (
+          <span className="font-bold text-red-500">N/A</span>
+        ) : record.active ? (
           <PopupConfirm
             onActivateOrDeActivate={() => handleActiveOrDeactivateUser(record)}
             title={"Do you really want to deactivate this account"}

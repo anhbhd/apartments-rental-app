@@ -207,7 +207,7 @@ const ApartmentsList: React.FC = () => {
   return (
     <main className="apartments-list">
       <div className="apartments-list__textheader">
-        <h3 className="header--bigtext">Available apartments for rent</h3>
+        <h3 className="header--bigtext">Our available apartments</h3>
         <p className="header--smalltext">
           Lorem ipsum dolor sit amet consectetur adipisicing elit.
         </p>

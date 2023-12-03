@@ -27,7 +27,8 @@
       transition: transform 1s ease;
     }
     .price-per-month,
-    .stars-rated {
+    .stars-rated,
+    .apartment-status {
       position: absolute;
       background-color: $background-white;
       padding: 1rem 2rem;
@@ -43,6 +44,18 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
+    }
+    .apartment-status {
+      right: -6.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      left: unset;
+      background-color: #717171;
+      color: white;
+      bottom: unset;
+      padding: 1rem 8rem;
+      top: 1rem;
+      transform: rotateZ(40deg);
     }
   }
 
