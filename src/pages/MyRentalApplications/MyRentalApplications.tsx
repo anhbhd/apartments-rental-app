@@ -6,7 +6,7 @@ import ApplicationsList from "../../components/MyRentalApplication/ApplicationsL
 import { RentalApplication } from "../../Type/RentalApplication";
 import { useAuth } from "../../context/AuthContext";
 import { mapCollectionToArrayObject } from "./../../utils/Mapper";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { db } from "../../config/firebase_config";
 import FullLoadingScreen from "../../utils/FullLoadingScreen/FullLoadingScreen";
 import { Option } from "../../Type/Option";
@@ -34,10 +34,11 @@ const MyRentalApplications = () => {
       const rentalAppsCollectionRef = collection(db, "rentalApplications");
 
       try {
-        const q = query(
+        let q = query(
           rentalAppsCollectionRef,
           where("tenantId", "==", currentUser.uid)
         );
+        q = query(q, orderBy("createdDate", "desc"));
 
         const rentalApplicationCollectionSnapshot = await getDocs(q);
         setTotalItems(rentalApplicationCollectionSnapshot.size);

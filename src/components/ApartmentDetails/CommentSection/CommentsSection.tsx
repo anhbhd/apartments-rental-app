@@ -58,11 +58,7 @@ const CommentsSection: React.FC<ICommentsSectionProps> = ({
             rentalsCollectionRef,
             where("apartmentId", "==", apartment?.id as string),
             where("tenantId", "==", currentUser.uid),
-            where("status", "not-in", [
-              RentAppStatus.PENDING,
-              RentAppStatus.PROCESSING,
-              RentAppStatus.CANCELED,
-            ])
+            where("contractSigned", "==", true)
           );
 
           const rentalsCollectionSnapshot = await getDocs(q);
