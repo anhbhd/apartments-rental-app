@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./AppItem.scss";
 import { Link } from "react-router-dom";
-import { RentalApplication } from "../../../../type/RentalApplication";
+import { RentalApplication } from "../../../../Type/RentalApplication";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../../../config/firebase_config";
-import { Apartment } from "../../../../type/Apartment";
+import { Apartment } from "../../../../Type/Apartment";
 import { secondsToDateTime } from "../../../../utils/SecondToDate";
 
 interface IAppItemProps {

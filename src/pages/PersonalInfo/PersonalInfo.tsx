@@ -3,7 +3,7 @@ import "./PersonalInfo.scss";
 import { useAuth } from "../../context/AuthContext";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../config/firebase_config";
-import { User } from "../../type/User";
+import { User } from "../../Type/User";
 import anonymousAva from "./../../assets/anonymous-avatarjpg.jpg";
 import FullLoadingScreen from "../../utils/FullLoadingScreen/FullLoadingScreen";
 import SuccessModal from "./Modal/Modal";

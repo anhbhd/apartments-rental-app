@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { BiBed, BiBath, BiHomeAlt } from "react-icons/bi";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
-import { Apartment } from "../../../type/Apartment";
+import { Apartment } from "../../../Type/Apartment";
 import "./ApartmentItem.scss";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";

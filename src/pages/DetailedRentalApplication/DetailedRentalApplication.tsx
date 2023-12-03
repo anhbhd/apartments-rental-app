@@ -2,7 +2,7 @@ import "./DetailedRentalApplication.scss";
 import RentalAppContent from "../../components/DetailedRentalApplication/RentalAppContent/RentalAppContent";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { RentalApplication } from "../../type/RentalApplication";
+import { RentalApplication } from "../../Type/RentalApplication";
 import { getDocument } from "../../services/getDocument";
 
 const DetailedRentalApplication = () => {

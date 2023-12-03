@@ -1,5 +1,5 @@
 import React from "react";
-import Icon from "../type/Icon";
+import Icon from "../Type/Icon";
 
 const RentedIcon: React.FC<Icon> = ({ height, width }) => {
   return (

@@ -1,5 +1,5 @@
 import "./PropertyDescription.scss";
-import { Apartment } from "../../../type/Apartment";
+import { Apartment } from "../../../Type/Apartment";
 import { formatter } from "../../../utils/FormatMoney";
 import { useEffect, useState } from "react";
 

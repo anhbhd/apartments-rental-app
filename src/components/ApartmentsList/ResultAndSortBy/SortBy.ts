@@ -1,4 +1,4 @@
-import { Option } from "../../../type/Option";
+import { Option } from "../../../Type/Option";
 
 export enum SortBy {
   ALL = "ALL",

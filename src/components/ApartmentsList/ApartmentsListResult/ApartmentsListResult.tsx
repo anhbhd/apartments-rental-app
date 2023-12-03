@@ -1,7 +1,7 @@
 import React from "react";
 import ApartmentItem from "../../FeaturesList/ApartmentItem/ApartmentItem";
 
-import { Apartment } from "../../../type/Apartment";
+import { Apartment } from "../../../Type/Apartment";
 
 interface IApartmentsListResultProps {
   className?: string;

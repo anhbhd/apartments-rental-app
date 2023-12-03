@@ -1,5 +1,5 @@
 import React from "react";
-import Icon from "../type/Icon";
+import Icon from "../Type/Icon";
 
 const InstagramIcon: React.FC<Icon> = ({ width, height, style }) => {
   return (

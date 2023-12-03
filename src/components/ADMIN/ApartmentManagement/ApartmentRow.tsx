@@ -1,7 +1,8 @@
 import React from "react";
-import { Apartment } from "../../../type/Apartment";
+
 import { Button } from "antd";
 import { Link } from "react-router-dom";
+import { Apartment } from "../../../Type/Apartment";
 
 interface IApartmentRowProps {
   apartment: Apartment;

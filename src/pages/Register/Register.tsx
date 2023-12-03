@@ -4,7 +4,7 @@ import "./Register.scss";
 import GoogleIcon from "../../icons/GoogleIcon";
 import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
 import { Link, useNavigate } from "react-router-dom";
-import { User } from "../../type/User";
+import { User } from "../../Type/User";
 import { toast } from "react-toastify";
 import FullLoadingScreen from "../../utils/FullLoadingScreen/FullLoadingScreen";
 import { useFormik } from "formik";

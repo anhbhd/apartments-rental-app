@@ -11,11 +11,11 @@ import validationSchema from "../../../validation_schemas";
 import CustomInput, {
   classErr,
 } from "../../../components/ADMIN/ApartmentManagement/Input/CustomInput";
-import { Category } from "../../../type/Category";
-import { Option } from "../../../type/Option";
+import { Category } from "../../../Type/Category";
+import { Option } from "../../../Type/Option";
 import { getDataCollection } from "../../../services/getDataCollection";
 import { Timestamp } from "firebase/firestore";
-import { Apartment } from "../../../type/Apartment";
+import { Apartment } from "../../../Type/Apartment";
 import { uploadImage } from "../../../utils/uploadImage";
 import { addDocument } from "../../../services/addDocument";
 import { useLocation } from "react-router-dom";

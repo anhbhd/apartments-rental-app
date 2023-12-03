@@ -1,4 +1,4 @@
-import { Option } from "../../../type/Option";
+import { Option } from "../../../Type/Option";
 export const starsSelections: Option[] = [
   {
     label: "All",

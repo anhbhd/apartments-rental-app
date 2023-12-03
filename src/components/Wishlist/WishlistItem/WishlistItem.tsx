@@ -3,11 +3,11 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import "./WishlistItem.scss";
 
 import { Link } from "react-router-dom";
-import { WishListItem } from "../../../type/WishListItem";
-import { Apartment } from "../../../type/Apartment";
+import { WishListItem } from "../../../Type/WishListItem";
+import { Apartment } from "../../../Type/Apartment";
 import { getDocument } from "../../../services/getDocument";
 import { deleteDocument } from "../../../services/deleteDocument";
-import { Category } from "../../../type/Category";
+import { Category } from "../../../Type/Category";
 
 interface IWishlistItemProps {
   wishlistItem: WishListItem;

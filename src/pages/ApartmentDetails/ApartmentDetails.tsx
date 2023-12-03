@@ -23,15 +23,15 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../../config/firebase_config";
-import { Apartment } from "../../type/Apartment";
+import { Apartment } from "../../Type/Apartment";
 import { formatter } from "./../../utils/FormatMoney";
 import { secondsToDateTime } from "../../utils/SecondToDate";
 
-import { Review } from "../../type/Review";
+import { Review } from "../../Type/Review";
 import { useAuth } from "../../context/AuthContext";
 import ModalBackToPersonalInfo from "../../components/ApartmentDetails/ModalBackToPersonalInfo/ModalBackToPersonalInfo";
-import { User } from "../../type/User";
-import { RentalApplication } from "../../type/RentalApplication";
+import { User } from "../../Type/User";
+import { RentalApplication } from "../../Type/RentalApplication";
 import { RentAppStatus } from "../../common/constants/RentalAppStatus";
 import SuccessRentModal from "../../components/ApartmentDetails/SuccessRentModal/SuccessRentModal";
 import FullLoadingScreen from "../../utils/FullLoadingScreen/FullLoadingScreen";

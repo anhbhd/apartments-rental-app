@@ -18,7 +18,7 @@ import {
 } from "firebase/firestore";
 import FullLoadingScreen from "../../utils/FullLoadingScreen/FullLoadingScreen";
 import { toast } from "react-toastify";
-import { User } from "../../type/User";
+import { User } from "../../Type/User";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 

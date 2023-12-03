@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, Input, Modal } from "antd";
-import { Category } from "../../../type/Category";
+import { Category } from "../../../Type/Category";
 import { getDocument } from "../../../services/getDocument";
 import { updateDocument } from "../../../services/updateDocument";
 import { toast } from "react-toastify";

@@ -9,7 +9,7 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { RentalApplication } from "../../../type/RentalApplication";
+import { RentalApplication } from "../../../Type/RentalApplication";
 import { MonthInYear } from "../../../common/constants/MonthInYear";
 import { useEffect, useState } from "react";
 

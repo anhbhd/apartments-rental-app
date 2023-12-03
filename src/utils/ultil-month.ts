@@ -1,4 +1,4 @@
-import { FirebaseDate } from "../type/Apartment";
+import { FirebaseDate } from "../Type/Apartment";
 
 export function getMonthFromTimestamp(timestamp: FirebaseDate): number {
   const date = new Date(timestamp.seconds * 1000); // Convert seconds to milliseconds

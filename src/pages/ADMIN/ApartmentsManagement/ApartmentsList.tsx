@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ApartmentRow from "../../../components/ADMIN/ApartmentManagement/ApartmentRow";
-import { Apartment } from "../../../type/Apartment";
+import { Apartment } from "../../../Type/Apartment";
 import { getDataCollection } from "../../../services/getDataCollection";
 import { deleteDocument } from "../../../services/deleteDocument";
 

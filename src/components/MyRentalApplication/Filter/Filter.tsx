@@ -1,7 +1,7 @@
 import React from "react";
 import "./Filter.scss";
 import CustomSelect from "../../../utils/CustomDropdown/CustomSelect";
-import { Option } from "../../../type/Option";
+import { Option } from "../../../Type/Option";
 import { RentAppStatus } from "../../../common/constants/RentalAppStatus";
 
 const options: Option[] = [

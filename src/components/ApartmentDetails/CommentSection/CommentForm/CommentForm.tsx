@@ -10,7 +10,7 @@ import {
   where,
 } from "firebase/firestore";
 import { addDocument } from "../../../../services/addDocument";
-import { Review } from "../../../../type/Review";
+import { Review } from "../../../../Type/Review";
 import { db } from "../../../../config/firebase_config";
 import { mapCollectionToArrayObject } from "../../../../utils/Mapper";
 import { calculateAverageStars } from "../../../../utils/calculateAverageStars";

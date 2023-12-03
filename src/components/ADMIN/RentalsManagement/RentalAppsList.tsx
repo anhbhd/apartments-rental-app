@@ -8,14 +8,14 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../../../config/firebase_config";
-import { RentalApplication } from "../../../type/RentalApplication";
+import { RentalApplication } from "../../../Type/RentalApplication";
 import { mapCollectionToArrayObject } from "../../../utils/Mapper";
-import { Apartment, FirebaseDate } from "../../../type/Apartment";
+import { Apartment, FirebaseDate } from "../../../Type/Apartment";
 import Table, { ColumnsType } from "antd/es/table";
 import { secondsToDateTime } from "../../../utils/SecondToDate";
 
 import { getDataCollection } from "../../../services/getDataCollection";
-import { User } from "../../../type/User";
+import { User } from "../../../Type/User";
 import {
   ColumnType,
   FilterConfirmProps,

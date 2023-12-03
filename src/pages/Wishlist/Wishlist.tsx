@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./Wishlist.scss";
 import Pagination from "../../components/ApartmentsList/Pagination/Pagination";
 import WishlistItem from "../../components/Wishlist/WishlistItem/WishlistItem";
-import { WishListItem } from "../../type/WishListItem";
+import { WishListItem } from "../../Type/WishListItem";
 import {
   collection,
   deleteDoc,

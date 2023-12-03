@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { RentalApplication } from "../../../type/RentalApplication";
+import { RentalApplication } from "../../../Type/RentalApplication";
 import { secondsToDateTime } from "../../../utils/SecondToDate";
 import "./RentalAppContent.scss";
 import { Link } from "react-router-dom";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../../config/firebase_config";
-import { User } from "../../../type/User";
+import { User } from "../../../Type/User";
 import { RentAppStatus } from "../../../common/constants/RentalAppStatus";
 import FullLoadingScreen from "../../../utils/FullLoadingScreen/FullLoadingScreen";
 

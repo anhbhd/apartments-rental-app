@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Timestamp } from "firebase/firestore";
 import { getDataCollection } from "../../../services/getDataCollection";
-import { RentalApplication } from "../../../type/RentalApplication";
+import { RentalApplication } from "../../../Type/RentalApplication";
 import { updateDocument } from "../../../services/updateDocument";
 import { RentAppStatus } from "../../../common/constants/RentalAppStatus";
 

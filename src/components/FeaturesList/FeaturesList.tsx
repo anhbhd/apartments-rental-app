@@ -4,7 +4,7 @@ import "swiper/css";
 import FeatureItem from "./ApartmentItem/ApartmentItem";
 
 import "./FeaturesList.scss";
-import { Apartment } from "../../type/Apartment";
+import { Apartment } from "../../Type/Apartment";
 import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
 import { db } from "../../config/firebase_config";
 import { mapCollectionToArrayObject } from "../../utils/Mapper";

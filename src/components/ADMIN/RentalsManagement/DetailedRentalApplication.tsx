@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Button, Col, Modal, Row, Tag } from "antd";
 import { RentalAppRow } from "./RentalAppsList";
 import { secondsToDateTime } from "../../../utils/SecondToDate";
-import { Apartment } from "../../../type/Apartment";
-import { User } from "../../../type/User";
+import { User } from "../../../Type/User";
 import { RentAppStatus } from "../../../common/constants/RentalAppStatus";
 import { Typography } from "antd";
 import { updateDocument } from "../../../services/updateDocument";
 import { getDocument } from "../../../services/getDocument";
 import { Link } from "react-router-dom";
 import ActionDialogButton from "./ActionsWithDialog/ActionDialogButton";
+import { Apartment } from "../../../Type/Apartment";
 
 const { Paragraph } = Typography;
 interface IDetailedRentalApplicationProps {

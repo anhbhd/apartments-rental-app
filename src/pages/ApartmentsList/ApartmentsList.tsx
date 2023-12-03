@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../../config/firebase_config";
 import { collection, getDocs } from "@firebase/firestore";
-import { Apartment } from "../../type/Apartment";
+import { Apartment } from "../../Type/Apartment";
 
 import Filterbar from "../../components/ApartmentsList/Filterbar/Filterbar";
 import ApartmentsListResult from "../../components/ApartmentsList/ApartmentsListResult/ApartmentsListResult";
@@ -11,8 +11,8 @@ import "./ApartmentsList.scss";
 import ResultsNumAndSortBy from "../../components/ApartmentsList/ResultAndSortBy/ResultsNumAndSortBy";
 import { Backdrop } from "../../utils/Backdrop/Backdrop";
 import { SortBy } from "../../components/ApartmentsList/ResultAndSortBy/SortBy";
-import { FilterbarType } from "../../type/Filterbar";
-import { Option } from "../../type/Option";
+import { FilterbarType } from "../../Type/Filterbar";
+import { Option } from "../../Type/Option";
 import { orderBy, query, where } from "firebase/firestore";
 import FullLoadingScreen from "../../utils/FullLoadingScreen/FullLoadingScreen";
 import { getDataCollection } from "../../services/getDataCollection";

@@ -3,13 +3,13 @@ import { useEffect, useState } from "react";
 import "./MyRentalApplication.scss";
 import Filter from "../../components/MyRentalApplication/Filter/Filter";
 import ApplicationsList from "../../components/MyRentalApplication/ApplicationsList/ApplicationsList";
-import { RentalApplication } from "../../type/RentalApplication";
+import { RentalApplication } from "../../Type/RentalApplication";
 import { useAuth } from "../../context/AuthContext";
 import { mapCollectionToArrayObject } from "./../../utils/Mapper";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../config/firebase_config";
 import FullLoadingScreen from "../../utils/FullLoadingScreen/FullLoadingScreen";
-import { Option } from "../../type/Option";
+import { Option } from "../../Type/Option";
 import Pagination from "../../components/ApartmentsList/Pagination/Pagination";
 import { paginate } from "../../utils/paginate";
 

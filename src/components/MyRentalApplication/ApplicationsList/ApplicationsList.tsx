@@ -1,7 +1,7 @@
 import AppItem from "./AppItem/AppItem";
 import "./ApplicationsList.scss";
-import { RentalApplication } from "../../../type/RentalApplication";
-import { Option } from "../../../type/Option";
+import { RentalApplication } from "../../../Type/RentalApplication";
+import { Option } from "../../../Type/Option";
 
 interface IApplicationsListProps {
   rentalApps: RentalApplication[];

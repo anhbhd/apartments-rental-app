@@ -1,5 +1,5 @@
 import React from "react";
-import Icon from "../type/Icon";
+import Icon from "../Type/Icon";
 
 const LinkedinIcon: React.FC<Icon> = ({ width, height, style }) => {
   return (

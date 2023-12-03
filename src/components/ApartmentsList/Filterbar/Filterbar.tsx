@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { Option } from "../../../type/Option";
+import { Option } from "../../../Type/Option";
 
 import SearchIcon from "../../../icons/SearchIcon";
 import { starsSelections } from "./StarSelections";
@@ -8,8 +8,8 @@ import { IoMdClose } from "react-icons/io";
 import CustomSelect from "../../../utils/CustomDropdown/CustomSelect";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../../config/firebase_config";
-import { Category } from "../../../type/Category";
-import { FilterbarType } from "../../../type/Filterbar";
+import { Category } from "../../../Type/Category";
+import { FilterbarType } from "../../../Type/Filterbar";
 import "./Filterbar.scss";
 interface IFilterbarProps {
   className: string;

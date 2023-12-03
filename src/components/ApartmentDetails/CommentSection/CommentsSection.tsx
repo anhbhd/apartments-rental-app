@@ -3,11 +3,11 @@ import React, { useEffect, useState } from "react";
 import "./CommentsSection.scss";
 import CommentItem from "./CommentItem/CommentItem";
 import CommentForm from "./CommentForm/CommentForm";
-import { Review } from "../../../type/Review";
+import { Review } from "../../../Type/Review";
 import { useAuth } from "../../../context/AuthContext";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../../config/firebase_config";
-import { Apartment } from "../../../type/Apartment";
+import { Apartment } from "../../../Type/Apartment";
 import { RentAppStatus } from "../../../common/constants/RentalAppStatus";
 
 interface ICommentsSectionProps {

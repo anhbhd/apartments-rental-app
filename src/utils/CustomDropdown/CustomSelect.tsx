@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FaSortDown } from "react-icons/fa";
 import "./CustomSelect.scss";
-import { Option } from "../../type/Option";
+import { Option } from "../../Type/Option";
 interface ICustomSelectProps {
   options: Option[];
   selected: Option;

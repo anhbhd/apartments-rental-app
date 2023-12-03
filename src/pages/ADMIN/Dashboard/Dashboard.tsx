@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Card from "../../../components/ADMIN/Dashboard/Card";
-import { User } from "../../../type/User";
+import { User } from "../../../Type/User";
 import UsersChart from "../../../components/ADMIN/Dashboard/UsersChart";
 import { getDataCollection } from "../../../services/getDataCollection";
 import { Spin } from "antd";
@@ -12,7 +12,7 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../../../config/firebase_config";
-import { RentalApplication } from "../../../type/RentalApplication";
+import { RentalApplication } from "../../../Type/RentalApplication";
 import { mapCollectionToArrayObject } from "../../../utils/Mapper";
 import RevenueChart from "../../../components/ADMIN/Dashboard/RevenueChart";
 import { useAuth } from "../../../context/AuthContext";

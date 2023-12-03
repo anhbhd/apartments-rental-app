@@ -1,4 +1,4 @@
-import { Review } from "../type/Review";
+import { Review } from "../Type/Review";
 
 export const calculateAverageStars = (reviews: Review[]): number => {
   if (reviews.length === 0) {

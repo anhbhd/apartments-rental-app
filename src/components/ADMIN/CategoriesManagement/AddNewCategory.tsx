@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Input, Modal } from "antd";
 import { addDocument } from "../../../services/addDocument";
-import { Category } from "../../../type/Category";
+import { Category } from "../../../Type/Category";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../../config/firebase_config";
 import { toast } from "react-toastify";

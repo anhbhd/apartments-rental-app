@@ -7,7 +7,7 @@ import type { InputRef } from "antd";
 import { Button, Input, Space, Table } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
-import { Category } from "../../../type/Category";
+import { Category } from "../../../Type/Category";
 import { getDataCollection } from "../../../services/getDataCollection";
 import AddNewCategory from "../../../components/ADMIN/CategoriesManagement/AddNewCategory";
 import Actions from "../../../components/ADMIN/CategoriesManagement/Actions";

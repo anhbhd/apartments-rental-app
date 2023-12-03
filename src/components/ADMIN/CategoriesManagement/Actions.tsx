@@ -1,6 +1,6 @@
 import { Button, Modal } from "antd";
 import React from "react";
-import { Category } from "../../../type/Category";
+import { Category } from "../../../Type/Category";
 import { deleteDocument } from "../../../services/deleteDocument";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../../config/firebase_config";

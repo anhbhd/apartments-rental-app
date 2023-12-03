@@ -3,9 +3,9 @@ import { AiFillStar } from "react-icons/ai";
 
 import tmpImg from "./../../../../assets/anonymous-avatarjpg.jpg";
 import "./CommentItem.scss";
-import { Review } from "../../../../type/Review";
+import { Review } from "../../../../Type/Review";
 
-import { User } from "../../../../type/User";
+import { User } from "../../../../Type/User";
 import { secondsToDateTime } from "../../../../utils/SecondToDate";
 import { getDocument } from "../../../../services/getDocument";
 

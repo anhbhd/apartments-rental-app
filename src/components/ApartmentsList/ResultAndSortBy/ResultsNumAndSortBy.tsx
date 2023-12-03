@@ -1,6 +1,6 @@
 import "./ResultsNumAndSortBy.scss";
 import CustomSelect from "../../../utils/CustomDropdown/CustomSelect";
-import { Option } from "../../../type/Option";
+import { Option } from "../../../Type/Option";
 
 import { IoFilter } from "react-icons/io5";
 import { sortBySelection } from "./SortBy";

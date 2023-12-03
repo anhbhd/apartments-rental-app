@@ -9,7 +9,7 @@ import { auth } from "../config/firebase_config";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useNavigate } from "react-router-dom";
 import { getDocument } from "../services/getDocument";
-import { User } from "../type/User";
+import { User } from "../Type/User";
 import { toast } from "react-toastify";
 
 const AuthContext = createContext<any>(null);

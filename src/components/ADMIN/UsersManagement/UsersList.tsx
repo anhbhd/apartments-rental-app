@@ -1,6 +1,6 @@
 import { InputRef, Table, Tag } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
-import { FirebaseDate } from "../../../type/Apartment";
+import { FirebaseDate } from "../../../Type/Apartment";
 import { secondsToDateTime } from "../../../utils/SecondToDate";
 import { FilterConfirmProps, SortOrder } from "antd/es/table/interface";
 import { useEffect, useRef, useState } from "react";
