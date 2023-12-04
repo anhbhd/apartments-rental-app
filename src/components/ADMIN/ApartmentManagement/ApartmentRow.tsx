@@ -16,7 +16,7 @@ const ApartmentRow = ({
   onOpenModal,
 }: IApartmentRowProps) => {
   return (
-    <tr className="bg-white border-b  dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+    <tr className="bg-white border-b   hover:bg-gray-50 ">
       <td className="p-4">
         <img
           src={apartment?.avatar}
@@ -24,11 +24,11 @@ const ApartmentRow = ({
           alt={apartment?.avatar}
         />
       </td>
-      <td className="px-6  py-4 font-semibold text-gray-900 dark:text-white">
+      <td className="px-6  py-4 font-semibold text-gray-900">
         {apartment?.name}
       </td>
 
-      <td className="px-6 py-4 font-semibold  text-gray-900 dark:text-white">
+      <td className="px-6 py-4 font-semibold  text-gray-900">
         $ {apartment?.pricePerMonth}
       </td>
       <td className="px-6 py-4  ">

@@ -330,7 +330,7 @@ const AddApartments = () => {
               ))}
             </select>
             {errors.categoryId && touched.categoryId && (
-              <p className="mt-2 text-sm absolute text-red-600 dark:text-red-500">
+              <p className="mt-2 text-sm absolute text-red-600 ">
                 {errors.categoryId}
               </p>
             )}
@@ -372,7 +372,7 @@ const AddApartments = () => {
               ))}
             </select>
             {errors.direction && touched.direction && (
-              <p className="mt-2 text-sm absolute text-red-600 dark:text-red-500">
+              <p className="mt-2 text-sm absolute text-red-600 ">
                 {errors.direction}
               </p>
             )}
@@ -525,7 +525,7 @@ const AddApartments = () => {
               ))}
             </select>
             {errors.city && touched.city && (
-              <p className="mt-2 text-sm absolute text-red-600 dark:text-red-500">
+              <p className="mt-2 text-sm absolute text-red-600 ">
                 {errors.city}
               </p>
             )}
@@ -551,7 +551,7 @@ const AddApartments = () => {
               ))}
             </select>
             {errors.district && touched.district && (
-              <p className="mt-2 absolute text-sm text-red-600 dark:text-red-500">
+              <p className="mt-2 absolute text-sm text-red-600 ">
                 {errors.district}
               </p>
             )}
@@ -573,9 +573,7 @@ const AddApartments = () => {
         <div className="grid grid-cols-1 mb-4 mt-10">
           <label className={`${labelCSSBase} `}>
             Description
-            <span className="mt-2 ml-2 text-sm text-red-600 dark:text-red-500">
-              *
-            </span>
+            <span className="mt-2 ml-2 text-sm text-red-600 ">*</span>
           </label>
           <ReactQuill
             theme="snow"
@@ -586,9 +584,7 @@ const AddApartments = () => {
 
           <label className={`${labelCSSBase} mt-20`}>
             Additional fees
-            <span className="mt-2 ml-2 text-sm text-red-600 dark:text-red-500">
-              *
-            </span>
+            <span className="mt-2 ml-2 text-sm text-red-600 ">*</span>
           </label>
           <ReactQuill
             theme="snow"
@@ -599,9 +595,7 @@ const AddApartments = () => {
 
           <label className={`${labelCSSBase} mt-20`}>
             Rental terms
-            <span className="mt-2 ml-2 text-sm text-red-600 dark:text-red-500">
-              *
-            </span>
+            <span className="mt-2 ml-2 text-sm text-red-600 ">*</span>
           </label>
           <ReactQuill
             theme="snow"
@@ -685,7 +679,7 @@ const AddApartments = () => {
             ) : (
               <>
                 {avatars.length < 1 && (
-                  <p className="mt-2 mb-5 absolute text-sm text-red-600 dark:text-red-500">
+                  <p className="mt-2 mb-5 absolute text-sm text-red-600 ">
                     You need to upload avatar
                   </p>
                 )}
@@ -772,7 +766,7 @@ const AddApartments = () => {
             ) : (
               <>
                 {images.length < 5 && (
-                  <p className="mt-6 mb-10 text-sm text-red-600 dark:text-red-500">
+                  <p className="mt-6 mb-10 text-sm text-red-600 ">
                     You need to upload 5 images
                   </p>
                 )}

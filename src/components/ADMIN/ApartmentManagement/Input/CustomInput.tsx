@@ -15,7 +15,7 @@ interface CustomInputProps {
   touched: boolean | undefined;
 }
 export const classErr =
-  "bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-red-100 dark:border-red-400";
+  "bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 ";
 const CustomInput: React.FC<CustomInputProps> = ({
   label,
   id,
@@ -44,9 +44,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
         min={min}
       />
       {error && touched && (
-        <p className="mt-2 text-sm absolute text-red-600 dark:text-red-500">
-          {error}
-        </p>
+        <p className="mt-2 text-sm absolute text-red-600 ">{error}</p>
       )}
     </div>
   );
