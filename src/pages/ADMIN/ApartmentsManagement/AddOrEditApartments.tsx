@@ -291,7 +291,7 @@ const AddApartments = () => {
       >
         <p>Please fulfill the form !!!</p>
       </Modal>
-
+      <h2 className="mb-11 font-bold text-2xl">Add/Edit an apartment</h2>
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-3 gap-4 mb-4">
           <CustomInput
