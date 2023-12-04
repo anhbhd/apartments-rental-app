@@ -8,6 +8,8 @@ import { db } from "../../../config/firebase_config";
 import { User } from "../../../Type/User";
 import { RentAppStatus } from "../../../common/constants/RentalAppStatus";
 import FullLoadingScreen from "../../../utils/FullLoadingScreen/FullLoadingScreen";
+import { toast } from "react-toastify";
+import { getDocument } from "../../../services/getDocument";
 
 interface IRentalAppContentProps {
   rental: RentalApplication;
@@ -21,21 +23,11 @@ const RentalAppContent = ({
   const [userData, setUserData] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    async function fetchRental() {
-      const docSnapshot = await getDoc(doc(db, `users/${rental?.tenantId}`));
-      if (!docSnapshot.exists) {
-        console.log("No such document!");
-      } else {
-        setUserData({
-          ...(docSnapshot.data() as User),
-          id: docSnapshot.id as string,
-        });
-      }
-    }
-
-    fetchRental();
-  }, [rental?.tenantId]);
+  async function fetchUserData() {
+    const userData: User = await getDocument("users", rental?.tenantId);
+    setUserData(userData);
+    setIsLoading(false);
+  }
 
   const handleCancelRequest = async () => {
     if (
@@ -51,17 +43,23 @@ const RentalAppContent = ({
           ...rental,
           status: RentAppStatus.CANCELED,
         });
-        console.log("Document written");
+        toast.success("Cancel successfully", {
+          autoClose: 1500,
+          position: "bottom-right",
+          style: {
+            fontSize: "15px",
+          },
+        });
       } catch (error) {
         console.error("Error adding document: ", error);
       }
     }
   };
+
   useEffect(() => {
-    if (userData) {
-      setIsLoading(false);
-    }
-  }, [userData]);
+    fetchUserData();
+  }, [rental?.tenantId]);
+
   return (
     <>
       {isLoading && <FullLoadingScreen />}
