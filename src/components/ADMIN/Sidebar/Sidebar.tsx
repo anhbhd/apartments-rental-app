@@ -11,15 +11,15 @@ const Sidebar = () => {
   return (
     <aside
       id="logo-sidebar"
-      className="fixed tailwind top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 "
+      className="fixed tailwind top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 "
       aria-label="Sidebar"
     >
-      <div className="h-full px-3 pb-4 overflow-y-auto bg-white">
+      <div className="h-full px-3 pb-4 overflow-y-auto bg-white ">
         <ul className="space-y-2 font-medium">
           <li>
             <Link
               to="dashboard"
-              className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 "
+              className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -42,7 +42,7 @@ const Sidebar = () => {
           <li>
             <Link
               to="categories"
-              className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
+              className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100  group"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -70,7 +70,7 @@ const Sidebar = () => {
           <li>
             <button
               type="button"
-              className="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 "
+              className="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100  "
               aria-controls="dropdown-example"
               onClick={() =>
                 setHiddenApartmentsManagement(!hiddenApartmentsManagement)
@@ -120,7 +120,7 @@ const Sidebar = () => {
               <li>
                 <Link
                   to="apartments"
-                  className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 "
+                  className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100  "
                 >
                   Apartments List
                 </Link>
@@ -139,7 +139,7 @@ const Sidebar = () => {
           <li>
             <Link
               to="rental_applications"
-              className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100 "
+              className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -187,7 +187,7 @@ const Sidebar = () => {
 
               <Link
                 to="users"
-                className="flex justify-start  w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-4 group hover:bg-gray-100 "
+                className="flex justify-start  w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-4 group hover:bg-gray-100"
               >
                 Users
               </Link>
